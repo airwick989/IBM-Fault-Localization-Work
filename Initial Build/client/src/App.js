@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from 'react'
 
-function App() {
+function App(){
+
+  const [data, setData] = useState([{}])
+
+  //Once the application is run, the useEffect block is run once
+  useEffect(() => {
+    //Fetch response from members endpoint
+    fetch("/members").then(
+      //whatever response we get, convert it to json
+      res => res.json()
+    ).then(
+      data => {
+        //whatever data is in that response json, we're gonna set that data to the "data" variable using the setData function
+        setData(data)
+        console.log(data) //Checking that we were able to retrieve the data from the backend
+      }
+    )
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+
+      {(typeof data.members == 'undefined') ? (
+        <p>Loading ...</p>
+      ) : (
+        data.members.map((member, i) => (
+          <p key={i}>{member}</p>
+        ))
+      )}
+
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
