@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
-import styles from "./index.css"
+// eslint-disable-next-line
+import styles from "./index.css"  //This import is important, ignore the warning
 
 function App(){
 
@@ -24,16 +25,16 @@ function App(){
 
     <div>
 
-      <h1 className="text-4xl font-bold">Hello there</h1>
+      <h1 className="text-4xl font-bold underline italic">Hello there</h1>
       
 
-      {/* {(typeof data.members == 'undefined') ? (
+      {(typeof data.members == 'undefined') ? (
         <p>Loading ...</p>
       ) : (
         data.members.map((member, i) => (
           <p key={i}>{member}</p>
         ))
-      )} */}
+      )}
 
     </div>
   )
