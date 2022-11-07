@@ -4,13 +4,14 @@ import React, { useState } from "react";
 
 const Home = () => {
 
-    const [file1, setFile1] = useState("");
-    const [file2, setFile2] = useState("");
+    const [fileJLM, setFileJLM] = useState("");
+    const [filePerf, setFilePerf] = useState("");
+    const [fileTest, setFileTest] = useState("");
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const dataSent = { file1, file2 };
+        const dataSent = { fileJLM, filePerf, fileTest };
         console.log(dataSent)
     }
 
@@ -28,27 +29,39 @@ const Home = () => {
                         <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
                         
                         <label class="label">
-                            <span class="label-text">File 1</span>
+                            <span class="label-text">JLM Data CSV</span>
                         </label>
                         <input type="file" 
                             class="file-input file-input-bordered file-input-accent w-full max-w-xs" 
                             style={{marginBottom: 50}}
-                            value={file1}
-                            name="file1"
+                            value={fileJLM}
+                            name="fileJLM"
                             required
-                            onChange={e => setFile1(e.target.value)}
+                            onChange={e => setFileJLM(e.target.value)}
                         />
 
                         <label class="label">
-                            <span class="label-text">File 2</span>
+                            <span class="label-text">Perf Data CSV</span>
                         </label>
                         <input type="file" 
                             class="file-input file-input-bordered file-input-accent w-full max-w-xs" 
                             style={{marginBottom: 50}}
-                            value={file2}
-                            name="file2"
+                            value={filePerf}
+                            name="filePerf"
                             required
-                            onChange={e => setFile2(e.target.value)}
+                            onChange={e => setFilePerf(e.target.value)}
+                        />
+
+                        <label class="label">
+                            <span class="label-text">Test Data CSV</span>
+                        </label>
+                        <input type="file" 
+                            class="file-input file-input-bordered file-input-accent w-full max-w-xs" 
+                            style={{marginBottom: 50}}
+                            value={fileTest}
+                            name="fileTest"
+                            required
+                            onChange={e => setFileTest(e.target.value)}
                         />
                         
                         <button className='btn btn-primary' type='submit'>Send to Classifier</button>
