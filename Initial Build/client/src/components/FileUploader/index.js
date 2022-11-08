@@ -17,7 +17,7 @@ export const FileUploader = ({}) => {
 
         const data = new FormData();
         for(let i = 0; i < files.length; i++){
-            data.append('file' + i, files[i]);
+            data.append('file', files[i]);
             //console.log(files[i])
         }
 
