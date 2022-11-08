@@ -74,7 +74,7 @@ export const FileUploader = ({}) => {
   
 
     return (
-        <form method="post" action="#" id="#" onSubmit={submitHandler}>
+        <form method="post" action="#" id="#" onSubmit={submitHandler} encType="multipart/form-data">
 
             <div class="max-w-md">
                 <h1 class="text-5xl font-bold">Enter Your Files Here</h1>
