@@ -14,20 +14,27 @@ export const FileUploader = ({}) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-
-        const data = new FormData();
-        for(let i = 0; i < files.length; i++){
-            data.append('file', files[i]);
-            //console.log(files[i])
+        
+        if(files.length !== 3){
+            alert("Please upload 3 CSV files according to the highlighted instructions!")
         }
+        else{
 
-        axios.post('http://localhost:5000/upload', data)
-            .then( (e) => {
-                console.log('Success')
-            })
-            .catch( (e) => {
-                console.error('Error', e)
-            })
+            const data = new FormData();
+            for(let i = 0; i < files.length; i++){
+                data.append('file', files[i]);
+                //console.log(files[i])
+            }
+
+            axios.post('http://localhost:5000/upload', data)
+                .then( (e) => {
+                    console.log('Success')
+                })
+                .catch( (e) => {
+                    console.error('Error', e)
+                })
+
+            }
 
     }
 
@@ -93,6 +100,7 @@ export const FileUploader = ({}) => {
                     required
                     multiple
                     onChange={onInputChange}
+                    accept=".csv"
                 />
                 
                 <button className='btn btn-primary' type='submit' style={{marginTop: 50}}>Send to Classifier</button>
