@@ -1,16 +1,16 @@
 from pickle import TRUE
-from flask import Flask
+from flask import Flask, request
+from flask_cors import CORS;
 import json
 
 app = Flask(__name__)
+CORS(app)
 
-# Members API Route
-@app.route("/members")
-def members():
-    # members = {"Member 1", "Member 2", "Member 3"}
-    # return json.dumps(list(members))
+@app.route("/upload", methods=['GET', 'POST'])
+def upload():
+    print(request.files)
 
-    return {"members": ["Member 1", "Member 2", "Member 3"]}
+    return "ok"
 
 if __name__ == "__main__":
     app.run(debug=True)

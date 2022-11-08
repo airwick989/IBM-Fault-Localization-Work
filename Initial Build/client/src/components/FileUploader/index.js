@@ -18,7 +18,7 @@ export const FileUploader = ({}) => {
         const data = new FormData();
         for(let i = 0; i < files.length; i++){
             data.append('file' + i, files[i]);
-            console.log(files[i])
+            //console.log(files[i])
         }
 
         axios.post('http://localhost:5000/upload', data)
@@ -30,6 +30,48 @@ export const FileUploader = ({}) => {
             })
 
     }
+
+//     const submitHandler = (e) => {
+//         e.preventDefault();
+//         const formData = new FormData();
+//         for(let i = 0; i < files.length; i++){
+//             formData.append('file' + i, files[i]);
+//         }
+
+//         return postFile('/upload', formData).then((res) => res);
+//     }
+
+//     /**
+//  * 
+//  * @param {string} endpoint 
+//  * @param {FormData} formData 
+//  * @returns 
+//  */
+//     let postFile = (endpoint, formData) => {
+//     const customHeader = {
+//       headers: {
+//         // Authorization: `Bearer ${getLocalStorageToken()}`,
+//         "Content-Type": 'multipart/form-data',
+//       },
+//     };
+  
+//     let url = `http://localhost:5000${endpoint}`;
+//         return axios
+//         .post(url, formData, customHeader)
+//         .then((res) => ({
+//             status: res.status,
+//             data: res.data,
+//             error: null,
+//         }))
+//         .catch((err) => {
+//             return {
+//             status: err.response ? err.response.status : 0,
+//             data: {},
+//             error: err.message,
+//             };
+//         });
+//     };
+  
 
     return (
         <form method="post" action="#" id="#" onSubmit={submitHandler}>
