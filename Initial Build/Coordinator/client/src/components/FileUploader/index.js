@@ -31,6 +31,7 @@ export const FileUploader = ({}) => {
                     if(e.data === "ok"){
                         console.log('Files Uploaded Successfully')
                         alert('Files Uploaded Successfully')
+                        window.location.reload();
                     }
                     else if(e.data === "fileNameError"){
                         console.error('Error: Please upload files according to the highlighted instructions')
