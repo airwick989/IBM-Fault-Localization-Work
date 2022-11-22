@@ -4,9 +4,23 @@ from flask_cors import CORS;
 import json
 from werkzeug.utils import secure_filename
 import os
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 CORS(app)
+
+"""---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../files.db'
+fileDB = SQLAlchemy(app)
+
+#Creates a database model, ie, a table. We will refer to this table as 'File'
+class File(fileDB.Model):
+    filename = fileDB.Column(fileDB.String(50) , primary_key = True)
+    data = fileDB.Column(fileDB.LargeBinary)
+
+"""---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
@@ -21,13 +35,26 @@ def upload():
             if filename not in accepted_filenames:
                 flag = False
                 break
+            data = f.read()
+
+            exists = bool(fileDB.session.query(File).filter_by(filename=filename).first())
+            if exists:
+                file = fileDB.session.query(File).filter(File.filename == filename).one()
+                file.data = data
+                fileDB.session.commit()
+            else:
+                file = File(filename=filename, data=data) #Create a 'File' object of the File class in the DATABASE CONFIGURATION part of the code
+                fileDB.session.add(file)
+                fileDB.session.commit()
+
+            #Save locally (for testing purposes)
             f.save(os.getcwd() + '\\Uploads\\' + filename)
 
         if flag == True:
             return "ok"
         else:
             return "fileNameError"
-            
+
     except Exception:
         return Exception
 
