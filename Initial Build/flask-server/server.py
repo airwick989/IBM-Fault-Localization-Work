@@ -48,13 +48,12 @@ def upload():
                 fileDB.session.commit()
 
             #Save locally (for testing purposes)
-            f.save(os.getcwd() + '\\Uploads\\' + filename)
+            #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
         if flag == True:
             return "ok"
         else:
             return "fileNameError"
-
     except Exception:
         return Exception
 
