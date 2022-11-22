@@ -12,7 +12,7 @@ CORS(app)
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../files.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../../../files.db'
 fileDB = SQLAlchemy(app)
 
 #Creates a database model, ie, a table. We will refer to this table as 'File'
