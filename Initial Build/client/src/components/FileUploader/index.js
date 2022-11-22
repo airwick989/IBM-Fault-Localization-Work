@@ -28,10 +28,22 @@ export const FileUploader = ({}) => {
 
             axios.post('http://localhost:5000/upload', data)
                 .then( (e) => {
-                    console.log('Success')
+                    if(e.data === "ok"){
+                        console.log('Files Uploaded Successfully')
+                        alert('Files Uploaded Successfully')
+                    }
+                    else if(e.data === "fileNameError"){
+                        console.error('Error: Please upload files according to the highlighted instructions')
+                        alert('Error: Please upload files according to the highlighted instructions')
+                    }
+                    else{
+                        console.error('Error: ', e)
+                        alert('Error: ' + e)
+                    }
                 })
                 .catch( (e) => {
-                    console.error('Error', e)
+                    console.error('Error: ', e)
+                    alert('Error: ' + e)
                 })
 
             }

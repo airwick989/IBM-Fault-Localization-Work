@@ -10,11 +10,26 @@ CORS(app)
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
-    files = request.files.getlist("file")
-    for f in files:
-        filename = secure_filename(f.filename)
-        f.save(os.getcwd() + '\\Uploads\\' + filename)
-    return "ok"
+
+    accepted_filenames = ['jlm.csv', 'perf.csv', 'test.csv']
+
+    try:
+        files = request.files.getlist("file")
+        flag = True
+        for f in files:
+            filename = secure_filename(f.filename)
+            if filename not in accepted_filenames:
+                flag = False
+                break
+            f.save(os.getcwd() + '\\Uploads\\' + filename)
+
+        if flag == True:
+            return "ok"
+        else:
+            return "fileNameError"
+            
+    except Exception:
+        return Exception
 
 if __name__ == "__main__":
     app.run(debug=True)
