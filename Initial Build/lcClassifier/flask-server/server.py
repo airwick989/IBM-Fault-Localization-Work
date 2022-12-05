@@ -7,6 +7,15 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.cluster import DBSCAN
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import silhouette_score
+from sklearn.model_selection import train_test_split
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 CORS(app)
@@ -63,6 +72,24 @@ def getFiles():
         #     csvData[i] = csvData[i].split(",")
         # headers = csvData[0]
         # csvData = csvData[1:-1]
+
+
+def scale_standard(df):
+    scaler = StandardScaler()
+    df_scaled = scaler.fit_transform(df)
+    return df_scaled
+
+
+def scale_minmax(df):
+    scaler = MinMaxScaler()
+    df_scaled = scaler.fit_transform(df)
+    return df_scaled
+
+
+def apply_pca(df):
+    pca = PCA(n_components=2)
+    features = pca.fit_transform(df)
+    return features
 
 
 def processData():
