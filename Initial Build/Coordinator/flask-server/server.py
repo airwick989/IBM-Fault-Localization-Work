@@ -1,13 +1,14 @@
-from pickle import TRUE
 from flask import Flask, request
 from flask_cors import CORS;
-import json
 from werkzeug.utils import secure_filename
-import os
 from flask_sqlalchemy import SQLAlchemy
+from time import sleep
+from json import dumps
+from kafka import KafkaProducer
 
 app = Flask(__name__)
 CORS(app)
+
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
@@ -21,6 +22,18 @@ class File(fileDB.Model):
     data = fileDB.Column(fileDB.LargeBinary)
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
+
+
+"""---- KAFKA PRODUCER ------------------------------------------------------------------------------------------------------------------"""
+
+producer = KafkaProducer(
+    bootstrap_servers = ['localhost:9092'],
+    api_version=(0,11,5),
+    value_serializer = lambda x:dumps(x).encode('utf-8')
+)
+
+"""---- KAFKA PRODUCER ------------------------------------------------------------------------------------------------------------------"""
+
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
@@ -51,6 +64,12 @@ def upload():
             #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
         if flag == True:
+
+            # message = {'data': "dogma"}
+            # producer.send('testTopic', value=message)
+            # producer.flush()
+            # producer.close()
+
             return "ok"
         else:
             return "fileNameError"

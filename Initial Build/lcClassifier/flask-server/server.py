@@ -1,9 +1,7 @@
 from pickle import TRUE
 from flask import Flask, request
 from flask_cors import CORS;
-import json
 from werkzeug.utils import secure_filename
-import os
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import numpy as np
@@ -17,6 +15,8 @@ from sklearn.model_selection import train_test_split
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
+from json import loads
+from kafka import KafkaConsumer
 
 app = Flask(__name__)
 CORS(app)
@@ -27,6 +27,7 @@ perf = None
 test = None
 
 filesPath = './Files/'
+
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
@@ -41,8 +42,29 @@ class File(fileDB.Model):
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
+
+"""---- KAFKA CONSUMER ------------------------------------------------------------------------------------------------------------------"""
+
+consumer = KafkaConsumer(
+    'testTopic',
+    bootstrap_servers = ['localhost:9092'],
+    auto_offset_reset = 'earliest',
+    enable_auto_commit = True,
+    api_version=(0,11,5),
+    group_id = None,
+    value_deserializer = lambda x:loads(x.decode('utf-8'))
+)
+
+"""---- KAFKA CONSUMER ------------------------------------------------------------------------------------------------------------------"""
+
+
 @app.route("/")
 def hello():
+
+    # for message in consumer:
+    #     data = message.value
+    #     print(data)
+
     getFiles()
     processData()
     
