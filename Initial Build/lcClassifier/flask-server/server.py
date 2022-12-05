@@ -142,7 +142,7 @@ def classify(pca_DF_train, DF_train):
     for name, group in groups:
         plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
     plt.legend()
-    plt.show()
+    #plt.show() #This is the resultant plot, commented out for now
 
 
 if __name__ == '__main__':
