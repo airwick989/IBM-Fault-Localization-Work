@@ -16,6 +16,8 @@ jlm = None
 perf = None
 test = None
 
+filesPath = './Files/'
+
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -32,11 +34,13 @@ class File(fileDB.Model):
 @app.route("/")
 def hello():
     getFiles()
+    processData()
     
     return "Hello World!"
 
 
 def getFiles():
+    global filesPath
     readfiles = fileDB.session.query(File)
 
     for file in readfiles:
@@ -45,8 +49,9 @@ def getFiles():
         data = file.data
         csv = str(data)[2:-1]
         csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+        csv = csv.replace("\\xef\\xbb\\xbf", "")   #Clean some utf-8 escape characters
         
-        print(csv, file=open(f'./Files/{file.filename}', 'w', encoding='utf-8-sig'))
+        print(csv, file=open(f'{filesPath}{file.filename}', 'w'))
         # if file.filename == "jlm.csv":
         #     data = file.data
         #     csv = str(data)[2:-1]
@@ -58,6 +63,26 @@ def getFiles():
         #     csvData[i] = csvData[i].split(",")
         # headers = csvData[0]
         # csvData = csvData[1:-1]
+
+
+def processData():
+    global filesPath
+    DF = pd.concat([pd.read_csv(f, encoding='UTF-8') for f in [f'{filesPath}jlm.csv' ,f'{filesPath}test.csv', f'{filesPath}perf.csv']], axis=1)
+    sum_columns = DF["TIER2"] + DF["TIER3"]
+    DF["SPIN_COUNT"] = sum_columns
+    DF["SLOW"].mean()/DF["GETS"].mean()
+    DF["%UTIL"].mean()/100
+    DF.drop(DF.columns[DF.columns.str.contains('Unnamed:',case = False)],axis = 1, inplace = True)
+    DF1 = DF.copy()
+    DF1 = DF1[['%MISS', 'GETS', 'SLOW', 'NONREC', 'REC', 'TIER2', 'TIER3', '%UTIL', 'AVER_HTM', 'PATTERN-NAME', 'PATTERN-NO', '_raw_spin_lock', 'ctx_sched_in', 'delay_mwaitx', 'THREADS', 'SLEEP', 'SPIN_COUNT']]
+    DF1 = DF1.rename(columns = {'_raw_spin_lock' : 'RAW_SPIN_LOCK', 'ctx_sched_in' : 'CTX_SWITCH', 'delay_mwaitx' : 'DELAY_MWAITX'})
+    DF_train = DF1[['GETS', 'SPIN_COUNT', 'NONREC', '%UTIL', 'AVER_HTM', 'PATTERN-NO', 'PATTERN-NAME', 'RAW_SPIN_LOCK', 'CTX_SWITCH', 'DELAY_MWAITX']]
+    cols = []
+    for col in DF_train.columns:
+            cols.append(col)
+
+    DF_train[cols] = scale_standard(DF_train[cols])
+    DF_train.head()
 
 
 if __name__ == '__main__':
