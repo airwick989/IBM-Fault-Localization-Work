@@ -11,6 +11,7 @@ import numpy as np
 app = Flask(__name__)
 CORS(app)
 
+#initialise variables to be used as dataframes
 jlm = None
 perf = None
 test = None
@@ -37,11 +38,26 @@ def hello():
 
 def getFiles():
     readfiles = fileDB.session.query(File)
+
     for file in readfiles:
-        print(file.filename)
-        if file.filename == 'jlm.csv':
-            data = file.data
-            print(data)
+        
+        # Read binary data and convert it into a csv format
+        data = file.data
+        csv = str(data)[2:-1]
+        csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+        
+        print(csv, file=open(f'./Files/{file.filename}', 'w', encoding='utf-8-sig'))
+        # if file.filename == "jlm.csv":
+        #     data = file.data
+        #     csv = str(data)[2:-1]
+        #     print(csv[0:5000])
+
+        #String to dataframe format
+        # csvData = csv.split('\n')
+        # for i in range(0,len(csvData)):
+        #     csvData[i] = csvData[i].split(",")
+        # headers = csvData[0]
+        # csvData = csvData[1:-1]
 
 
 if __name__ == '__main__':
