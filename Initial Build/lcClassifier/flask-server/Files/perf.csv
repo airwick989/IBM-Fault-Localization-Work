@@ -1,4 +1,4 @@
-﻿_raw_spin_lock,ctx_sched_in,delay_mwaitx
+_raw_spin_lock,ctx_sched_in,delay_mwaitx
 319,214,456
 342,186,376
 342,170,382
