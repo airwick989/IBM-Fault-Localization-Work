@@ -20,6 +20,7 @@ from kafka import KafkaConsumer
 
 app = Flask(__name__)
 CORS(app)
+app.app_context().push()    #added to mitigate "working outside of application context" error
 
 #initialise variables to be used as dataframes
 jlm = None
@@ -43,44 +44,8 @@ class File(fileDB.Model):
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
 
-"""---- KAFKA CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
-def deserialize(message):
-    try:
-        return loads(message.decode('utf-8'))
-    except Exception:
-        return "Error: Message is not JSON Deserializable"
-
-consumer = KafkaConsumer(
-    'testTopic',
-    bootstrap_servers = ['localhost:9092'],
-    auto_offset_reset = 'latest',
-    enable_auto_commit = True,
-    group_id = None,
-    value_deserializer = deserialize
-)
-
-"""---- KAFKA CONSUMER ------------------------------------------------------------------------------------------------------------------"""
-
-
-for message in consumer:
-    data = message.value
-    print(data)
-
-
-
-# @app.route("/")
-# def hello():
-
-#     # for message in consumer:
-#     #     data = message.value
-#     #     print(data)
-
-#     getFiles()
-#     processData()
-    
-#     return "Hello World!"
-
+"""---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
 def getFiles():
     global filesPath
@@ -176,6 +141,51 @@ def classify(pca_DF_train, DF_train):
         plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
     plt.legend()
     #plt.show() #This is the resultant plot, commented out for now
+
+"""---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
+
+
+
+"""---- KAFKA CONSUMER ------------------------------------------------------------------------------------------------------------------"""
+
+def deserialize(message):
+    try:
+        return loads(message.decode('utf-8'))
+    except Exception:
+        return "Error: Message is not JSON Deserializable"
+
+consumer = KafkaConsumer(
+    'testTopic',
+    bootstrap_servers = ['localhost:9092'],
+    auto_offset_reset = 'latest',
+    enable_auto_commit = True,
+    group_id = None,
+    value_deserializer = deserialize
+)
+
+"""---- KAFKA CONSUMER ------------------------------------------------------------------------------------------------------------------"""
+
+
+for message in consumer:
+    data = message.value
+    print(data)
+    # getFiles()
+    # processData()
+
+
+
+# @app.route("/")
+# def hello():
+
+#     # for message in consumer:
+#     #     data = message.value
+#     #     print(data)
+
+#     getFiles()
+#     processData()
+    
+#     return "Hello World!"
+
 
 
 # if __name__ == '__main__':

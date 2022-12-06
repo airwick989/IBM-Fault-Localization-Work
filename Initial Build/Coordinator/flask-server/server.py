@@ -64,7 +64,7 @@ def upload():
 
         if flag == True:
 
-            message = {'data': "dogma"}
+            message = {'data': "somedata"}
             producer.send('testTopic', value=message)
 
             return "ok"
