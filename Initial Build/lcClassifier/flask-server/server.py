@@ -45,30 +45,41 @@ class File(fileDB.Model):
 
 """---- KAFKA CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
+def deserialize(message):
+    try:
+        return loads(message.decode('utf-8'))
+    except Exception:
+        return "Error: Message is not JSON Deserializable"
+
 consumer = KafkaConsumer(
     'testTopic',
     bootstrap_servers = ['localhost:9092'],
-    auto_offset_reset = 'earliest',
+    auto_offset_reset = 'latest',
     enable_auto_commit = True,
-    api_version=(0,11,5),
     group_id = None,
-    value_deserializer = lambda x:loads(x.decode('utf-8'))
+    value_deserializer = deserialize
 )
 
 """---- KAFKA CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
 
-@app.route("/")
-def hello():
+for message in consumer:
+    data = message.value
+    print(data)
 
-    # for message in consumer:
-    #     data = message.value
-    #     print(data)
 
-    getFiles()
-    processData()
+
+# @app.route("/")
+# def hello():
+
+#     # for message in consumer:
+#     #     data = message.value
+#     #     print(data)
+
+#     getFiles()
+#     processData()
     
-    return "Hello World!"
+#     return "Hello World!"
 
 
 def getFiles():
@@ -167,5 +178,5 @@ def classify(pca_DF_train, DF_train):
     #plt.show() #This is the resultant plot, commented out for now
 
 
-if __name__ == '__main__':
-    app.run(port=5001, debug=True)
+# if __name__ == '__main__':
+#     app.run(port=5001, debug=True)

@@ -28,7 +28,6 @@ class File(fileDB.Model):
 
 producer = KafkaProducer(
     bootstrap_servers = ['localhost:9092'],
-    api_version=(0,11,5),
     value_serializer = lambda x:dumps(x).encode('utf-8')
 )
 
@@ -65,10 +64,8 @@ def upload():
 
         if flag == True:
 
-            # message = {'data': "dogma"}
-            # producer.send('testTopic', value=message)
-            # producer.flush()
-            # producer.close()
+            message = {'data': "dogma"}
+            producer.send('testTopic', value=message)
 
             return "ok"
         else:
