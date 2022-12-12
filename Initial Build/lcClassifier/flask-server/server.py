@@ -105,7 +105,7 @@ def processData():
     DF_train = DF1[['GETS', 'SPIN_COUNT', 'NONREC', '%UTIL', 'AVER_HTM', 'PATTERN-NO', 'PATTERN-NAME', 'RAW_SPIN_LOCK', 'CTX_SWITCH', 'DELAY_MWAITX']]
     
     #THIS IS ADDED BY ME
-    DF_train2 = DF_train
+    DF_trainBeforeDrop = DF_train
     DF_train = DF_train.drop(['PATTERN-NAME'], axis=1)
     
     cols = []
@@ -114,33 +114,88 @@ def processData():
     DF_train[cols] = scale_standard(DF_train[cols])
     pca_DF_train = pd.DataFrame(data = apply_pca(DF_train), columns = ['pc1', 'pc2'])
 
-    classify(pca_DF_train, DF_train2)
+    df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_trainBeforeDrop['PATTERN-NAME']})
+
+    # # #classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
+
+    kmeans13 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
+    kmeans13.fit(pca_DF_train)
+    DF1['CLUSTER_TYPE'] = pd.Series(kmeans13.labels_, index=DF1.index)
+
+    classify(DF1)
+
+    
 
 
-def classify(pca_DF_train, DF_train):
-    # kmeans12 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
-    # kmeans12.fit(pca_DF_train)
+def classifyScatterPlot(pca_DF_train, DF_train):
+    pass
+    # df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
 
-    # Plotting the cluster centers and the data points on a 2D plane
     # plt.figure(figsize = (6,6))
     # plt.style.use("seaborn")
-    # plt.scatter(pca_DF_train['pc1'], pca_DF_train['pc2'], s=50, c=DF_train['PATTERN-NO'], cmap="inferno")
-    # plt.title('PCA & KMeans cluster centroids : SyncTask Example')
-    # plt.xlabel("Principal Component 1")
-    # plt.ylabel("Principal Component 2")
-    #plt.show()
-    
-    df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
-    
-    plt.figure(figsize = (6,6))
-    plt.style.use("seaborn")
-    sns.color_palette("Paired")
-    groups = df.groupby('z')
+    # sns.color_palette("Paired")
+    # groups = df.groupby('z')
+    # for name, group in groups:
+    #     plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
+    # plt.legend()
+    # plt.show() #This is the resultant plot, commented out for now
 
-    for name, group in groups:
-        plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
-    plt.legend()
-    #plt.show() #This is the resultant plot, commented out for now
+def classify(DF):
+    df_box = DF.copy()
+    df_box = df_box.drop(['THREADS', 'SLEEP', '%UTIL'], axis=1)
+
+    type_zero_total = 0
+    type_zero_count = 0
+
+    type_one_total = 0
+    type_one_count = 0
+
+    type_two_total = 0
+    type_two_count = 0
+
+    for row in df_box.index:
+        #print(df_box['AVER_HTM'][row], df_box['CLUSTER_TYPE'][row])
+        if df_box['CLUSTER_TYPE'][row] == 0:
+            type_zero_count += 1
+            type_zero_total += df_box['AVER_HTM'][row]
+        elif df_box['CLUSTER_TYPE'][row] == 1:
+            type_one_count += 1
+            type_one_total += df_box['AVER_HTM'][row]
+        else:
+            type_two_count += 1
+            type_two_total += df_box['AVER_HTM'][row]
+    
+    type_zero_mean = type_zero_total/type_zero_count
+    type_one_mean = type_one_total/type_one_count
+    type_two_mean = type_two_total/type_two_count
+
+    valueToTypeDict = {
+        'Type 0': type_zero_mean,
+        'Type 1': type_one_mean,
+        'Type 2': type_two_mean
+    }
+
+    print(list(valueToTypeDict.keys())[list(valueToTypeDict.values()).index(max([type_zero_mean, type_one_mean, type_two_mean]))])
+
+    # #This will create a boxplot showing the distribution of average hold times for each cluster type ie contention type
+    # for col in df_box.columns:
+    #     #I modified this line to only show the average holdtime boxplot
+    #     if col == 'AVER_HTM':
+    #         x = 'CLUSTER_TYPE'
+    #         y = col
+    #         f, ax = plt.subplots(figsize=(8, 6))
+    #         sns.boxplot(y=y, x=x, data=df_box,
+    #                     whis=[0, 100], width=.6, palette="coolwarm")
+
+    #         # Add in points to show each observation
+    #         sns.stripplot(y=y, x=x, data=df_box,
+    #                     size=3, color=".3", linewidth=0)
+
+    #         # Tweak the visual presentation
+    #         ax.xaxis.grid(True)
+    #         ax.set(ylabel=col)
+    #         sns.despine(trim=True, left=True)
+    #         plt.show()
 
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
@@ -155,7 +210,7 @@ def deserialize(message):
         return "Error: Message is not JSON Deserializable"
 
 consumer = KafkaConsumer(
-    'testTopic',
+    'coordinatorToClassifier',
     bootstrap_servers = ['localhost:9092'],
     auto_offset_reset = 'latest',
     enable_auto_commit = True,
@@ -168,9 +223,10 @@ consumer = KafkaConsumer(
 
 for message in consumer:
     data = message.value
-    print(data)
-    # getFiles()
-    # processData()
+    if 'signal' in data:
+        if data['signal'] == 'start':
+            getFiles()
+            processData()
 
 
 

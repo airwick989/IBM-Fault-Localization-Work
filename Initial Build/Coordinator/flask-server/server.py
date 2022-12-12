@@ -64,8 +64,8 @@ def upload():
 
         if flag == True:
 
-            message = {'data': "somedata"}
-            producer.send('testTopic', value=message)
+            message = {'signal': "start"}
+            producer.send('coordinatorToClassifier', value=message)
 
             return "ok"
         else:
