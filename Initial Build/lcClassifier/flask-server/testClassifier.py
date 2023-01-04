@@ -6,6 +6,8 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 app = Flask(__name__)
 CORS(app)
@@ -94,48 +96,43 @@ def processData():
 
     df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_trainBeforeDrop['PATTERN-NAME']})
 
-    kmeans13 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
-    kmeans13.fit(pca_DF_train)
-    DF1['CLUSTER_TYPE'] = pd.Series(kmeans13.labels_, index=DF1.index)
+    #classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
+    classify(pca_DF_train, DF_train)
 
-    classify(DF1)
 
-def classify(DF):
-    df_box = DF.copy()
-    df_box = df_box.drop(['THREADS', 'SLEEP', '%UTIL'], axis=1)
+# def classifyScatterPlot(pca_DF_train, DF_train):
+#     df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
 
-    type_zero_total = 0
-    type_zero_count = 0
+#     plt.figure(figsize = (6,6))
+#     plt.style.use("seaborn")
+#     sns.color_palette("Paired")
+#     groups = df.groupby('z')
+#     for name, group in groups:
+#         plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
+#     plt.legend()
+#     plt.show() #This is the resultant plot, commented out for now
 
-    type_one_total = 0
-    type_one_count = 0
 
-    type_two_total = 0
-    type_two_count = 0
+def classify(pca_DF_train, DF_train):
+    kmeans12 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
+    kmeans12.fit(pca_DF_train.values)
+    print(kmeans12.predict([[1.845041, 2.369252]]))
 
-    for row in df_box.index:
-        #print(df_box['AVER_HTM'][row], df_box['CLUSTER_TYPE'][row])
-        if df_box['CLUSTER_TYPE'][row] == 0:
-            type_zero_count += 1
-            type_zero_total += df_box['AVER_HTM'][row]
-        elif df_box['CLUSTER_TYPE'][row] == 1:
-            type_one_count += 1
-            type_one_total += df_box['AVER_HTM'][row]
-        else:
-            type_two_count += 1
-            type_two_total += df_box['AVER_HTM'][row]
-    
-    type_zero_mean = type_zero_total/type_zero_count
-    type_one_mean = type_one_total/type_one_count
-    type_two_mean = type_two_total/type_two_count
+    # # Plotting the cluster centers and the data points on a 2D plane
+    # plt.figure(figsize = (6,6))
+    # plt.style.use("seaborn")
+    # plt.scatter(pca_DF_train['pc1'], pca_DF_train['pc2'], s=50, c=DF_train['PATTERN-NO'], cmap="inferno")
 
-    valueToTypeDict = {
-        'Type 0': type_zero_mean,
-        'Type 1': type_one_mean,
-        'Type 2': type_two_mean
-    }
 
-    print(list(valueToTypeDict.keys())[list(valueToTypeDict.values()).index(max([type_zero_mean, type_one_mean, type_two_mean]))])
+    # #plt.scatter(kmeans12.cluster_centers_[:, 0], kmeans12.cluster_centers_[:, 1], c='red', marker='o')
+        
+    # plt.title('PCA & KMeans cluster centroids : SyncTask Example')
+    # plt.xlabel("Principal Component 1")
+    # plt.ylabel("Principal Component 2")
+    # plt.show()
+
+
+
 
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
