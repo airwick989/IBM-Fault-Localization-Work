@@ -130,7 +130,6 @@ def classify(pca_DF_train, DF_train):
     plt.title('PCA KMeans clustering: SyncTask Example')
     plt.xlabel("Principal Component 1")
     plt.ylabel("Principal Component 2")
-    plt.legend()
     plt.show()
 
 
