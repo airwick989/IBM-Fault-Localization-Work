@@ -120,8 +120,9 @@ def classify(pca_DF_train, DF_train):
     with open(f'{filesPath}kmeans12.pkl', 'rb') as f:
         kmeans12 = pickle.load(f)
 
-    kmeans12.fit(pca_DF_train.values)
-    print(kmeans12.predict([[1.845041, 2.369252]]))
+    for i in range(0,100):
+        kmeans12.fit(pca_DF_train.values)
+        print(kmeans12.predict([[-0.818853547565306, -0.106073789921626]]))
 
     # # Plotting the cluster centers and the data points on a 2D plane
     # plt.figure(figsize = (6,6))
