@@ -116,13 +116,13 @@ def processData():
 
 def classify(pca_DF_train, DF_train):
     #kmeans12 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
+    #kmeans12.fit(pca_DF_train.values)
     
     with open(f'{filesPath}kmeans12.pkl', 'rb') as f:
         kmeans12 = pickle.load(f)
 
     for i in range(0,100):
-        kmeans12.fit(pca_DF_train.values)
-        print(kmeans12.predict([[-0.818853547565306, -0.106073789921626]]))
+        print(kmeans12.predict([[-1.22576610990847, -0.304350779950182]]))
 
     # # Plotting the cluster centers and the data points on a 2D plane
     # plt.figure(figsize = (6,6))
