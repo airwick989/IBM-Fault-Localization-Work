@@ -119,6 +119,7 @@ def classify(pca_DF_train, DF_train):
     
     with open(f'{filesPath}kmeans12.pkl', 'rb') as f:
         kmeans12 = pickle.load(f)
+
     kmeans12.fit(pca_DF_train.values)
     print(kmeans12.predict([[1.845041, 2.369252]]))
 
