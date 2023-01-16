@@ -8,6 +8,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pickle
 
 app = Flask(__name__)
 CORS(app)
@@ -114,7 +115,10 @@ def processData():
 
 
 def classify(pca_DF_train, DF_train):
-    kmeans12 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
+    #kmeans12 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
+    
+    with open(f'{filesPath}kmeans12.pkl', 'rb') as f:
+        kmeans12 = pickle.load(f)
     kmeans12.fit(pca_DF_train.values)
     print(kmeans12.predict([[1.845041, 2.369252]]))
 
