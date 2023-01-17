@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from json import loads
 from kafka import KafkaConsumer
+import pickle
 
 app = Flask(__name__)
 CORS(app)
@@ -27,7 +28,8 @@ jlm = None
 perf = None
 test = None
 
-filesPath = './Files/sample_input/'
+filesPath = './Files/Uploads/'
+modelPath = './Files/'
 
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
@@ -115,87 +117,12 @@ def processData():
     pca_DF_train = pd.DataFrame(data = apply_pca(DF_train), columns = ['pc1', 'pc2'])
 
     df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_trainBeforeDrop['PATTERN-NAME']})
+    print(df)
+    classify(pca_DF_train)
 
-    # # #classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
-
-    kmeans13 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
-    kmeans13.fit(pca_DF_train)
-    DF1['CLUSTER_TYPE'] = pd.Series(kmeans13.labels_, index=DF1.index)
-
-    classify(DF1)
-
-    
-
-
-def classifyScatterPlot(pca_DF_train, DF_train):
-    pass
-    # df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
-
-    # plt.figure(figsize = (6,6))
-    # plt.style.use("seaborn")
-    # sns.color_palette("Paired")
-    # groups = df.groupby('z')
-    # for name, group in groups:
-    #     plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
-    # plt.legend()
-    # plt.show() #This is the resultant plot, commented out for now
-
-def classify(DF):
-    df_box = DF.copy()
-    df_box = df_box.drop(['THREADS', 'SLEEP', '%UTIL'], axis=1)
-
-    type_zero_total = 0
-    type_zero_count = 0
-
-    type_one_total = 0
-    type_one_count = 0
-
-    type_two_total = 0
-    type_two_count = 0
-
-    for row in df_box.index:
-        #print(df_box['AVER_HTM'][row], df_box['CLUSTER_TYPE'][row])
-        if df_box['CLUSTER_TYPE'][row] == 0:
-            type_zero_count += 1
-            type_zero_total += df_box['AVER_HTM'][row]
-        elif df_box['CLUSTER_TYPE'][row] == 1:
-            type_one_count += 1
-            type_one_total += df_box['AVER_HTM'][row]
-        else:
-            type_two_count += 1
-            type_two_total += df_box['AVER_HTM'][row]
-    
-    type_zero_mean = type_zero_total/type_zero_count
-    type_one_mean = type_one_total/type_one_count
-    type_two_mean = type_two_total/type_two_count
-
-    valueToTypeDict = {
-        'Type 0': type_zero_mean,
-        'Type 1': type_one_mean,
-        'Type 2': type_two_mean
-    }
-
-    print(list(valueToTypeDict.keys())[list(valueToTypeDict.values()).index(max([type_zero_mean, type_one_mean, type_two_mean]))])
-
-    # #This will create a boxplot showing the distribution of average hold times for each cluster type ie contention type
-    # for col in df_box.columns:
-    #     #I modified this line to only show the average holdtime boxplot
-    #     if col == 'AVER_HTM':
-    #         x = 'CLUSTER_TYPE'
-    #         y = col
-    #         f, ax = plt.subplots(figsize=(8, 6))
-    #         sns.boxplot(y=y, x=x, data=df_box,
-    #                     whis=[0, 100], width=.6, palette="coolwarm")
-
-    #         # Add in points to show each observation
-    #         sns.stripplot(y=y, x=x, data=df_box,
-    #                     size=3, color=".3", linewidth=0)
-
-    #         # Tweak the visual presentation
-    #         ax.xaxis.grid(True)
-    #         ax.set(ylabel=col)
-    #         sns.despine(trim=True, left=True)
-    #         plt.show()
+def classify(pca_DF_train):
+    with open(f'{modelPath}kmeans12.pkl', 'rb') as f:
+        kmeans12 = pickle.load(f)
 
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
