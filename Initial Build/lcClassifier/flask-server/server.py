@@ -27,7 +27,7 @@ jlm = None
 perf = None
 test = None
 
-filesPath = './Files/'
+filesPath = './Files/sample_input/'
 
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""

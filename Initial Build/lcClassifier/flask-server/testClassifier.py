@@ -19,7 +19,8 @@ jlm = None
 perf = None
 test = None
 
-filesPath = './Files/'
+filesPath = './Files/combined_training_data/'
+savePath = './Files/'
 
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
@@ -103,10 +104,9 @@ def processData():
 
 def classifyScatterPlot(pca_DF_train, DF_train):
     df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
-    with open(f'{filesPath}kmeans12.pkl', 'rb') as f:
+    with open(f'{savePath}kmeans12.pkl', 'rb') as f:
         kmeans12 = pickle.load(f)
     df['Cluster'] = kmeans12.labels_
-    #df.to_csv(f'{filesPath}cluster_results.csv', index = False, encoding='utf-8')
 
     plt.figure(figsize = (6,6))
     plt.style.use("seaborn")
@@ -122,7 +122,7 @@ def classify(pca_DF_train, DF_train):
     #kmeans12 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
     #kmeans12.fit(pca_DF_train.values)
     
-    with open(f'{filesPath}kmeans12.pkl', 'rb') as f:
+    with open(f'{savePath}kmeans12.pkl', 'rb') as f:
         kmeans12 = pickle.load(f)
 
     # for i in range(0,100):
