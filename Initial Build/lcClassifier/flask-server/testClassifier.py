@@ -97,21 +97,25 @@ def processData():
 
     df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_trainBeforeDrop['PATTERN-NAME']})
 
-    #classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
-    classify(pca_DF_train, DF_train)
+    classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
+    #classify(pca_DF_train, DF_train)
 
 
-# def classifyScatterPlot(pca_DF_train, DF_train):
-#     df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
+def classifyScatterPlot(pca_DF_train, DF_train):
+    df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
+    with open(f'{filesPath}kmeans12.pkl', 'rb') as f:
+        kmeans12 = pickle.load(f)
+    df['Cluster'] = kmeans12.labels_
+    #df.to_csv(f'{filesPath}cluster_results.csv', index = False, encoding='utf-8')
 
-#     plt.figure(figsize = (6,6))
-#     plt.style.use("seaborn")
-#     sns.color_palette("Paired")
-#     groups = df.groupby('z')
-#     for name, group in groups:
-#         plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
-#     plt.legend()
-#     plt.show() #This is the resultant plot, commented out for now
+    plt.figure(figsize = (6,6))
+    plt.style.use("seaborn")
+    sns.color_palette("Paired")
+    groups = df.groupby('Cluster')
+    for name, group in groups:
+        plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
+    plt.legend()
+    plt.show() #This is the resultant plot, commented out for now
 
 
 def classify(pca_DF_train, DF_train):
