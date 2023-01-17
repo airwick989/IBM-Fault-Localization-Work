@@ -128,15 +128,6 @@ def classify(pca_DF_train, DF_train):
     # for i in range(0,100):
     #     print(kmeans12.predict([[-1.22576610990847, -0.304350779950182]]))
 
-    plt.figure(figsize = (6,6))
-    plt.style.use("seaborn")
-    plt.scatter(pca_DF_train['pc1'], pca_DF_train['pc2'], c=kmeans12.labels_, cmap="plasma")
-    plt.title('PCA KMeans clustering: SyncTask Example')
-    plt.xlabel("Principal Component 1")
-    plt.ylabel("Principal Component 2")
-    plt.show()
-
-
 
 
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
