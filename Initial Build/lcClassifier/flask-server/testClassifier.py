@@ -58,10 +58,11 @@ def getFiles():
 
 
 def scale_standard(df):
-    scaler = StandardScaler()
+    #scaler = StandardScaler()
     #df_scaled = scaler.fit_transform(df)
-    scaler.fit(df)
-    
+    #scaler.fit(df)
+    with open(f'{modelPath}scaler.pkl', 'rb') as f:
+        scaler = pickle.load(f)
     df_scaled = scaler.transform(df)
     return df_scaled
 
