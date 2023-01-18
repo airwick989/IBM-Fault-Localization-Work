@@ -108,7 +108,6 @@ def processData():
     #THIS IS ADDED BY ME
     DF_trainBeforeDrop = DF_train
     DF_train = DF_train.drop(['PATTERN-NAME'], axis=1)
-    #DF_train = DF_train.drop(['PATTERN-NO'], axis=1)
     
     cols = []
     for col in DF_train.columns:
@@ -118,20 +117,13 @@ def processData():
     # DF_train.loc[len(DF_train)] = df_scaled_list
     print(DF_train)
     pca_DF_train = pd.DataFrame(data = apply_pca(DF_train), columns = ['pc1', 'pc2'])
-    print("\n")
-    print(pca_DF_train)
 
-    classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
-    #classify(pca_DF_train, DF_train)
+    #classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
+    classify(pca_DF_train, DF_trainBeforeDrop)
 
 
 def classifyScatterPlot(pca_DF_train, DF_train):
     df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
-    with open(f'{modelPath}kmeans12.pkl', 'rb') as f:
-        kmeans12 = pickle.load(f)
-    
-    print(df)
-    print(kmeans12.predict([[-2.596045, 1.272793]]))
 
     # df['Cluster'] = kmeans12.labels_
     # plt.figure(figsize = (6,6))
@@ -148,11 +140,19 @@ def classify(pca_DF_train, DF_train):
     #kmeans12 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
     #kmeans12.fit(pca_DF_train.values)
     
+    #df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
+    #print(df)
     with open(f'{modelPath}kmeans12.pkl', 'rb') as f:
         kmeans12 = pickle.load(f)
 
-    # for i in range(0,100):
-    #     print(kmeans12.predict([[-1.22576610990847, -0.304350779950182]]))
+    predicted_clusters = []
+    for index, row in pca_DF_train.iterrows():
+        #print(kmeans12.predict([[row['pc1'], row['pc2']]])[0])
+        predicted_clusters.append(kmeans12.predict([[row['pc1'], row['pc2']]])[0])
+    pca_DF_train['Cluster'] = predicted_clusters
+    print(pca_DF_train)
+    
+    #print(kmeans12.predict([[-2.596045, 1.272793]]))
 
 
 
