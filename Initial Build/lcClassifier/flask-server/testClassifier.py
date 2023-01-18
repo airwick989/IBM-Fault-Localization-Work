@@ -20,7 +20,7 @@ jlm = None
 perf = None
 test = None
 
-filesPath = './Files/combined_training_data/'
+filesPath = './Files/Uploads/'
 savePath = './Files/'
 modelPath = './Files/Models/'
 
@@ -83,8 +83,12 @@ def scale_minmax(df):
 
 
 def apply_pca(df):
-    pca = PCA(n_components=2)
-    features = pca.fit_transform(df)
+    #pca = PCA(n_components=2)
+    # features = pca.fit_transform(df)
+    # pca.fit(df)
+    with open(f'{modelPath}pca.pkl', 'rb') as f:
+        pca = pickle.load(f)
+    features = pca.transform(df)
     return features
 
 
