@@ -29,7 +29,7 @@ perf = None
 test = None
 
 filesPath = './Files/Uploads/'
-modelPath = './Files/'
+modelPath = './Files/Models/'
 
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""

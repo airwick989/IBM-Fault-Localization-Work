@@ -9,6 +9,7 @@ from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
@@ -21,6 +22,7 @@ test = None
 
 filesPath = './Files/combined_training_data/'
 savePath = './Files/'
+modelPath = './Files/Models/'
 
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
@@ -57,8 +59,20 @@ def getFiles():
 
 def scale_standard(df):
     scaler = StandardScaler()
-    df_scaled = scaler.fit_transform(df)
+    #df_scaled = scaler.fit_transform(df)
+    scaler.fit(df)
+    
+    df_scaled = scaler.transform(df)
     return df_scaled
+
+def single_scale_standard(df):
+    scaler = StandardScaler()
+    df = np.array(df.values[0])
+    df_scaled = scaler.fit_transform(df[:, np.newaxis])
+    df_scaled_list = []
+    for value in df_scaled:
+        df_scaled_list.append(value[0])
+    return df_scaled_list
 
 
 def scale_minmax(df):
@@ -85,18 +99,22 @@ def processData():
     DF1 = DF1[['%MISS', 'GETS', 'SLOW', 'NONREC', 'REC', 'TIER2', 'TIER3', '%UTIL', 'AVER_HTM', 'PATTERN-NAME', 'PATTERN-NO', '_raw_spin_lock', 'ctx_sched_in', 'delay_mwaitx', 'THREADS', 'SLEEP', 'SPIN_COUNT']]
     DF1 = DF1.rename(columns = {'_raw_spin_lock' : 'RAW_SPIN_LOCK', 'ctx_sched_in' : 'CTX_SWITCH', 'delay_mwaitx' : 'DELAY_MWAITX'})
     DF_train = DF1[['GETS', 'SPIN_COUNT', 'NONREC', '%UTIL', 'AVER_HTM', 'PATTERN-NO', 'PATTERN-NAME', 'RAW_SPIN_LOCK', 'CTX_SWITCH', 'DELAY_MWAITX']]
-    
+
     #THIS IS ADDED BY ME
     DF_trainBeforeDrop = DF_train
     DF_train = DF_train.drop(['PATTERN-NAME'], axis=1)
+    #DF_train = DF_train.drop(['PATTERN-NO'], axis=1)
     
     cols = []
     for col in DF_train.columns:
             cols.append(col)
-    DF_train[cols] = scale_standard(DF_train[cols])
+    df_scaled_list = scale_standard(DF_train[cols])
+    DF_train[cols] = df_scaled_list
+    # DF_train.loc[len(DF_train)] = df_scaled_list
+    print(DF_train)
     pca_DF_train = pd.DataFrame(data = apply_pca(DF_train), columns = ['pc1', 'pc2'])
-
-    df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_trainBeforeDrop['PATTERN-NAME']})
+    print("\n")
+    print(pca_DF_train)
 
     classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
     #classify(pca_DF_train, DF_train)
@@ -104,25 +122,28 @@ def processData():
 
 def classifyScatterPlot(pca_DF_train, DF_train):
     df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
-    with open(f'{savePath}kmeans12.pkl', 'rb') as f:
+    with open(f'{modelPath}kmeans12.pkl', 'rb') as f:
         kmeans12 = pickle.load(f)
-    df['Cluster'] = kmeans12.labels_
+    
+    print(df)
+    print(kmeans12.predict([[-2.596045, 1.272793]]))
 
-    plt.figure(figsize = (6,6))
-    plt.style.use("seaborn")
-    sns.color_palette("Paired")
-    groups = df.groupby('Cluster')
-    for name, group in groups:
-        plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
-    plt.legend()
-    plt.show() #This is the resultant plot, commented out for now
+    # df['Cluster'] = kmeans12.labels_
+    # plt.figure(figsize = (6,6))
+    # plt.style.use("seaborn")
+    # sns.color_palette("Paired")
+    # groups = df.groupby('Cluster')
+    # for name, group in groups:
+    #     plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
+    # plt.legend()
+    # plt.show() #This is the resultant plot, commented out for now
 
 
 def classify(pca_DF_train, DF_train):
     #kmeans12 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
     #kmeans12.fit(pca_DF_train.values)
     
-    with open(f'{savePath}kmeans12.pkl', 'rb') as f:
+    with open(f'{modelPath}kmeans12.pkl', 'rb') as f:
         kmeans12 = pickle.load(f)
 
     # for i in range(0,100):
@@ -135,5 +156,5 @@ def classify(pca_DF_train, DF_train):
 
 
 
-getFiles()
+#getFiles()
 processData()
