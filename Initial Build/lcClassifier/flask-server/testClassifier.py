@@ -112,9 +112,7 @@ def processData():
     cols = []
     for col in DF_train.columns:
             cols.append(col)
-    df_scaled_list = scale_standard(DF_train[cols])
-    DF_train[cols] = df_scaled_list
-    # DF_train.loc[len(DF_train)] = df_scaled_list
+    DF_train[cols] = scale_standard(DF_train[cols])
     print(DF_train)
     pca_DF_train = pd.DataFrame(data = apply_pca(DF_train), columns = ['pc1', 'pc2'])
 

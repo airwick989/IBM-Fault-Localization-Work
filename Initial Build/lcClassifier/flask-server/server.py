@@ -76,20 +76,16 @@ def getFiles():
 
 
 def scale_standard(df):
-    scaler = StandardScaler()
-    df_scaled = scaler.fit_transform(df)
-    return df_scaled
-
-
-def scale_minmax(df):
-    scaler = MinMaxScaler()
-    df_scaled = scaler.fit_transform(df)
+    with open(f'{modelPath}scaler.pkl', 'rb') as f:
+        scaler = pickle.load(f)
+    df_scaled = scaler.transform(df)
     return df_scaled
 
 
 def apply_pca(df):
-    pca = PCA(n_components=2)
-    features = pca.fit_transform(df)
+    with open(f'{modelPath}pca.pkl', 'rb') as f:
+        pca = pickle.load(f)
+    features = pca.transform(df)
     return features
 
 
@@ -114,15 +110,21 @@ def processData():
     for col in DF_train.columns:
             cols.append(col)
     DF_train[cols] = scale_standard(DF_train[cols])
+    print(DF_train)
     pca_DF_train = pd.DataFrame(data = apply_pca(DF_train), columns = ['pc1', 'pc2'])
 
-    df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_trainBeforeDrop['PATTERN-NAME']})
-    print(df)
     classify(pca_DF_train)
 
 def classify(pca_DF_train):
     with open(f'{modelPath}kmeans12.pkl', 'rb') as f:
         kmeans12 = pickle.load(f)
+
+    predicted_clusters = []
+    for index, row in pca_DF_train.iterrows():
+        #print(kmeans12.predict([[row['pc1'], row['pc2']]])[0])
+        predicted_clusters.append(kmeans12.predict([[row['pc1'], row['pc2']]])[0])
+    pca_DF_train['Cluster'] = predicted_clusters
+    print(pca_DF_train)
 
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
