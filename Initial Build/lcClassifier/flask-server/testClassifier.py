@@ -20,7 +20,8 @@ jlm = None
 perf = None
 test = None
 
-filesPath = './Files/Uploads/'
+#filesPath = './Files/Uploads/' #What it originally was 
+filesPath = './Files/new_combined_training_data/'
 savePath = './Files/'
 modelPath = './Files/Models/'
 
@@ -84,8 +85,8 @@ def scale_minmax(df):
 
 def apply_pca(df):
     #pca = PCA(n_components=2)
-    # features = pca.fit_transform(df)
-    # pca.fit(df)
+    #features = pca.fit_transform(df)
+    #pca.fit(df)
     with open(f'{modelPath}pca.pkl', 'rb') as f:
         pca = pickle.load(f)
     features = pca.transform(df)
@@ -101,13 +102,13 @@ def processData():
     DF["%UTIL"].mean()/100
     DF.drop(DF.columns[DF.columns.str.contains('Unnamed:',case = False)],axis = 1, inplace = True)
     DF1 = DF.copy()
-    DF1 = DF1[['%MISS', 'GETS', 'SLOW', 'NONREC', 'REC', 'TIER2', 'TIER3', '%UTIL', 'AVER_HTM', 'PATTERN-NAME', 'PATTERN-NO', '_raw_spin_lock', 'ctx_sched_in', 'delay_mwaitx', 'THREADS', 'SLEEP', 'SPIN_COUNT']]
+    DF1 = DF1[['%MISS', 'GETS', 'SLOW', 'NONREC', 'REC', 'TIER2', 'TIER3', '%UTIL', 'AVER_HTM', '_raw_spin_lock', 'ctx_sched_in', 'delay_mwaitx', 'THREADS', 'SLEEP', 'SPIN_COUNT']]
     DF1 = DF1.rename(columns = {'_raw_spin_lock' : 'RAW_SPIN_LOCK', 'ctx_sched_in' : 'CTX_SWITCH', 'delay_mwaitx' : 'DELAY_MWAITX'})
-    DF_train = DF1[['GETS', 'SPIN_COUNT', 'NONREC', '%UTIL', 'AVER_HTM', 'PATTERN-NO', 'PATTERN-NAME', 'RAW_SPIN_LOCK', 'CTX_SWITCH', 'DELAY_MWAITX']]
+    DF_train = DF1[['GETS', 'SPIN_COUNT', 'NONREC', '%UTIL', 'AVER_HTM', 'RAW_SPIN_LOCK', 'CTX_SWITCH', 'DELAY_MWAITX']]
 
     #THIS IS ADDED BY ME
     DF_trainBeforeDrop = DF_train
-    DF_train = DF_train.drop(['PATTERN-NAME'], axis=1)
+    #DF_train = DF_train.drop(['PATTERN-NAME'], axis=1)
     
     cols = []
     for col in DF_train.columns:
@@ -116,22 +117,28 @@ def processData():
     print(DF_train)
     pca_DF_train = pd.DataFrame(data = apply_pca(DF_train), columns = ['pc1', 'pc2'])
 
-    #classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
-    classify(pca_DF_train, DF_trainBeforeDrop)
+    classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
+    #classify(pca_DF_train, DF_trainBeforeDrop)
 
 
 def classifyScatterPlot(pca_DF_train, DF_train):
-    df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2'], 'z': DF_train['PATTERN-NAME']})
+    df = pd.DataFrame({'x': pca_DF_train['pc1'], 'y': pca_DF_train['pc2']})
 
-    # df['Cluster'] = kmeans12.labels_
-    # plt.figure(figsize = (6,6))
-    # plt.style.use("seaborn")
-    # sns.color_palette("Paired")
-    # groups = df.groupby('Cluster')
-    # for name, group in groups:
-    #     plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
-    # plt.legend()
-    # plt.show() #This is the resultant plot, commented out for now
+    # kmeans12 = KMeans(n_clusters=3, init='k-means++', max_iter=600, n_init=10)
+    # kmeans12.fit(pca_DF_train.values)
+
+    with open(f'{modelPath}kmeans12.pkl', 'rb') as f:
+        kmeans12 = pickle.load(f)
+
+    df['Cluster'] = kmeans12.labels_
+    plt.figure(figsize = (6,6))
+    plt.style.use("seaborn")
+    sns.color_palette("Paired")
+    groups = df.groupby('Cluster')
+    for name, group in groups:
+        plt.plot(group.x, group.y, marker='o', linestyle='', markersize=3, label=name)
+    plt.legend()
+    plt.show() #This is the resultant plot, commented out for now
 
 
 def classify(pca_DF_train, DF_train):
