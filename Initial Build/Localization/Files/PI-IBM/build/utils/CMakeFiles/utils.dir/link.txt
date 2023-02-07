@@ -1,0 +1,2 @@
+/usr/bin/ar qc /home/nahid/Projects/IBM-1106/Benchmarks/PI-IBM/Dpiperf/lib/libutils.a  CMakeFiles/utils.dir/common.o CMakeFiles/utils.dir/pi_thread.o
+/usr/bin/ranlib /home/nahid/Projects/IBM-1106/Benchmarks/PI-IBM/Dpiperf/lib/libutils.a
