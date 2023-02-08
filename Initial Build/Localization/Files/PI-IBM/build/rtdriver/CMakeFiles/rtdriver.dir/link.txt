@@ -1,1 +1,0 @@
-/usr/bin/cc  -fPIC -Wno-narrowing -Wno-write-strings  -rdynamic CMakeFiles/rtdriver.dir/rtdriver.o  -o /home/nahid/Projects/IBM-1106/Benchmarks/PI-IBM/Dpiperf/bin/rtdriver 

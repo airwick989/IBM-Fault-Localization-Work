@@ -1,0 +1,243 @@
+
+ JPROF Version_9.8.7 (JVMTI)
+
+  (Built    : Thr Dec 9 2010 at 16:05:13)
+
+  (Source   : Thr Dec 9 2010 at 16:05:13)
+
+  (Platform : Linux-x86_64, OS=5.10.16.3-microsoft-standard-WSL2, PerfUtil=v9.8.7, PERFDD=v00000000, CPUS=8, HT=0, MC=0, CpuSig=0x00000000, (null), Hostname=LAPTOP-L8EKDQ3T)
+
+  (JVM Info : OpenJDK 64-Bit Server VM,25.71-b10,mixed mode, sharing,OpenLogic-OpenJDK)
+
+ JPROF started at 16:33:45 on 2023/02/08
+
+ JPROF Options: scs=monitor_contended_entered+,logpath=/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/Files
+
+
+Version for IBM Internal Use Only
+JVMTI Ver    = 30010203
+ The following are valid metrics on this platform:
+    0 <COUNTER0>
+    1 <COUNTER1>
+  254 <PTT_INSTS>
+  255 <PTT_CYCLES>
+  259 <RAW_CYCLES>
+  260 <LAT_CYCLES>
+  261 <CPI>
+  262 <NOMETRICS>
+
+ Path and prefix for log files: ./log
+ Parsed: +1 = SCS=MONITOR_CONTENDED_ENTERED
+ Parsed:  1 = LOGPATH=/MNT/D/DESKTOP/GITHUB/IBM-FAULT-LOCALIZATION-WORK/INITIAL_BUILD/LOCALIZATION/FILES
+
+ Path and prefix for log files: /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/Files/log
+
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/Files/log-msg_8279
+
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/Files/log-jtnm_8279
+
+ Logical Metric #0 = RAW_CYCLES
+Physical Metric #0 = RAW_CYCLES
+Logical Mapping #0 = 0
+Node    Size = 88
+Class   Size = 40
+Method  Size = 48
+Thread  Size = 432
+RTEvent Size = 32
+ Logical Metrics    = 1
+ Physical Metrics   = 0
+SetEventNotificationMode:  rc = 0,  Enable VM_INIT
+SetEventNotificationMode:  rc = 0,  Enable VM_DEATH
+ EnableEvents1x:  Enable
+SetEventNotificationMode:  rc = 0,  Enable THREAD_START
+SetEventNotificationMode:  rc = 0,  Enable THREAD_END
+SetEventNotificationMode:  rc = 0,  Enable CLASS_LOAD
+SetEventNotificationMode:  rc = 0,  Enable CLASS_PREPARE
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
+<< EnableEvents1x(1)
+<<< Agent_OnLoad
+hashInit: buckets =     2053, itemsize =      432, name = ThreadTable
+ ==> cbVMInit, jvmti = 0x7f93ec008450, tid = 0x2058
+hashInit: buckets =    64007, itemsize =       40, name = ClassTable
+Get Primitive Classes
+ EnableEvents1x:  Enable
+SetEventNotificationMode:  rc = 0,  Enable THREAD_START
+SetEventNotificationMode:  rc = 0,  Enable THREAD_END
+SetEventNotificationMode:  rc = 0,  Enable CLASS_LOAD
+SetEventNotificationMode:  rc = 0,  Enable CLASS_PREPARE
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
+<< EnableEvents1x(1)
+GetLoadedClasses() found 384 classes
+
+Statistics for ClassTable
+
+Total Elements: 392
+Total Buckets:  64007
+Element Size:   40
+Empty Buckets:  63615
+Largest Bucket: 1
+
+**INFO** (16:33:47) SCS initialization starting
+**INFO** gv->scs_monitorEvent = 76 (MONITOR_CONTENDED_ENTERED)
+
+Server socket (7) created for PID 8279. Listening on port 8888
+ <== cbVMInit
+
+ (16:34:03) RTDriver Cmd: <start>
+ (0x1741F6EF:374C4124) RTDriver Token: <start>
+ Parsed:  1 = START
+Entering RTD_LOCK : treset(STATE)
+  Inside RTD_LOCK : treset(STATE)
+ Leaving RTD_LOCK : treset(STATE)
+ >> RTD_LOCK : RTArcfTraceStart(1)
+ EnableEvents2x:  Enable
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0,  Enable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(1)
+ << RTD_LOCK : RTArcfTraceStart(1)
+hashInit: buckets =    20011, itemsize =       36, name = MethodTable
+
+ (16:34:23) RTDriver Cmd: <stop>
+ (0x1741F6F3:DFACE25C) RTDriver Token: <stop>
+ Parsed:  1 = STOP
+ EnableEvents2x: Disable
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(0)
+Entering RTD_LOCK : treset(SYNC)
+  Inside RTD_LOCK : treset(SYNC)
+ Leaving RTD_LOCK : treset(SYNC)
+ >> RTD_LOCK : flush
+
+ Begin TREE 1
+
+
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/Files/log-rt.1_8279
+gv->calltree  = 0
+gv->calltrace = 0
+gv->usermets  = 1
+gv->physmets  = 0
+gv->start     = 0
+Start at 1741f6ef374c4124, Flush at 1741f6f3dface25c
+
+
+ End Tree 1
+
+ OverCal               0
+ Tree Nodes           56
+ Node Size            88
+ Class Size           40
+ Event Size           32
+ Tree Size          4928
+
+# of xMalloc:   1608
+# of xFree:     9
+# of xStrDup:   749
+# of xFreeStr:  9
+Mem Requested:  800699
+Memory In Use:  816144
+Memory Freed:   376
+Max Footprint:  816104
+Number of GCs: 75
+
+ LOCK STATS
+ ge.lockcnt[02] =         12 Thread_Tbl
+ ge.lockcnt[04] =       1400 Class_Tbl
+ ge.lockcnt[08] =         15 Method_Tbl
+ ge.lockcnt[20] =          4 RtDrvrLock
+ ge.lockcnt[40] =        715 ObjectTags
+ << RTD_LOCK : flush
+Entering RTD_LOCK : treset(FULL)
+  Inside RTD_LOCK : treset(FULL)
+ EnableEvents2x: Disable
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(0)
+ Leaving RTD_LOCK : treset(FULL)
+ RTWaitForClient: Client connection closed. Re-Initializing Socket 7 on port 8888 ...
+ RTWaitForClient: ready to accept connections on port 8888 again ...
+ (16:34:29) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
+
+# of xMalloc:   1626
+# of xFree:     74
+# of xStrDup:   756
+# of xFreeStr:  10
+Mem Requested:  796959
+Memory In Use:  812040
+Memory Freed:   6104
+Max Footprint:  816104
+ EnableEvents1x: Disable
+SetEventNotificationMode:  rc = 0, Disable THREAD_START
+SetEventNotificationMode:  rc = 0, Disable CLASS_LOAD
+SetEventNotificationMode:  rc = 0, Disable CLASS_PREPARE
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+<< EnableEvents1x(0)
+
+ (16:34:29) RTDriver Cmd: <END>
+ (0x1741F6F5:4B23E19C) RTDriver Token: <END>
+ Parsed:  1 = END
+ EnableEvents2x: Disable
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(0)
+Entering RTD_LOCK : treset(SYNC)
+  Inside RTD_LOCK : treset(SYNC)
+ Leaving RTD_LOCK : treset(SYNC)
+Entering RTD_LOCK : treset(FULL)
+  Inside RTD_LOCK : treset(FULL)
+ EnableEvents2x: Disable
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(0)
+Freeing dead thread: 00002075_SIGINT_handler
+ Leaving RTD_LOCK : treset(FULL)
+
+hashFree: name = MethodTable
+
+Statistics for MethodTable
+
+Total Elements: 14
+Total Buckets:  20011
+Element Size:   36
+Empty Buckets:  19997
+Largest Bucket: 1
+
+hashFree: name = ClassTable
+
+Statistics for ClassTable
+
+Total Elements: 718
+Total Buckets:  64007
+Element Size:   40
+Empty Buckets:  63289
+Largest Bucket: 1
+
+Statistics for ThreadTable
+
+Total Elements: 13
+Total Buckets:  2053
+Element Size:   432
+Empty Buckets:  2041
+Largest Bucket: 1
+
+# of xMalloc:   1626
+# of xFree:     1546
+# of xStrDup:   756
+# of xFreeStr:  744
+Mem Requested:  26927
+Memory In Use:  27656
+Memory Freed:   790488
+Max Footprint:  816104
+
+Number of GCs: 75
+
+ JPROF ending at 16:34:29 on 2023/02/08
+

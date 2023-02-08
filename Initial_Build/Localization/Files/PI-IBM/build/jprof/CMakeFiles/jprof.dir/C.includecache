@@ -1,0 +1,522 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/dump.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+tree.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/gv.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/hash.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/hash.h
+jvmti.h
+-
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.c
+version.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/version.h
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+tree.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+sdate.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/sdate.h
+perfutil.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/perfutil.h
+utils/pi_time.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/utils/pi_time.h
+plugin/JprofPluginInterface.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/plugin/JprofPluginInterface.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+utils/common.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/utils/common.h
+a2n.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/a2n.h
+stdio.h
+-
+stdarg.h
+-
+stddef.h
+-
+pthread.h
+-
+semaphore.h
+-
+sys/systemcfg.h
+-
+perfutil.h
+-
+pmapi.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/pmapi.h
+pthread.h
+-
+arpa/inet.h
+-
+unistd.h
+-
+pthread.h
+-
+perfutil.h
+-
+linux/unistd.h
+-
+sys/types.h
+-
+signal.h
+-
+dlfcn.h
+-
+perfutil.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/perfutil.h
+ibmjvmti.h
+-
+jvmti.h
+-
+hash.h
+-
+scs.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/scs.h
+semaphore.h
+-
+sys/time.h
+-
+sys/resource.h
+-
+sys/time.h
+-
+gv.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/gv.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprofti.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+hash.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/hash.h
+tree.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+utils/pi_time.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/utils/pi_time.h
+plugin/JprofPluginInterface.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/plugin/JprofPluginInterface.h
+sys/time.h
+-
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprofti_helpers.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+tree.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+hash.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/hash.h
+utils/pi_time.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/utils/pi_time.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/metrics.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+hash.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/hash.h
+utils/pi_time.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/utils/pi_time.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/parse_jprof.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+tree.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/parse_rtdriver.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+tree.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/plugin/JprofPluginInterface.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/rtarcf.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+tree.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+utils/pi_time.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/utils/pi_time.h
+plugin/JprofPluginInterface.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/plugin/JprofPluginInterface.h
+perf_event.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/perf_event.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/scs.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+tree.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+scs.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/scs.h
+pu_scs.hpp
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/pu_scs.hpp
+hash.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/hash.h
+psapi.h
+-
+stdlib.h
+-
+errno.h
+-
+execinfo.h
+-
+ucontext.h
+-
+unwind.h
+-
+sys/mman.h
+-
+errno.h
+-
+pmapi.h
+-
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/scs.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/socket.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+fcntl.h
+-
+errno.h
+-
+string.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+time.h
+-
+unistd.h
+-
+sys/socket.h
+-
+sys/socketvar.h
+-
+netinet/in.h
+-
+netdb.h
+-
+arpa/inet.h
+-
+pthread.h
+-
+unistd.h
+-
+sys/socket.h
+-
+sys/socketvar.h
+-
+netinet/in.h
+-
+netdb.h
+-
+arpa/inet.h
+-
+pthread.h
+-
+stdio.h
+-
+stdlib.h
+-
+windows.h
+-
+winbase.h
+-
+limits.h
+-
+conio.h
+-
+io.h
+-
+unistd.h
+-
+sys/types.h
+-
+sys/socket.h
+-
+netinet/in.h
+-
+netdb.h
+-
+arpa/inet.h
+-
+pthread.h
+-
+ctype.h
+-
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/thread.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+hash.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/hash.h
+utils/pi_time.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/utils/pi_time.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.c
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+tree.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+scs.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/scs.h
+execinfo.h
+-
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/util.c
+version.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/version.h
+jprof.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/jprof.h
+tree.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/tree.h
+sys/utsname.h
+-
+utils/common.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/utils/common.h
+utils/pi_time.h
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/utils/pi_time.h
+
+/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial Build/Localization/Files/PI-IBM/build/Dpiperf/src/jprof/version.h
+
+Dpiperf/include/a2n.h
+
+Dpiperf/include/bputil_common.h
+
+Dpiperf/include/encore.h
+itypes.h
+Dpiperf/include/itypes.h
+windows.h
+-
+winbase.h
+-
+conio.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+io.h
+-
+limits.h
+-
+libgen.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+unistd.h
+-
+stdint.h
+-
+sys/types.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+stdarg.h
+-
+errno.h
+-
+ctype.h
+-
+fcntl.h
+-
+time.h
+-
+math.h
+-
+assert.h
+-
+memory.h
+-
+
+Dpiperf/include/ibmjvmti.h
+jvmti.h
+Dpiperf/include/jvmti.h
+
+Dpiperf/include/itypes.h
+stdbool.h
+-
+platform.h
+-
+windows.h
+-
+windef.h
+-
+basetsd.h
+-
+limits.h
+-
+stdint.h
+-
+limits.h
+-
+inttypes.h
+-
+inttypes.h
+-
+sys/types.h
+-
+inttypes.h
+-
+sys/types.h
+-
+
+Dpiperf/include/jni.h
+stdio.h
+-
+stdarg.h
+-
+jniport.h
+Dpiperf/include/jniport.h
+jni_jcl.h
+Dpiperf/include/jni_jcl.h
+
+Dpiperf/include/jniport.h
+AEEFile.h
+Dpiperf/include/AEEFile.h
+
+Dpiperf/include/jvmti.h
+jni.h
+Dpiperf/include/jni.h
+
+Dpiperf/include/perfctr.h
+
+Dpiperf/include/perfmisc.h
+itypes.h
+Dpiperf/include/itypes.h
+
+Dpiperf/include/perfutil.h
+basetsd.h
+-
+limits.h
+-
+itypes.h
+Dpiperf/include/itypes.h
+sys/types.h
+-
+unistd.h
+-
+
+Dpiperf/include/perfutilbase.h
+linux/ioctl.h
+-
+pitrace.h
+Dpiperf/include/pitrace.h
+
+Dpiperf/include/pitrace.h
+asm/byteorder.h
+-
+endian.h
+-
+bputil_common.h
+-
+
+Dpiperf/include/platform.h
+stdint.h
+-
+endian.h
+-
+limits.h
+-
+stddef.h
+-
+inttypes.h
+-
+
+Dpiperf/include/sdate.h
+
+Dpiperf/src/jprof/hash.h
+jvmti.h
+-
+
+Dpiperf/src/perfutil/perfutil_core.hpp
+unistd.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+stdint.h
+-
+stdarg.h
+-
+fcntl.h
+-
+errno.h
+-
+sys/mman.h
+-
+time.h
+-
+sys/time.h
+-
+sys/stat.h
+-
+sys/ioctl.h
+-
+ctype.h
+-
+semaphore.h
+-
+sched.h
+-
+sys/types.h
+-
+itypes.h
+Dpiperf/src/perfutil/itypes.h
+perfctr.h
+Dpiperf/src/perfutil/perfctr.h
+perfutilbase.h
+Dpiperf/src/perfutil/perfutilbase.h
+perfutil.h
+Dpiperf/src/perfutil/perfutil.h
+pitrace.h
+Dpiperf/src/perfutil/pitrace.h
+perfmisc.h
+Dpiperf/src/perfutil/perfmisc.h
+
+Dpiperf/src/perfutil/pu_scs.hpp
+perfutil_core.hpp
+Dpiperf/src/perfutil/perfutil_core.hpp
+
+Dpiperf/src/utils/common.h
+encore.h
+Dpiperf/src/utils/encore.h
+
+Dpiperf/src/utils/pi_time.h
+time.h
+-
+sys/time.h
+-
+unistd.h
+-
+stdint.h
+-
+
