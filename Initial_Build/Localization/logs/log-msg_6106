@@ -9,7 +9,7 @@
 
   (JVM Info : OpenJDK 64-Bit Server VM,17.0.4+8-Ubuntu-120.04,mixed mode, sharing,Private Build)
 
- JPROF started at 17:12:23 on 2023/02/09
+ JPROF started at 14:48:03 on 2023/02/13
 
  JPROF Options: scs=monitor_contended_entered+,logpath=/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs
 
@@ -32,9 +32,9 @@ JVMTI Ver    = 30110000
 
  Path and prefix for log files: /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log
 
- Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-msg_10524
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-msg_6106
 
- Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-jtnm_10524
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-jtnm_6106
 
  Logical Metric #0 = RAW_CYCLES
 Physical Metric #0 = RAW_CYCLES
@@ -57,7 +57,7 @@ SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
 << EnableEvents1x(1)
 <<< Agent_OnLoad
- ==> cbVMInit, jvmti = 0x7fe99c0099e0, tid = 0x291d
+ ==> cbVMInit, jvmti = 0x7f6ef80099e0, tid = 0x17db
 hashInit: buckets =     2053, itemsize =      432, name = ThreadTable
 hashInit: buckets =    64007, itemsize =       40, name = ClassTable
 Get Primitive Classes
@@ -79,99 +79,25 @@ Element Size:   40
 Empty Buckets:  63559
 Largest Bucket: 1
 
-**INFO** (17:12:23) SCS initialization starting
+**INFO** (14:48:03) SCS initialization starting
 **INFO** gv->scs_monitorEvent = 76 (MONITOR_CONTENDED_ENTERED)
+bind() error. rc = 98
+bind() error. rc = 98
+bind() error. rc = 98
+bind() error. rc = 98
 
-Server socket (8) created for PID 10524. Listening on port 8888
+Server socket (12) created for PID 6106. Listening on port 8892
  <== cbVMInit
+ (14:48:40) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
 
- (17:12:38) RTDriver Cmd: <start>
- (0x1742479E:D6C2C5AC) RTDriver Token: <start>
- Parsed:  1 = START
-Entering RTD_LOCK : treset(STATE)
-  Inside RTD_LOCK : treset(STATE)
- Leaving RTD_LOCK : treset(STATE)
- >> RTD_LOCK : RTArcfTraceStart(1)
- EnableEvents2x:  Enable
-SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
-SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
-SetEventNotificationMode:  rc = 0,  Enable MONITOR_CONTENDED_ENTERED
-<< EnableEvents2x(1)
- << RTD_LOCK : RTArcfTraceStart(1)
-hashInit: buckets =    20011, itemsize =       36, name = MethodTable
-
- (17:12:58) RTDriver Cmd: <stop>
- (0x174247A3:7F1FB918) RTDriver Token: <stop>
- Parsed:  1 = STOP
- EnableEvents2x: Disable
-SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
-SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
-SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
-<< EnableEvents2x(0)
-Entering RTD_LOCK : treset(SYNC)
-  Inside RTD_LOCK : treset(SYNC)
- Leaving RTD_LOCK : treset(SYNC)
- >> RTD_LOCK : flush
-
- Begin TREE 1
-
-
- Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-rt.1_10524
-gv->calltree  = 0
-gv->calltrace = 0
-gv->usermets  = 1
-gv->physmets  = 0
-gv->start     = 0
-Start at 1742479ed6c2c5ac, Flush at 174247a37f1fb918
-
-
- End Tree 1
-
- OverCal               0
- Tree Nodes            6
- Node Size            88
- Class Size           40
- Event Size           32
- Tree Size           528
-
-# of xMalloc:   1259
-# of xFree:     12
-# of xStrDup:   619
-# of xFreeStr:  12
-Mem Requested:  785252
-Memory In Use:  797416
-Memory Freed:   472
-Max Footprint:  797376
-Number of GCs: 0
-
- LOCK STATS
- ge.lockcnt[02] =         11 Thread_Tbl
- ge.lockcnt[04] =       1154 Class_Tbl
- ge.lockcnt[08] =          3 Method_Tbl
- ge.lockcnt[20] =          4 RtDrvrLock
- ge.lockcnt[40] =        580 ObjectTags
- << RTD_LOCK : flush
-Entering RTD_LOCK : treset(FULL)
-  Inside RTD_LOCK : treset(FULL)
- EnableEvents2x: Disable
-SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
-SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
-SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
-<< EnableEvents2x(0)
-Freeing dead thread: 0000291d_main
- Leaving RTD_LOCK : treset(FULL)
- RTWaitForClient: Client connection closed. Re-Initializing Socket 8 on port 8888 ...
- RTWaitForClient: ready to accept connections on port 8888 again ...
- (17:13:04) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
-
-# of xMalloc:   1282
-# of xFree:     26
+# of xMalloc:   1265
+# of xFree:     13
 # of xStrDup:   627
-# of xFreeStr:  14
-Mem Requested:  786179
-Memory In Use:  798424
-Memory Freed:   1760
-Max Footprint:  798328
+# of xFreeStr:  13
+Mem Requested:  624587
+Memory In Use:  636792
+Memory Freed:   504
+Max Footprint:  636696
  EnableEvents1x: Disable
 SetEventNotificationMode:  rc = 0, Disable THREAD_START
 SetEventNotificationMode:  rc = 0, Disable CLASS_LOAD
@@ -180,8 +106,8 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 << EnableEvents1x(0)
 
- (17:13:04) RTDriver Cmd: <END>
- (0x174247A4:C20BB118) RTDriver Token: <END>
+ (14:48:40) RTDriver Cmd: <END>
+ (0x17437A15:BE365D28) RTDriver Token: <END>
  Parsed:  1 = END
  EnableEvents2x: Disable
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
@@ -198,18 +124,9 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
 << EnableEvents2x(0)
-Freeing dead thread: 0000293b_SIGINT_handler
+Freeing dead thread: 000017fa_SIGTERM_handler
+Freeing dead thread: 000017db_main
  Leaving RTD_LOCK : treset(FULL)
-
-hashFree: name = MethodTable
-
-Statistics for MethodTable
-
-Total Elements: 2
-Total Buckets:  20011
-Element Size:   36
-Empty Buckets:  20009
-Largest Bucket: 1
 
 hashFree: name = ClassTable
 
@@ -229,16 +146,16 @@ Element Size:   432
 Empty Buckets:  2042
 Largest Bucket: 1
 
-# of xMalloc:   1282
-# of xFree:     1204
+# of xMalloc:   1265
+# of xFree:     1190
 # of xStrDup:   627
-# of xFreeStr:  601
-Mem Requested:  25821
-Memory In Use:  26544
-Memory Freed:   773640
-Max Footprint:  798328
+# of xFreeStr:  599
+Mem Requested:  23902
+Memory In Use:  24600
+Memory Freed:   612696
+Max Footprint:  636696
 
 Number of GCs: 0
 
- JPROF ending at 17:13:04 on 2023/02/09
+ JPROF ending at 14:48:40 on 2023/02/13
 

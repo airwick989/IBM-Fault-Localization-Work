@@ -1,18 +1,30 @@
-import os, time
+import os, time, sys
 from threading import Thread
+from io import StringIO 
 
 filename = "Hot_1"
 args = "4 100"
 
 start_time = "15"
-end_time = "20"
+recording_length = "20"
+
+delay = 1
+script_running_time = delay + int(start_time) + int(recording_length) + delay
 
 def run_rtdriver():
-    time.sleep(1)
-    os.system(f"./run_rtdriver.sh {start_time} {end_time}")
+    time.sleep(delay)
+    os.system(f"./run_rtdriver.sh {start_time} {recording_length}")
 
 def run_jlm():
-    os.system(f"./run_jlm.sh {filename} {args}")
+    os.system(f"./run_jlm.sh {script_running_time} {filename} {args}")
 
-Thread(target= run_rtdriver).start()
-Thread(target=run_jlm).start()
+rtdriver = Thread(target= run_rtdriver)
+jlm = Thread(target=run_jlm)
+rtdriver.start()
+jlm.start()
+
+
+
+time.sleep(script_running_time)
+rtdriver.join()
+jlm.join()
