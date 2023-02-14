@@ -1,6 +1,5 @@
-import os, time, sys
+import os, time
 from threading import Thread
-from io import StringIO 
 
 filename = "Hot_1"
 args = "4 100"
@@ -22,8 +21,6 @@ rtdriver = Thread(target= run_rtdriver)
 jlm = Thread(target=run_jlm)
 rtdriver.start()
 jlm.start()
-
-
 
 time.sleep(script_running_time)
 rtdriver.join()
