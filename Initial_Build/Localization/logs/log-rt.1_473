@@ -1,0 +1,41 @@
+
+ JPROF Version_9.8.7 (JVMTI)
+
+  (Built    : Thr Dec 9 2010 at 16:05:13)
+
+  (Source   : Thr Dec 9 2010 at 16:05:13)
+
+  (Platform : Linux-x86_64, OS=5.10.16.3-microsoft-standard-WSL2, PerfUtil=v9.8.7, PERFDD=v00000000, CPUS=8, HT=0, MC=0, CpuSig=0x00000000, (null), Hostname=LAPTOP-L8EKDQ3T)
+
+  (JVM Info : OpenJDK 64-Bit Server VM,17.0.4+8-Ubuntu-120.04,mixed mode, sharing,Private Build)
+
+ JPROF started at 12:12:31 on 2023/02/22
+
+ JPROF Options: scs=monitor_contended_entered+,logpath=/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs
+
+
+ Base Values:
+
+  EVENT      :: Callstack Monitor Event samples
+
+ Column Labels:
+
+  LV         :: Level of Nesting       (Call Depth)
+  EVENT      :: Callstack Monitor Event samples
+  NAME       :: Name of Method or Thread
+
+ Process_Number_ID=473
+
+  LV      EVENT  NAME
+   0          0  000001f2_Thread-3
+   1          0  Hot.run()V
+   2          0  Hot.retriveData(I)Ljava/lang/Object;
+   3          1  (java/lang/Object)
+   0          0  000001f3_Thread-4
+   1          0  Hot.run()V
+   2          0  Hot.retriveData(I)Ljava/lang/Object;
+   3          1  (java/lang/Object)
+   0          0  000001f4_Thread-5
+   1          0  Hot.run()V
+   2          0  Hot.retriveData(I)Ljava/lang/Object;
+   3          1  (java/lang/Object)
