@@ -125,6 +125,13 @@ def classify(pca_DF_train):
         predicted_clusters.append(kmeans12.predict([[row['pc1'], row['pc2']]])[0])
     pca_DF_train['Cluster'] = predicted_clusters
     print(pca_DF_train)
+    print("\n\n")
+    cluster_mappings = {
+        0 : "Type 2 contention",
+        1 : "Type 1 contention",
+        2 : "low contention"
+    }
+    print(f"Your Java program is experiencing {cluster_mappings[pca_DF_train['Cluster'].iloc[0]]}.")
 
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
