@@ -1,5 +1,14 @@
-import os, time
+import os, time, re
 from threading import Thread
+
+
+#Clearing out the log directory
+if len(os.listdir('./logs/')) == 0:
+    pass
+else:    
+    for file in os.listdir('./logs/'):
+        os.remove(f'./logs/{file}')
+
 
 filename = "Hot_1"
 args = "4 100"
@@ -25,3 +34,25 @@ jlm.start()
 time.sleep(script_running_time)
 rtdriver.join()
 jlm.join()
+
+
+#Returning the method causing lock contention
+methods = []
+r = re.compile("^log-rt")
+log_rt_file = list(filter(r.match, os.listdir('./logs/')))[0]
+with open(f'./logs/{log_rt_file}') as file:
+    flag = False
+    for line in file:
+        if line.split() == ['LV', 'EVENT', 'NAME']:
+            flag = True
+
+        if flag:
+            if line.split()[0] == '1':
+                methods.append(line.split()[2])
+
+methods = list(set(methods))
+print("\n\n")
+methods_str = "The method(s) causing contention in your Java program are: "
+for method in methods:
+    methods_str = methods_str + method + ", "
+print(methods_str)
