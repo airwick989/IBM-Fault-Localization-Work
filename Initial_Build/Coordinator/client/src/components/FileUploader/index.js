@@ -15,8 +15,8 @@ export const FileUploader = ({}) => {
     const submitHandler = (e) => {
         e.preventDefault();
         
-        if(files.length !== 3){
-            alert("Please upload 3 CSV files according to the highlighted instructions!")
+        if(files.length !== 4){
+            alert("Please upload 3 CSV files and 1 java file according to the highlighted instructions!")
         }
         else{
 
@@ -33,9 +33,13 @@ export const FileUploader = ({}) => {
                         alert('Files Uploaded Successfully')
                         window.location.reload();
                     }
-                    else if(e.data === "fileNameError"){
-                        console.error('Error: Please upload files according to the highlighted instructions')
-                        alert('Error: Please upload files according to the highlighted instructions')
+                    else if(e.data === "FileNameError"){
+                        console.error('FileNameError: Please ensure oyu upload only Java files and CSV files with the correct names.')
+                        alert('FileNameError: Please ensure oyu upload only Java files and CSV files with the correct names.')
+                    }
+                    else if(e.data === "FileCountError"){
+                        console.error('FileCountError: Please enter EXACTLY 3 CSV files according to the specified naming conventions and EXACTLY 1 Java file.')
+                        alert('FileCountError: Please enter EXACTLY 3 CSV files according to the specified naming conventions and EXACTLY 1 Java file.')
                     }
                     else{
                         console.error('Error: ', e)
@@ -98,22 +102,24 @@ export const FileUploader = ({}) => {
 
             <div class="max-w-md">
                 <h1 class="text-5xl font-bold">Enter Your Files Here</h1>
-                <p class="py-6">Please provide the combined JLM, perf, and test CSV files to the dropbox. 
-                These files will be sent to the Classifier in order to retrieve the classification data.</p>
+                <p class="py-6">Please provide the combined JLM, perf, and test CSV files along with the 
+                Java file to the dropbox. These files will be sent to the Classifier and Localizer
+                in order to retrieve the classification and Localization data.</p>
                 <p style={{color:'orange', fontWeight:'bold'}}>Please ensure the files are named correctly!</p>
-                <p>Your combined JLM CSV should be titled '<b style={{color:'orange'}}>jlm.csv</b>', your combined perf CSV 
-                should be titled '<b style={{color:'orange'}}>perf.csv</b>', and your combined test CSV should be titled 
+                <p>Your JLM CSV should be titled '<b style={{color:'orange'}}>jlm.csv</b>', your perf CSV 
+                should be titled '<b style={{color:'orange'}}>perf.csv</b>', and your test CSV should be titled 
                 '<b style={{color:'orange'}}>test.csv</b>'</p>
+                <p>Your Java file can have any filename, so long as it is a '<b style={{color:'orange'}}>.java</b>' file</p>
                 
                 <label class="label">
-                    <span class="label-text" style={{marginTop: 50}}>Insert All CSV Files Here</span>
+                    <span class="label-text" style={{marginTop: 50}}>Insert All Files Here</span>
                 </label>
                 <input type="file" 
                     class="file-input file-input-bordered file-input-accent w-full max-w-xs" 
                     required
                     multiple
                     onChange={onInputChange}
-                    accept=".csv"
+                    accept=".csv, .java"
                 />
                 
                 <button className='btn btn-primary' type='submit' style={{marginTop: 50}}>Send to Classifier</button>

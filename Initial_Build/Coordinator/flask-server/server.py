@@ -42,34 +42,51 @@ def upload():
     try:
         files = request.files.getlist("file")
         flag = True
+        errorType = ""
+        csvCount = 0
+        javaCount = 0
+
+        #Preliminary Check
         for f in files:
             filename = secure_filename(f.filename)
-            if filename not in accepted_filenames:
+            
+            if filename not in accepted_filenames and not filename.endswith(".java"):
                 flag = False
+                errorType = "FileNameError"
                 break
-            data = f.read()
-
-            exists = bool(fileDB.session.query(File).filter_by(filename=filename).first())
-            if exists:
-                file = fileDB.session.query(File).filter(File.filename == filename).one()
-                file.data = data
-                fileDB.session.commit()
+            if filename.endswith(".csv"):
+                csvCount += 1
             else:
-                file = File(filename=filename, data=data) #Create a 'File' object of the File class in the DATABASE CONFIGURATION part of the code
-                fileDB.session.add(file)
-                fileDB.session.commit()
+                javaCount += 1
+        if csvCount != 3 or javaCount != 1:
+            flag = False
+            errorType = "FileCountError"
 
-            #Save locally (for testing purposes)
-            #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
         if flag == True:
+            for f in files:
+                filename = secure_filename(f.filename)
+
+                data = f.read()
+                exists = bool(fileDB.session.query(File).filter_by(filename=filename).first())
+                if exists:
+                    file = fileDB.session.query(File).filter(File.filename == filename).one()
+                    file.data = data
+                    fileDB.session.commit()
+                else:
+                    file = File(filename=filename, data=data) #Create a 'File' object of the File class in the DATABASE CONFIGURATION part of the code
+                    fileDB.session.add(file)
+                    fileDB.session.commit()
+
+                #Save locally (for testing purposes)
+                #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
             message = {'signal': "start"}
             producer.send('coordinatorToClassifier', value=message)
 
             return "ok"
         else:
-            return "fileNameError"
+            return errorType
     except Exception:
         return Exception
 

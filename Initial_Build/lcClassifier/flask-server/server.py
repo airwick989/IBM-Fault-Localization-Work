@@ -55,24 +55,25 @@ def getFiles():
 
     for file in readfiles:
         
-        # Read binary data and convert it into a csv format
-        data = file.data
-        csv = str(data)[2:-1]
-        csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
-        csv = csv.replace("\\xef\\xbb\\xbf", "")   #Clean some utf-8 escape characters
-        
-        print(csv, file=open(f'{filesPath}{file.filename}', 'w'))
-        # if file.filename == "jlm.csv":
-        #     data = file.data
-        #     csv = str(data)[2:-1]
-        #     print(csv[0:5000])
+        if file.filename.endswith(".csv"):
+            # Read binary data and convert it into a csv format
+            data = file.data
+            csv = str(data)[2:-1]
+            csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+            csv = csv.replace("\\xef\\xbb\\xbf", "")   #Clean some utf-8 escape characters
+            
+            print(csv, file=open(f'{filesPath}{file.filename}', 'w'))
+            # if file.filename == "jlm.csv":
+            #     data = file.data
+            #     csv = str(data)[2:-1]
+            #     print(csv[0:5000])
 
-        #String to dataframe format
-        # csvData = csv.split('\n')
-        # for i in range(0,len(csvData)):
-        #     csvData[i] = csvData[i].split(",")
-        # headers = csvData[0]
-        # csvData = csvData[1:-1]
+            #String to dataframe format
+            # csvData = csv.split('\n')
+            # for i in range(0,len(csvData)):
+            #     csvData[i] = csvData[i].split(",")
+            # headers = csvData[0]
+            # csvData = csvData[1:-1]
 
 
 def scale_standard(df):
