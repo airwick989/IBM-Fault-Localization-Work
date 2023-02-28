@@ -3,8 +3,9 @@ from flask_cors import CORS;
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from time import sleep
-from json import dumps
-from kafka import KafkaProducer
+from json import dumps, loads
+from kafka import KafkaProducer, KafkaConsumer
+from threading import Thread
 
 app = Flask(__name__)
 CORS(app)
@@ -24,14 +25,42 @@ class File(fileDB.Model):
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
 
-"""---- KAFKA PRODUCER ------------------------------------------------------------------------------------------------------------------"""
+"""---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
 producer = KafkaProducer(
     bootstrap_servers = ['localhost:9092'],
     value_serializer = lambda x:dumps(x).encode('utf-8')
 )
 
-"""---- KAFKA PRODUCER ------------------------------------------------------------------------------------------------------------------"""
+def initiate_event(producer, topic):
+    message = {'signal': "start"}
+    producer.send(topic, value=message)
+
+#---
+
+def deserialize(message):
+    try:
+        return loads(message.decode('utf-8'))
+    except Exception:
+        return "Error: Message is not JSON Deserializable"
+
+consumerClassifier = KafkaConsumer(
+    'classifierBackToCoordinator',
+    bootstrap_servers = ['localhost:9092'],
+    auto_offset_reset = 'latest',
+    enable_auto_commit = True,
+    group_id = None,
+    value_deserializer = deserialize
+)
+
+def listen(consumer, producer, producerTopic):
+    for message in consumer:
+        data = message.value
+        if 'signal' in data:
+            if data['signal'] == 'start':
+                initiate_event(producer, producerTopic)
+
+"""---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
 
 @app.route("/upload", methods=['GET', 'POST'])
@@ -81,8 +110,7 @@ def upload():
                 #Save locally (for testing purposes)
                 #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
-            message = {'signal': "start"}
-            producer.send('coordinatorToClassifier', value=message)
+            initiate_event(producer, 'coordinatorToClassifier')
 
             return "ok"
         else:
@@ -91,4 +119,6 @@ def upload():
         return Exception
 
 if __name__ == "__main__":
+    classifierListener = Thread(target= listen, args=[consumerClassifier, producer, 'coordinatorToLocalizer'])
+    classifierListener.start()
     app.run(debug=True)

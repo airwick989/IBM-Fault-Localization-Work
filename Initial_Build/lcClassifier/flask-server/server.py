@@ -15,8 +15,8 @@ from sklearn.model_selection import train_test_split
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
-from json import loads
-from kafka import KafkaConsumer
+from json import loads, dumps
+from kafka import KafkaConsumer, KafkaProducer
 import pickle
 
 app = Flask(__name__)
@@ -134,11 +134,14 @@ def classify(pca_DF_train):
     }
     print(f"Your Java program is experiencing {cluster_mappings[pca_DF_train['Cluster'].iloc[0]]}.")
 
+    message = {'signal': "start"}
+    producer.send('classifierBackToCoordinator', value=message)
+
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
 
 
-"""---- KAFKA CONSUMER ------------------------------------------------------------------------------------------------------------------"""
+"""---- KAFKA CONSUMER / PRODUCER ------------------------------------------------------------------------------------------------------------------"""
 
 def deserialize(message):
     try:
@@ -155,7 +158,14 @@ consumer = KafkaConsumer(
     value_deserializer = deserialize
 )
 
-"""---- KAFKA CONSUMER ------------------------------------------------------------------------------------------------------------------"""
+#---
+
+producer = KafkaProducer(
+    bootstrap_servers = ['localhost:9092'],
+    value_serializer = lambda x:dumps(x).encode('utf-8')
+)
+
+"""---- KAFKA CONSUMER / PRODUCER ------------------------------------------------------------------------------------------------------------------"""
 
 
 for message in consumer:
@@ -164,6 +174,7 @@ for message in consumer:
         if data['signal'] == 'start':
             getFiles()
             processData()
+            
 
 
 
