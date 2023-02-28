@@ -44,7 +44,7 @@ def upload():
         flag = True
         for f in files:
             filename = secure_filename(f.filename)
-            if filename not in accepted_filenames:
+            if filename not in accepted_filenames and not filename.endswith(".class"):
                 flag = False
                 break
             data = f.read()
