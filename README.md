@@ -47,19 +47,26 @@
 ### Tools & Technologies Used
 - React (JS)
   - Currently runs on port 3000 of the localhost (http://localhost:3000)
-  - Acts as the front-end of the coordinator module.
+  - Acts as the frontend of the coordinator module.
 - Flask (Python)
   - Currently runs on port 5000 of the localhost (http://localhost:5000)
   - Is the backend of the coordinator module.
-### Front-end Functionality
+### Frontend Details
 - Main landing page is in [Home.js](./Initial_Build/Coordinator/client/src/Home.js).
 - 'Home.js' primarily utilizes and displays the [FileUploader component](./Initial_Build/Coordinator/client/src/components/FileUploader/index.js).
 - It is responsible for displaying information, receiving user input, preliminary error-checking, and notifying the user of certain events.
-- As it currently stands, the front-end is set up such that it **requires** the 3 CSV files along with the Java program. This is because the performance benchmarking is currently an area of investigation. 
-- After ensuring the uploaded files meet some specified criteria, it uploads the files to the coordinator's backend using an HTTP POST method.
+- As it currently stands, the frontend is set up such that it **requires** the 3 CSV files along with the Java program. This is because the performance benchmarking is currently an area of investigation. 
+- After ensuring the uploaded files meet some specified criteria, it uploads the files to the correct endpoint in coordinator's backend (http://localhost:5000/upload) using an HTTP POST method.
 - It has error messages which may be returned to the user if the backend returns some error type.
-### Backend Functionality
-- Hello there
+### Backend Details
+- The endpoint http://localhost:5000/upload is responsible for handling submitted files.
+- Performs a secondary check of the files to ensure they abide by the specified criteria.
+- If all file criteria is not satisifed, a specific error message is returned back to and handled by the coordinator's frontend.
+- If all file criteria is satisfied, the files are saved in the system's local database as binary objects and overwritten if they already exist. After saving the files to the database, the coordinator backend sends a signal to the lock contention classifier module to initiate classification.
+- The coordinator backend makes communications along the following pub/sub topics (thus far):
+  - coordinatorToClassifier (Initiate classifier)
+  - classifierBackToCoordinator (listen for classifier completed signal on a separate thread **(a)**)
+  - coordinatorToLocalizer (Initiates localization on a separate thread **(a)**)
 
 ## Performance BenchMarking
 ### This portion of the system is currently a work-in-progress
