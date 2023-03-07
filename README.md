@@ -69,7 +69,7 @@
   - coordinatorToLocalizer (Initiates localization on a separate thread **\[thread a\]**)
 
 ## Performance BenchMarking
-###  <span style="color:orange">some *blue* text</span>
+###  <font color='red'>test blue color font</font>
 
 ## Common Data Store
 ### Tools & Technologies Used
