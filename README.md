@@ -29,8 +29,8 @@
 #### lcClassifier
 - Uses all the performance metrics collected from the Java program and runs it against a pre-trained machine learning classifier.
 - Classification returns 1 of 3 possible lock contention types:
-  - Type 0: H
-  - Type 1: H
-  - Type 2: H
+  - Type 0: Minimal or no lock contention exhibited.
+  - Type 1: A thread(s) is holding the lock to a critical section for a prolonged time.
+  - Type 2: High frequency of access requests from threads to acquire a particular lock.
 
 ## Database Configuration
