@@ -92,6 +92,7 @@
 	- data (BLOB)
   		- The data of an uploaded file is stored in the database as a binary object.
 - Example Database State:
+
 ![Example Database State](./md_images/sample_db.png "Example Database State")
 
 ## Topic-based Pub/Sub Broker
