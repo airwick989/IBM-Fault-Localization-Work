@@ -20,7 +20,6 @@
 - Database stored locally in the system.
 - Stores files to be shared across multiple modules.
 - Stores files as binary objects to be encoded and decoded.
-- Details of the 'Common Data Store' found on [Database Configuration](##database-configuration) section.
 #### Topic-based Pub/Sub Broker
 - Used to have system exhibit an event-driven behaviour.
 - Responsible for calling on module functionality when initiated by the Coordinator.
