@@ -78,9 +78,17 @@
   - Is stored locally in the system.
   - Accessed by all Python-based modules using SQLAlchemy.
 ### Database Model (Columns)
-- filename (String\[50\], primary key)
+- Model Structure:
+  ```
+  CREATE TABLE file (
+	filename VARCHAR(50) NOT NULL, 
+	data BLOB, 
+	PRIMARY KEY (filename)
+  )
+  ```
+- filename (VARCHAR\[50\], NOT NULL, primary key)
   - The name of an uploaded file is stored in this column as a string. It is the primary key.
-- data (LargeBinary)
+- data (BLOB)
   - The data of an uploaded file is stored in the database as a binary object.
 
 ## Topic-based Pub/Sub Broker
