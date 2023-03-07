@@ -72,6 +72,12 @@
 ### This portion of the system is currently a work-in-progress
 
 ## Common Data Store
+### Tools & Technologies Used
+- SQLite (SQL)
+  - The [database](./Initial_Build/files.db) ('.db' file) is stored directly in the Initial_Build directory.
+  - Is stored locally in the system.
+  - Accessed by all Python-based modules using SQLAlchemy.
+### Database Model
 
 ## Topic-based Pub/Sub Broker
 
