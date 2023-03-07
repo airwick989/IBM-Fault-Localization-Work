@@ -77,7 +77,11 @@
   - The [database](./Initial_Build/files.db) ('.db' file) is stored directly in the Initial_Build directory.
   - Is stored locally in the system.
   - Accessed by all Python-based modules using SQLAlchemy.
-### Database Model
+### Database Model (Columns)
+- filename (String\[50\], primary key)
+  - The name of an uploaded file is stored in this column as a string. It is the primary key.
+- data (LargeBinary)
+  - The data of an uploaded file is stored in the database as a binary object.
 
 ## Topic-based Pub/Sub Broker
 
