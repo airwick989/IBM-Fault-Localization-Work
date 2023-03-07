@@ -3,7 +3,7 @@
 ## Current System Architecture
 ![Current System Architecture](./md_images/curr_sys_arch.png "Current System Architecture")
 
-### Modules and Responsibilities
+### Brief Summary of Modules and their Responsibilities
 #### Coordinator
 - Acts as primary interface for the user to the system.
 - Where the user enters the necessary inputs to the system.
