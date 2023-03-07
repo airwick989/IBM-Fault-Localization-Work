@@ -5,5 +5,6 @@
 ### Modules and Responsibilities
 - Coordinator
   Hello there
+  
 - Performance Benchmarking
   Hello there
