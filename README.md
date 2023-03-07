@@ -65,8 +65,8 @@
 - If all file criteria is satisfied, the files are saved in the system's local database as binary objects and overwritten if they already exist. After saving the files to the database, the coordinator backend sends a signal to the lock contention classifier module to initiate classification.
 - The coordinator backend makes communications along the following pub/sub topics (thus far):
   - coordinatorToClassifier (Initiate classifier)
-  - classifierBackToCoordinator (listen for classifier completed signal on a separate thread **(thread a)**)
-  - coordinatorToLocalizer (Initiates localization on a separate thread **(thread a)**)
+  - classifierBackToCoordinator (listen for classifier completed signal on a separate thread **\[thread a\]**)
+  - coordinatorToLocalizer (Initiates localization on a separate thread **\[thread a\]**)
 
 ## Performance BenchMarking
 ### This portion of the system is currently a work-in-progress
