@@ -44,6 +44,17 @@
 - Currently a work-in-progress. 
 
 ## Coordinator Module
+### Tools & Technologies Used
+- React (JS)
+  - Currently runs on port 3000 of the localhost (http://localhost:3000)
+  - Acts as the front-end of the coordinator module.
+  - Is responsible for displaying information, receiving user input, preliminary error-checking, and notifying the user of certain events.
+- Flask (Python)
+  - Currently runs on port 5000 of the localhost (http://localhost:5000)
+  - Is the backend of the coordinator module.
+### Front-end Functionality
+- Main landing page is in 'Home.js'.
+- 'Home.js' uses the component in Initial_Build/Coordinator/client/src/components/FileUploader/index.js
 
 ## Performance BenchMarking
 ### This portion of the system is currently a work-in-progress
