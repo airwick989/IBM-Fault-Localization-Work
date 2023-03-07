@@ -27,10 +27,21 @@
 - Sends completion signals back to the Coordinator upon a module completing its designated functionality.
 - Pub/sub model is in place to ensure each module is more discrete and separated from the rest of the system as development is occurring within the functionalities of various modules at any given moment (high cohesion, low coupling).
 #### lcClassifier
+- Lock contention classifier.
 - Uses all the performance metrics collected from the Java program and runs it against a pre-trained machine learning classifier.
 - Classification returns 1 of 3 possible lock contention types:
   - Type 0: Minimal or no lock contention exhibited.
   - Type 1: A thread(s) is holding the lock to a critical section for a prolonged time.
   - Type 2: High frequency of access requests from threads to acquire a particular lock.
+#### crLocator
+- Contented region locator.
+- Executes the Java program and simultaneously performs call stack tracing.
+- Produces and automatically parses a log file containing the resultant call stack traces.
+- Localize the fault by finding the method causing contention.
+#### apIdentifier
+- Anti-pattern identifier.
+- Detects anti-patterns (common bad practices) in the Java code which cause contention.
+- Returns recommendations to resolve the issues identified.
+- Currently a work-in-progress. 
 
 ## Database Configuration
