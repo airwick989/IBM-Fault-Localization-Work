@@ -53,7 +53,7 @@
   - Is the backend of the coordinator module.
 ### Front-end Functionality
 - Main landing page is in [Home.js](./Initial_Build/Coordinator/client/src/Home.js).
-- 'Home.js' uses the component in [Initial_Build/Coordinator/client/src/components/FileUploader/index.js](./Initial_Build/Coordinator/client/src/components/FileUploader/index.js)
+- 'Home.js' primarily utilizes and displays the [FileUploader component](./Initial_Build/Coordinator/client/src/components/FileUploader/index.js).
 - It is responsible for displaying information, receiving user input, preliminary error-checking, and notifying the user of certain events.
 - As it currently stands, the front-end is set up such that it **requires** the 3 CSV files along with the Java program. This is because the performance benchmarking is currently an area of investigation. 
 - After ensuring the uploaded files meet some specified criteria, it uploads the files to the coordinator's backend using an HTTP POST method.
