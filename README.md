@@ -44,4 +44,18 @@
 - Returns recommendations to resolve the issues identified.
 - Currently a work-in-progress. 
 
-## Database Configuration
+## Coordinator Module
+
+## Performance BenchMarking
+### This portion of the system is currently a work-in-progress
+
+## Common Data Store
+
+## Topic-based Pub/Sub Broker
+
+## Lock Contention Classifier
+
+## Contented Region Locator
+
+## Anti-pattern Identifier
+### This portion of the system is currently a work-in-progress
