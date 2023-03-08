@@ -115,8 +115,20 @@
 	```
 	- Create topic (separate terminal - with zookeeper and kafka servers running)
 	```
-	\bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic [enter topic name here]
+	.\bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic [enter topic name]
 	```
+	- Use a console producer (separate terminal - with zookeeper and kafka servers running)
+	```
+	.\bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic [enter topic name]
+	```
+	- Use a console consumer (separate terminal - with zookeeper and kafka servers running)
+	```
+	.\bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic [enter topic name]
+	```
+- Topics Used (thus far):
+	- coordinatorToClassifier
+	- classifierBackToCoordinator
+	- coordinatorToLocalizer
 
 ## Lock Contention Classifier
 
