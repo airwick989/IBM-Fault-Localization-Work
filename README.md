@@ -141,6 +141,10 @@
   - coordinatorToClassifier (consumer, listens for signal from coordinator to initiate classification).
   - classifierBackToCoordinator (producer, sends a classification complete signal back to the coordinator).
 - Retrieves uploaded metrics files from the [Uploads directory](./Initial_Build/lcClassifier/flask-server/Files/Uploads) in the lcClassifier module.
+- All pre-trained machine learning models are found in the [Models directory](./Initial_Build/lcClassifier/flask-server/Files/Models) in the lcClassifier module.
+### Classifier Functionality
+- Perform preprocessing of the performance metrics (some merging and calculations on the datasets) to generate a combined dataset.
+	
 
 ## Contented Region Locator
 
