@@ -160,6 +160,6 @@
 		- Cluster 2 = Minimal or No Contention 
 
 ## Contented Region Locator
-
+### This portion of the system is currently a work-in-progress
 ## Anti-pattern Identifier
 ### This portion of the system is currently a work-in-progress
