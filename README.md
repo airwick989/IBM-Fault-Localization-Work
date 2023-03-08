@@ -149,7 +149,8 @@
 - Apply principle component analysis using a pre-trained pca component to reduce the dimensionality of the data for clustering.
 	![Example Principle Component Values](./md_images/ex_pc_vals.png)
 - Use a pre-trained clustering algorithm to assign a cluster (lock contention class) to the principle components.
-	- Clusters produced from training data (x - principle component 1, y - principle component 2):
+	- Clusters produced from training data (x-axis = principle component 1, y-axis = principle component 2):
+	![Clusters produced from training data](./md_images/clusters.png)
 
 ## Contented Region Locator
 
