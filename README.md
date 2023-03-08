@@ -96,6 +96,18 @@
 ![Example Database State](./md_images/sample_db.png "Example Database State")
 
 ## Topic-based Pub/Sub Broker
+### Tools & Technologies Used
+- Apache Kafka
+  - Currently the Kafka broker is stored locally on a development machine, but the modules communicating with the broker can be set up to utilize another broker, given it has the correct topics.
+  - The plan in the future is to have a cloud-based broker which hosts kafka such that it is available not only on a system's localhost.
+  - Accessed by all Python-based modules using kafka-python.
+### Broker Details (Currently locally stored on a **Windows** machine in the development stage)
+- Installation Guide: https://www.youtube.com/watch?v=EUzH9khPYgs&t=1s
+- Useful Commands (Command Prompt - In the Kafka directory \[ex. C:\kafka\]):
+	- Start zookeeper server (separate terminal):
+	```
+	.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+	```
 
 ## Lock Contention Classifier
 
