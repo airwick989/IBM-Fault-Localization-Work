@@ -144,7 +144,7 @@
 - All pre-trained machine learning models are found in the [Models directory](./Initial_Build/lcClassifier/flask-server/Files/Models) in the lcClassifier module.
 ### Classifier Functionality
 - Perform preprocessing of the performance metrics (some merging and calculations on the datasets) to generate a combined data entry.
-	![Example Combined Entry](./md_images/ex_combined_entry.png)
+	![Example Combined Entry](./md_images/ex_comb_entry.png)
 
 ## Contented Region Locator
 
