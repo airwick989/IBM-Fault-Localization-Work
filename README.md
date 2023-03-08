@@ -64,9 +64,9 @@
 - If all file criteria is not satisifed, a specific error message is returned back to and handled by the coordinator's frontend.
 - If all file criteria is satisfied, the files are saved in the system's local database as binary objects and overwritten if they already exist. After saving the files to the database, the coordinator backend sends a signal to the lock contention classifier module to initiate classification.
 - The coordinator backend makes communications along the following pub/sub topics (thus far):
-  - coordinatorToClassifier (Initiate classifier)
-  - classifierBackToCoordinator (listen for classifier completed signal on a separate thread **\[thread a\]**)
-  - coordinatorToLocalizer (Initiates localization on a separate thread **\[thread a\]**)
+  - coordinatorToClassifier (producer, initiates classifier)
+  - classifierBackToCoordinator (consumer, listens for classifier completed signal on a separate thread **\[thread a\]**)
+  - coordinatorToLocalizer (producer, initiates localization on a separate thread **\[thread a\]**)
 
 ## Performance BenchMarking
 ### This portion of the system is currently a work-in-progress
@@ -132,6 +132,15 @@
 - <ins>Note:</ins> If the kafka server exhibits an error, clear the kafka-logs directory.
 
 ## Lock Contention Classifier
+### Tools & Technologies Used
+- Flask (Python)
+  - Does not run on any port.
+  - Busy loops, listens for a signal to initiate.
+### Classifier Details
+- The classifier makes communications along the following pub/sub topics:
+  - coordinatorToClassifier (consumer, listens for signal from coordinator to initiate classification).
+  - classifierBackToCoordinator (producer, sends a classification complete signal back to the coordinator).
+- Retrieves uploaded metrics files from the [Uploads directory](./Initial_Build/lcClassifier/flask-server/Files/Uploads) in the lcClassifier module.
 
 ## Contented Region Locator
 
