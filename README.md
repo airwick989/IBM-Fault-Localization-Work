@@ -147,6 +147,7 @@
 	![Example Combined Entry](./md_images/ex_comb_entry.png)
 - Scale the values according to a pre-trained standard scaler.
 - Apply principle component analysis using a pre-trained pca component to reduce the dimensionality of the data for clustering.
+	![Example Principle Component Values](./md_images/ex_pc_vals.png)
 - Use a pre-trained clustering algorithm to assign a cluster (lock contention class) to the principle components.
 	- Clusters produced from training data:
 
