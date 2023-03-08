@@ -115,9 +115,9 @@ def processData():
             cols.append(col)
     DF_train[cols] = scale_standard(DF_train[cols])
     print(DF_train)
-    pca_DF_train = pd.DataFrame(data = apply_pca(DF_train), columns = ['pc1', 'pc2'])
+    #pca_DF_train = pd.DataFrame(data = apply_pca(DF_train), columns = ['pc1', 'pc2'])
 
-    classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
+    #classifyScatterPlot(pca_DF_train, DF_trainBeforeDrop)
     #classify(pca_DF_train, DF_trainBeforeDrop)
 
 
