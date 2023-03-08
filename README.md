@@ -129,6 +129,7 @@
 	- coordinatorToClassifier
 	- classifierBackToCoordinator
 	- coordinatorToLocalizer
+- <ins>Note:</ins> If the kafka server exhibits an error, clear the kafka-logs directory.
 
 ## Lock Contention Classifier
 
