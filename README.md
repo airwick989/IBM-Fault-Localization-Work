@@ -115,7 +115,7 @@
 	```
 	- Create topic (separate terminal - with zookeeper and kafka servers running)
 	```
-	\bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic \[enter topic name here\]
+	\bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic [enter topic name here]
 	```
 
 ## Lock Contention Classifier
