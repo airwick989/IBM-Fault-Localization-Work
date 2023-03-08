@@ -103,10 +103,19 @@
   - Accessed by all Python-based modules using kafka-python.
 ### Broker Details (Currently locally stored on a <ins>Windows</ins> machine in the development stage)
 - Installation Guide: https://www.youtube.com/watch?v=EUzH9khPYgs&t=1s
+- Runs on port 9092 of the localhost by default (http://localhost:9092)
 - Useful Commands (Command Prompt - In the Kafka directory \[ex. C:\kafka\]):
 	- Start zookeeper server (separate terminal):
 	```
 	.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+	```
+	- Start kafka server (separate terminal):
+	```
+	.\bin\windows\kafka-server-start.bat .\config\server.properties
+	```
+	- Create topic (separate terminal - with zookeeper and kafka servers running)
+	```
+	\bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic \[enter topic name here\]
 	```
 
 ## Lock Contention Classifier
