@@ -147,6 +147,7 @@
 - Perform preprocessing of the performance metrics (some merging and calculations on the datasets) to generate a combined data entry.
 	![Example Combined Entry](./md_images/ex_comb_entry.png)
 - Scale the values according to a pre-trained standard scaler.
+	![Example Scaled Entry](./md_images/ex_scaled_entry.png)
 - Apply principle component analysis using a pre-trained pca component to reduce the dimensionality of the data for clustering.
 
 	![Example Principle Component Values](./md_images/ex_pc_vals.png)
