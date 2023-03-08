@@ -145,6 +145,10 @@
 ### Classifier Functionality
 - Perform preprocessing of the performance metrics (some merging and calculations on the datasets) to generate a combined data entry.
 	![Example Combined Entry](./md_images/ex_comb_entry.png)
+- Scale the values according to a pre-trained standard scaler.
+- Apply principle component analysis using a pre-trained pca component to reduce the dimensionality of the data for clustering.
+- Use a pre-trained clustering algorithm to assign a cluster (lock contention class) to the principle components.
+	- Clusters produced from training data:
 
 ## Contented Region Locator
 
