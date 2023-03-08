@@ -143,6 +143,7 @@
 - Retrieves uploaded metrics files from the [Uploads directory](./Initial_Build/lcClassifier/flask-server/Files/Uploads) in the lcClassifier module.
 - All pre-trained machine learning models are found in the [Models directory](./Initial_Build/lcClassifier/flask-server/Files/Models) in the lcClassifier module.
 ### Classifier Functionality
+- Queries the performance metrics files from the SQLite database and performs some cleaning and reformatting before preprocessing.
 - Perform preprocessing of the performance metrics (some merging and calculations on the datasets) to generate a combined data entry.
 	![Example Combined Entry](./md_images/ex_comb_entry.png)
 - Scale the values according to a pre-trained standard scaler.
@@ -151,6 +152,10 @@
 - Use a pre-trained clustering algorithm to assign a cluster (lock contention class) to the principle components.
 	- Clusters produced from training data (x-axis = principle component 1, y-axis = principle component 2):
 	![Clusters produced from training data](./md_images/clusters.png)
+	- Cluster mappings:
+		- Cluster 0 = Type 2 Contention
+		- Cluster 1 = Type 1 Contention
+		- Cluster 2 = Minimal or No Contention 
 
 ## Contented Region Locator
 
