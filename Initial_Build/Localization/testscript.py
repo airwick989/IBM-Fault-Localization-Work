@@ -10,7 +10,7 @@ else:
         os.remove(f'./logs/{file}')
 
 
-filename = "Hot_1"
+filename = "./Files/Hot_1.jar"
 args = "4 100"
 
 start_time = "15"
