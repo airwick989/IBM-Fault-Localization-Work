@@ -134,7 +134,7 @@ def classify(pca_DF_train):
     }
     print(f"Your Java program is experiencing {cluster_mappings[pca_DF_train['Cluster'].iloc[0]]}.")
 
-    message = {'signal': "start"}
+    message = {'signal': "classifierDone"}
     producer.send('classifierBackToCoordinator', value=message)
 
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
@@ -171,7 +171,7 @@ producer = KafkaProducer(
 for message in consumer:
     data = message.value
     if 'signal' in data:
-        if data['signal'] == 'start':
+        if data['signal'] == 'startClassifier':
             getFiles()
             processData()
             

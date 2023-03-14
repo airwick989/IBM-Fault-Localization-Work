@@ -32,8 +32,8 @@ producer = KafkaProducer(
     value_serializer = lambda x:dumps(x).encode('utf-8')
 )
 
-def initiate_event(producer, topic):
-    message = {'signal': "start"}
+def initiate_event(producer, topic, messageData):
+    message = {'signal': messageData}
     producer.send(topic, value=message)
 
 #---
@@ -53,12 +53,12 @@ consumerClassifier = KafkaConsumer(
     value_deserializer = deserialize
 )
 
-def listen(consumer, producer, producerTopic):
+def listen(consumer, signalMessage, producer, producerTopic, messageData):
     for message in consumer:
         data = message.value
         if 'signal' in data:
-            if data['signal'] == 'start':
-                initiate_event(producer, producerTopic)
+            if data['signal'] == signalMessage:
+                initiate_event(producer, producerTopic, messageData)
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
@@ -117,7 +117,7 @@ def upload():
                 #Save locally (for testing purposes)
                 #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
-            initiate_event(producer, 'coordinatorToClassifier')
+            initiate_event(producer, 'coordinatorToClassifier', "startClassifier")
 
             return "ok"
         else:
@@ -126,6 +126,6 @@ def upload():
         return Exception
 
 if __name__ == "__main__":
-    classifierListener = Thread(target= listen, args=[consumerClassifier, producer, 'coordinatorToLocalizer'])
+    classifierListener = Thread(target= listen, args=[consumerClassifier, "classifierDone", producer, 'coordinatorToLocalizer', "startLocalizer"])
     classifierListener.start()
     app.run(debug=True)
