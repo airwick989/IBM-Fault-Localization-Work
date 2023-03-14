@@ -6,9 +6,10 @@ export const FileUploader = ({}) => {
 
     //the reason the initial state is '[]' instead of 'null' is because its an array of files, not just one
     const [files, setFiles] = useState([]);
+    const [args, setArgs] = useState("");
 
     //e is the parameter, in this case, e is an event
-    const onInputChange = (e) => {
+    const onFileInputChange = (e) => {
         setFiles(e.target.files);
     }
 
@@ -25,6 +26,8 @@ export const FileUploader = ({}) => {
                 data.append('file', files[i]);
                 //console.log(files[i])
             }
+
+            data.append('args', args)
 
             axios.post('http://localhost:5000/upload', data)
                 .then( (e) => {
@@ -118,8 +121,18 @@ export const FileUploader = ({}) => {
                     class="file-input file-input-bordered file-input-accent w-full max-w-xs" 
                     required
                     multiple
-                    onChange={onInputChange}
+                    onChange={onFileInputChange}
                     accept=".csv, .jar"
+                />
+
+                <label class="label">
+                    <span class="label-text" style={{marginTop: 50}}>Insert Any Arguments to Pass to the Java Program Here<br/>(Separated by Spaces)</span>
+                </label>
+                <input type="text" 
+                    class="input input-bordered input-accent w-full max-w-xs" 
+                    value={args}
+                    placeholder="arg0 arg1 arg2"
+                    onChange={(e)=>setArgs(e.target.value)}
                 />
                 
                 <button className='btn btn-primary' type='submit' style={{marginTop: 50}}>Send to Classifier</button>

@@ -134,6 +134,11 @@ def classify(pca_DF_train):
     }
     print(f"Your Java program is experiencing {cluster_mappings[pca_DF_train['Cluster'].iloc[0]]}.")
 
+    results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]].encode()
+    resultsFile = File(filename="results.txt", data=results)
+    fileDB.session.add(resultsFile)
+    fileDB.session.commit()
+
     message = {'signal': "classifierDone"}
     producer.send('classifierBackToCoordinator', value=message)
 

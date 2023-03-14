@@ -32,8 +32,7 @@ producer = KafkaProducer(
     value_serializer = lambda x:dumps(x).encode('utf-8')
 )
 
-def initiate_event(producer, topic, messageData):
-    message = {'signal': messageData}
+def initiate_event(producer, topic, message):
     producer.send(topic, value=message)
 
 #---
@@ -53,14 +52,16 @@ consumerClassifier = KafkaConsumer(
     value_deserializer = deserialize
 )
 
-def listen(consumer, signalMessage, producer, producerTopic, messageData):
+def listen(consumer, signalMessage, producer, producerTopic, producerMessage):
     for message in consumer:
         data = message.value
+
         if 'signal' in data:
             if data['signal'] == signalMessage:
-                initiate_event(producer, producerTopic, messageData)
+                initiate_event(producer, producerTopic, producerMessage)
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
+
 
 
 @app.route("/upload", methods=['GET', 'POST'])
@@ -71,6 +72,7 @@ def upload():
     try:
         files = request.files.getlist("file")
         flag = True
+        javaProgramArgs = request.form.get('args')
         errorType = ""
         csvCount = 0
         jarCount = 0
@@ -98,6 +100,12 @@ def upload():
             fileDB.session.query(File).delete()
             fileDB.session.commit()
 
+            if javaProgramArgs != "":
+                javaProgramArgs = javaProgramArgs.encode()
+                argsFile = File(filename="javaProgramArgs.txt", data=javaProgramArgs)
+                fileDB.session.add(argsFile)
+                fileDB.session.commit()
+
             for f in files:
                 filename = secure_filename(f.filename)
 
@@ -117,7 +125,7 @@ def upload():
                 #Save locally (for testing purposes)
                 #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
-            initiate_event(producer, 'coordinatorToClassifier', "startClassifier")
+            initiate_event(producer, 'coordinatorToClassifier', {'signal': "startClassifier"})
 
             return "ok"
         else:
@@ -126,6 +134,6 @@ def upload():
         return Exception
 
 if __name__ == "__main__":
-    classifierListener = Thread(target= listen, args=[consumerClassifier, "classifierDone", producer, 'coordinatorToLocalizer', "startLocalizer"])
+    classifierListener = Thread(target= listen, args=[consumerClassifier, "classifierDone", producer, 'coordinatorToLocalizer', {'signal': "startLocalizer"}])
     classifierListener.start()
     app.run(debug=True)
