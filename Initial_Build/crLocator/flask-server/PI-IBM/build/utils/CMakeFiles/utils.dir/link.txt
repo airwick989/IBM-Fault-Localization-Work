@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../Dpiperf/lib/libutils.a  CMakeFiles/utils.dir/common.o CMakeFiles/utils.dir/pi_thread.o
+/usr/bin/ranlib ../Dpiperf/lib/libutils.a

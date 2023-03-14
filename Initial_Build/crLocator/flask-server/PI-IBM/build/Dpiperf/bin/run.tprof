@@ -1,0 +1,795 @@
+#!/bin/bash
+
+#----------------------------------------------------------------------------
+#
+#   IBM Performance Inspector
+#   Copyright (c) International Business Machines Corp., 2003 - 2009
+#
+#   This script is free software; you can redistribute it and/or
+#   modify it under the terms of the GNU Lesser General Public
+#   License as published by the Free Software Foundation; either
+#   version 2.1 of the License, or (at your option) any later version.
+#
+#   This library is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#   Lesser General Public License for more details.
+#
+#   You should have received a copy of the GNU Lesser General Public License
+#   along with this library; if not, write to the Free Software Foundation,
+#   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#----------------------------------------------------------------------------
+
+
+########## USER MODIFIABLE VARIABLES ########## 
+
+
+
+
+
+
+# for verbose output set VERBOSE=1
+# for quiet output set VERBOSE=0
+VERBOSE=1
+
+########## END OF USER MODIFIABLE VARIABLES ########## 
+
+# path variables
+PI_BIN_DIR=$(dirname "$0")
+PI_LIB_DIR=$PI_LIB_DIR/../lib
+LD_LIBRARY_PATH=$PI_LIB_DIR:$LD_LIBRARY_PATH
+PATH=$PI_BIN_DIR:$PATH
+
+# vout
+# ----
+# Verbose output - outputs messages when VERBOSE=1,
+# else it is silent.
+#
+vout()
+{
+   if [ -n "${VERBOSE}" ] && [ "${VERBOSE}" = 1 ]; then
+	echo "$@"
+   fi
+}
+
+# usage_msg
+# ---------
+# Prints a short usage message
+# 
+usage_msg()
+{
+   echo -e "run.tprof: Coordinates the TPROF procedure"
+   echo
+   echo -e "Syntax:"
+   echo -e "-------"
+   echo -e "run.tprof <-a | -t | -p> <-b #> <-B #> <-m [time | event]> <-y [norm | cont | wrap]> <-s #> <-r #> <-M>"
+   echo
+   echo -e "\t Options valid with '-m time':"
+   echo -e "\t   <-c ticks_per_second>"
+   echo 
+   echo -e "\t Options valid with '-m event':"
+   echo -e "\t    <-e event_name> <-c #evts>"
+   echo
+   echo -e "\t To get more extensive help:"
+   echo -e "\t run.tprof -h verbose"
+}
+
+# long_help
+# ---------
+# Prints a longer decription of run.tprof syntax
+#
+long_help()
+{
+  echo -e "Where:"
+  echo -e "------"
+
+  echo -e "\n -a\t Run entire TPROF procedure."
+  echo -e "\t * !!! THIS IS THE DEFAULT AND NEED NOT BE SPECIFIED !!!"
+  echo -e "\t * Performs the trace and post-processing steps.  "
+  echo -e "\t * Produces a raw trace file (swtrace.nrm2) "
+  echo -e "\t * and a TPROF report file (tprof.out)  "
+
+  echo -e "\n -t\t Run tracing only."
+  echo -e "\t * Performs only the tracing (ie. data collection) step"
+  echo -e "\t   of the TPROF procedure."
+  echo -e "\t * Produces a raw trace file (swtrace.nrm2)."
+  echo -e "\t * The trace will not be post-processed.   "
+  echo -e "\t * You can post-process the trace at later time by invoking" 
+  echo -e "\t   run.tprof with the -p option."
+  echo -e "\t * This option is mutually exclusive with -a and -p."
+
+  echo -e "\n -p\t Run post-processing only."
+  echo -e "\t * Performs only the post-processing step of the TPROF procedure."
+  echo -e "\t * It requires a trace file (swtrace.nrm2) and assumes that"
+  echo -e "\t   you have already done the tracing step, either by itself,"
+  echo -e "\t   via a previous -t, or in a previous complete run, via -a."
+  echo -e "\t * Produces a TPROF report file (tprof.out)"
+  echo -e "\t * This option is mutually exclusive with -a and -t.  "
+
+  echo -e "\n -b ##\t Set the trace buffer size to ## MB **PER PROCESSOR**."
+  echo -e "\t * You can also set this value using"
+  echo -e "\t   the IBMPERF_TPROF_BUFFER_SIZE environment variable."
+
+  echo -e "\n -B ##\t Set the mte trace buffer size to ## MB."
+  echo -e "\t * You can also set this value using"
+  echo -e "\t   the IBMPERF_TPROF_MTE_BUFFER_SIZE environment variable."
+
+  echo -e "\n -m mode\t Set the TPROF mode."
+  echo -e "\t * Valid modes are:"
+  echo -e "\t\t - TIME"
+  echo -e "\t\t  This causes TPROF to run in the TIME-based mode."
+  echo -e "\t\t  In this mode sampling is based on time and the time"
+  echo -e "\t\t  between samples is constant. The sampling rate"
+  echo -e "\t\t  can be set via the -c option."
+  echo -e "\t\t - EVENT"
+  echo -e "\t\t  This causes TPROF to run in EVENT-based mode."
+  echo -e "\t\t  In this mode sampling is based on event counts and"
+  echo -e "\t\t  the time between samples is not constant. The sampling"
+  echo -e "\t\t  event count can be set via the -c option."
+  echo -e "\t * Default mode is TIME."
+  echo -e "\t * You can also set this value using"
+  echo -e "\t   the IBMPERF_TPROF_MODE environment variable."
+
+  echo -e "\n -e event\t Set the event name when in EVENT-based mode."
+  echo -e "\t * 'event' is the name of an event. Valid event names can be"
+  echo -e "\t   obtained by entering the 'swtrace event list' command."
+  echo -e "\t   - Event names are not case sensitive. INSTR is the same as"  
+  echo -e "\t   Instr or iNStr or instr or ..."
+  echo -e "\t   - An event count can be set using the -c option."
+  echo -e "\t * Default event name is INSTR.  "
+  echo -e "\t * You can also set this value using"
+  echo -e "\t   the IBMPERF_TPROF_EVENT environment variable."
+  
+  echo -e "\n -c ##evts\t Set tick rate (TIME-based) or event count (EVENT-based)."
+  echo -e "\t * If mode is TIME then ##evts represents the desired TPROF tick"
+  echo -e "\t   rate, in ticks/second."
+  echo -e "\t   - Default tick rate is 100 ticks/second."
+  echo -e "\t   - You can also set this value using"
+  echo -e "\t     the IBMPERF_TPROF_TICK_RATE environment variable."
+  echo -e "\t * If mode is EVENT then ##evts represents represent the number of events"
+  echo -e "\t   after which a TPROF tick will occur."
+  echo -e "\t   - Default event count is 10,000,000 events."
+  echo -e "\t   - You can also set this value using"
+  echo -e "\t     the IBMPERF_TPROF_EVENTCNT environment variable."
+  echo -e "\t * Setting the rate too high may affect overall system performance."
+  echo -e "\t * Setting the rate too low may not collect enough samples."
+  echo -e "\t * Set a rate that is neither too high nor too low :-) "
+
+  echo -e "\n -y trace_mode\t Set the TPROF tracing mode."
+  echo -e "\t * Valid modes are:"
+  echo -e "\t\t - NORM"
+  echo -e "\t\t  Normal mode: when a trace buffer is full, tracing stops."
+  echo -e "\t\t  There is one buffer per processor for both MTE and non-MTE data,"
+  echo -e "\t\t  plus an MTE buffer for final MTE data (after the tracing stops)."
+  echo -e "\t\t - CONT"
+  echo -e "\t\t  Continuous mode: trace records are continuously written to a file."
+  echo -e "\t\t  There are two buffers per processor, one for MTE and another for non-MTE data."
+  echo -e "\t\t - WRAP"
+  echo -e "\t\t  Wraparound mode: when a non-MTE trace buffer is full,"
+  echo -e "\t\t  new records are written to it from the buffer start."
+  echo -e "\t\t  MTE data are continuously written to a file, as with the CONT mode."
+  echo -e "\t\t  There are two buffers per processor, one for mte and another for non-mte data."
+  echo -e "\t * Default mode is CONT if kernel version > 2.6.7."
+  echo -e "\t * You can also set this value using"
+  echo -e "\t   the IBMPERF_TPROF_TRACE_MODE environment variable."
+
+  echo -e "\n -s ##\t Automatically start tracing after approximately ## seconds."
+  echo -e "\t * You WILL NOT be prompted for when to start tracing. Instead,"
+  echo -e "\t   tracing will start automatically after a delay of approximately"
+  echo -e "\t   # seconds."
+  echo -e "\t * If you DO NOT specify the -r option, you will be prompted for"
+  echo -e "\t   when to stop tracing."
+  echo -e "\t * If you specify 0 (zero) or a non-numeric value, tracing is"
+  echo -e "\t   started immediately."
+  echo -e "\t * If you use this option your application should be started and"
+  echo -e "\t   warmed up by the time tracing is started."
+  echo -e "\t * Only applicable with -a or -t. Ignored otherwise."
+  echo -e "\t * Default is to prompt for when to start tracing."
+
+  echo -e "\n -r ##\t Run (trace) for approximately ## seconds."
+  echo -e "\t * You WILL NOT be prompted for when to stop tracing. Instead,"
+  echo -e "\t   tracing will stop automatically after a delay of approximately"
+  echo -e "\t   # seconds from the time tracing was started."
+  echo -e "\t * If you DO NOT specify the -s option, tracing is stopped"
+  echo -e "\t   approximately # seconds after you press ENTER to start the trace."
+  echo -e "\t * If you specify 0 (zero), or a non-numeric value, tracing is"
+  echo -e "\t   stopped immediately after being started."
+  echo -e "\t * If you use this option your application should complete the"
+  echo -e "\t   scenario you want to trace in the approximately the amount of"
+  echo -e "\t   time you specify with this option."
+  echo -e "\t * Only applicable with -a or -t. Ignored otherwise."
+  echo -e "\t * Default is to prompt for when to stop tracing."
+
+  echo -e "\n -M  \t Combine the tprof.out, tprof.micro, log-jita2n*, log-jtnm* and"
+  echo -e "\t post.show files into a single file - tprof_e.out."
+  echo -e "\t * Done if no errors are encountered generating the TPROF report."
+  echo -e "\t * You can also set this option using the IBMPERF_TPROF_GENERATE_MERGE_FILE"
+  echo -e "\t   environment variable. The merged file name can be specified using "
+  echo -e "\t   IBMPERF_TPROF_MERGE_FILE_NAME."
+
+  echo -e "Notes:"
+  echo -e "------\n"
+  echo -e " * Command options are case sensitive.\n"
+  echo -e " * Command options are parsed left to right,"
+  echo -e "   so the last option overrides previous of the same type"
+  echo -e "   (e.g., run.tprof -tp will execute only post-processing)"
+  echo -e " * The meaning of -c varies depending on the mode.\n"
+  echo -e "   It is assumed to be a rate (ticks/second) in TIME-based mode,"
+  echo -e "   or an event count in EVENT-based mode."
+  echo -e " * -e is ignored if the current mode is TIME.\n"
+  echo -e " * -s and -r are useful if you are automating the TPROF procedure"
+  echo -e "   and have an idea of how long it takes for the scenario to start up (-s option)"
+  echo -e "   and how long you want to TPROF for (-r option).\n"
+  echo -e " * Time delays specified with -s and -r are approximate. Specifying 5"
+  echo -e "   doesn't mean exactly 5 seconds. It will be about 5 seconds.\n"
+  echo -e " * Valid option combinations:"
+  echo -e "\t No options       Run entire procedure."
+  echo -e "\t -a               Same as no options."
+  echo -e "\t -t               Trace only. No post-processing."
+  echo -e "\t -p               Post-process only. No tracing."
+  echo
+  echo -e "\t No -s and no -r  Prompt to start and prompt stop tracing."
+  echo -e "\t -s #             Automatically start tracing in # seconds."
+  echo -e "\t                  Prompt to stop."
+  echo -e "\t -r #             Prompt to start tracing. Automatically stop tracing"
+  echo -e "\t                  approximately # seconds after tracing started."
+  echo -e "\t -s # -r #        Automatically start tracing in approximately # seconds."
+  echo -e "\t                  Automatically stop tracing approximately # seconds"
+  echo -e "\t                  after tracing started."
+  echo
+
+  echo -e " Customization:"
+  echo -e " --------------"
+  echo -e "  You do not have to modify this (run.tprof) command file."
+  echo -e "  Instead, you can modify the user command scripts which run.tprof executes."
+  echo
+  echo -e "   1) userxbegin.sh:"
+  echo -e "      This is the 'begin user exit' command file. If present it will be"
+  echo -e "      executed at the start of run.tprof."
+  echo -e "      * It is assumed to be reachable either via the PATH environment "
+  echo -e "        variable or in the current directory."
+  echo -e "      * It is invoked with a '. userxbegin.sh',"
+  echo -e "        so that you can set environment variables for run.tprof in it."
+  echo -e "        For example, 'export IBMPERF_TPROF_REPORT_FILENAME=my_tprof.out' "
+  echo -e "        or 'export IBMPERF_JPROF_LOG_FILES_PATH=mylogs'"
+  echo -e "      * It is not passed any arguments"
+  echo -e "      * In it you are free to do anything you want:"
+  echo -e "        - Clean up files"
+  echo -e "        - Do special set up for your scenario"
+  echo -e "        - Whatever else you want"
+  echo -e "      * An empty userxbegin.sh is included in the package. It is up to"
+  echo -e "        you to modify it if you wish."
+  echo 
+  echo -e "   2) userxend.sh:"
+  echo -e "      This is the 'end user exit' command file. If present it will be"
+  echo -e "      executed immediately after successful execution of run.tprof BUT before"
+  echo -e "      run.tprof terminates."
+  echo -e "      * It is assumed to be reachable either via the PATH environment"
+  echo -e "        variable or in the current directory."
+  echo -e "      * It is not passed any arguments"
+  echo -e "      * In it you are free to do anything you want:"
+  echo -e "        - Clean up/copy/move/rename files"
+  echo -e "        - Do additional post-processing"
+  echo -e "        - Whatever else you want"
+  echo -e "      * An empty userxend.sh is included in the package. It is up to"
+  echo -e "        you to modify it if you wish."
+
+  echo
+  echo -e " TPROF Environment variables "
+  echo -e " ----------------------"
+  echo -e " IBMPERF_TPROF_BUFFER_SIZE             - same as -b "
+  echo -e " IBMPERF_TPROF_MTE_BUFFER_SIZE         - same as -B "
+  echo -e " IBMPERF_TPROF_MODE                    - same as -m " 
+  echo -e " IBMPERF_TPROF_EVENT                   - same as -e "
+  echo -e " IBMPERF_TPROF_TICK_RATE               - same as -c "
+  echo -e " IBMPERF_TPROF_EVENTCNT                - same as -c "
+  echo -e " IBMPERF_TPROF_TRACE_MODE              - same as -y "
+  echo -e " IBMPERF_TPROF_GENERATE_MERGE_FILE     - same as -M " 
+  echo -e " IBMPERF_TPROF_MERGE_FILE_NAME         - merge file name for VPA input, default tprof_e.out "
+  echo -e " IBMPERF_TPROF_REPORT_FILENAME         - tprof report file name, default tprof.out "
+  echo -e " IBMPERF_DATA_PATH                     - directory where swtrace.nrm2/tprof reports are moved,"
+  echo -e "                                         and where post looks for swtrace.nrm2 if only post-processing, default current" 
+  echo -e " IBMPERF_JPROF_LOG_FILES_PATH          - path where post looks for jprof log files, default IBMPERF_DATA_PATH"
+  echo -e " IBMPERF_JPROF_LOG_FILES_NAME_PREFIX   - jprof log files prefix, default log" 
+  echo -e " IBMPERF_REMOVE_JITA2N_FILES           - remove 'old' log-jita2n files before tracing starts, default NO"
+  echo -e " IBMPERF_TPROF_POST_OPTIONS            - post options, default -clip 0 -off -a2nrdup"
+  echo    
+
+
+  echo -e " Examples:"
+  echo -e " ---------"
+  echo -e "   1) run.tprof"
+  echo -e "      Runs the entire TPROF procedure. You are prompted to start and stop"
+  echo -e "      the trace. Generates TPROF report."
+  echo -e "      Same as:  'run.tprof -a'"
+  echo
+  echo -e "   2) run.tprof -s 10 -r 60"
+  echo -e "      Runs the entire TPROF procedure. Tracing starts automatically after"
+  echo -e "      about a 10 seconds delay. Tracing stops automatically about 60 seconds"
+  echo -e "      after being started. Generates TPROF report. There are no prompts -"
+  echo -e "      everything happens automatically."
+  echo -e "      Same as: 'run.tprof -a -s 10 -r 60'"
+  echo
+  echo -e "   3) run.tprof -t"
+  echo -e "      Runs the trace step of the TPROF procedure. You are prompted to start"
+  echo -e "      and stop the trace. Does not generate a TPROF report."
+  echo
+  echo -e "   4) run.tprof -t -s 10 -r 60"
+  echo -e "      Runs the trace step of the TPROF procedure. Tracing starts automatically"
+  echo -e "      after about a 10 seconds delay. Tracing stops automatically about 60"
+  echo -e "      seconds after being started. There are no prompts - everything happens"
+  echo -e "      automatically."
+  echo
+  echo -e "   5) run.tprof -t -s 10"
+  echo -e "      Runs the trace step of the TPROF procedure. Tracing starts automatically"
+  echo -e "      after about a 10 seconds delay. You are prompted for when to stop tracing."
+  echo
+  echo -e "   6) run.tprof -p"
+  echo -e "      Runs the post-processing step of the TPROF procedure. You are prompted"
+  echo -e "      to start and stop the trace. Only generates a TPROF report."
+  echo
+  echo -e "   7) run.tprof -m event -e INSTR -c 100000 -s 10 -r 60"
+  echo -e "      Runs the entire TPROF procedure. Sampling is EVENT-based, using event"
+  echo -e "      INSTR and sampling every 100,000 occurrences. Tracing starts"
+  echo -e "      automatically after about a 10 seconds delay. Tracing stops"
+  echo -e "      automatically about 60 seconds after being started. Generates TPROF"
+  echo -e "      report. There are no prompts - everything happens automatically."
+  echo
+  echo -e "   8) run.tprof -m event -e INSTR -c 100000 -s 10 -r 60 -M"
+  echo -e "      Same as number 7) above but the VPA mergetprof command is run."
+  echo -e "      MERGETPROF output will be in file 'tprof_e.out'."
+  echo
+}
+
+# profile_java_msg
+# ----------------
+# Prints a message about java profiling
+#
+profile_java_msg()
+{
+echo -e "\n*****************************************************************************"
+echo -e "If TPROFing a java application you must invoke java using the'-Xrun'"
+echo -e "option (Java 5.0 and earlier) or the '-agentlib' option (Java 5.0 and"
+echo -e "later).  This allows jitted method information to be obtained.\n"
+echo -e "Invoke java (5.0 and earlier) as follows:"
+echo -e "   java -Xrunjprof:tprof,logpath=WantedPath AppName\n"
+echo -e "Invoke java (5.0 and later) as follows:"
+echo -e "   java -agentlib:jprof=tprof,logpath=WantedPath AppName\n"
+
+echo -e "Alternatively, set the IBM_JAVA_OPTIONS environment variable as follows:"
+echo -e "   export IBM_JAVA_OPTIONS=-Xrunjprof:tprof,logpath=WantedPath"
+echo -e "   or"
+echo -e "   export IBM_JAVA_OPTIONS=-agentlib:jprof=tprof,logpath=WantedPath"
+echo -e "\n******************************************************************************\n"
+}
+
+
+# swtrace_error
+# ------------
+# Exits, called if swtrace error
+#
+swtrace_error()
+{
+   echo "**ERROR** **ERROR** **ERROR**"
+   echo "swtrace command error.  Quitting."
+   echo "**ERROR** **ERROR** **ERROR**"
+   exit 1
+}
+
+# run_trace
+# ---------
+# Runs tprof tracing
+#
+run_trace()
+{
+   if [ "${IBMPERF_REMOVE_JITA2N_FILES}" = [yY][eE][sS] ]; then
+      rmja2n ${IBMPERF_DATA_PATH}
+   fi
+
+   if [ "${HOSTTYPE}" = "s390" ] ||  [ "${HOSTTYPE}" = "s390x" ] ; then
+        ORIG_HZ=$(/sbin/sysctl -n kernel.hz_timer)
+        /sbin/sysctl -w kernel.hz_timer=1 > /dev/null 2>&1
+   fi
+
+# mode
+
+   if [ -z "$mode" ]; then
+      if [ -z "${IBMPERF_TPROF_MODE}" ]; then
+         mode="TIME"
+      else
+         mode=${IBMPERF_TPROF_MODE}
+      fi
+   fi   
+
+   if [[ "${mode}" = [Ee][Vv][Ee][Nn][Tt] ]]; then
+      mode="EVENT"
+   else
+     if [[ "$mode" = [Tt][Ii][Mm][Ee] ]]; then
+        mode="TIME"
+     else
+        echo "run.tprof: Invalid mode with -m option. Must be TIME or EVENT. Quitting."
+        exit 1
+     fi
+   fi
+
+
+# set trace mode
+
+   
+  if [ -z "$trace_mode" ]; then
+	 if [ -z "${IBMPERF_TRACE_MODE}" ]; then 
+		trace_mode="cont"
+	 else
+		trace_mode=${IBMPERF_TRACE_MODE}
+	 fi
+  fi
+
+
+   echo $mode, $trace_mode
+
+# **
+# **  Get ready to trace ...
+# **
+
+   echo "**"
+   echo "** Initializing swtrace ..."
+   echo "**"
+   
+# set up pipe
+	rm -f pipe
+	mkfifo pipe
+# run swtrace with pipe
+	swtrace -fifo pipe > swtrace.msg &
+	pid=$!
+# set up fd on the pipe
+	exec 4>pipe
+	
+# init
+
+   echo init -s $bufsize -t $trace_mode -anon 0 -sm $mte_bufsize >&4
+   if  !(kill -0 $pid) ; then
+       swtrace_error
+   fi
+
+   if [ $mode = "TIME" ]; then
+      
+      # Setup for TIME-based profiling
+      
+      if [ -z $tickrate ]; then
+         if [ -z "${IBMPERF_TPROF_TICK_RATE}" ]; then
+            tickrate=0
+         else
+            tickrate=${IBMPERF_TPROF_TICK_RATE}
+         fi
+      fi     
+         
+      echo setrate $tickrate >&4
+      if  !(kill -0 $pid) ; then
+         swtrace_error
+      fi
+ 
+   else
+      # Setup for EVENT-based profiling 
+
+      if [ -z $tickrate ]; then
+         if [ -z "${IBMPERF_TPROF_TICK_RATE}" ]; then
+            tickrate=10000000
+         else
+            tickrate=${IBMPERF_TPROF_TICK_RATE}
+         fi
+      fi     
+
+      if [ -z $_TPROF_EVENT ]; then
+         if [ -z "${IBMPERF_TPROF_EVENT}" ]; then
+            _TPROF_EVENT="INSTR"
+         else
+            _TPROF_EVENT=${IBMPERF_TPROF_EVENT}
+         fi
+      fi     
+
+      echo event $_TPROF_EVENT -c $tickrate >&4
+      if  !(kill -0 $pid) ; then
+         swtrace_error
+      fi
+   fi
+
+   echo disable  >&4
+   if  !(kill -0 $pid) ; then
+         swtrace_error
+   fi
+
+   echo enable 16 >&4
+   if  !(kill -0 $pid) ; then
+         swtrace_error
+   fi
+
+   # Check for the start delay parameter
+
+   if [ -z $start_delay ]; then
+      echo -e "\n Start the program to be tprof'ed."
+      read -p "Press ENTER in this terminal when you want to start collecting tprof data."
+   else
+      echo "***** Will automatically start tracing in $start_delay seconds..."
+      sleep $start_delay
+   fi
+
+   echo -e "\n"
+   echo "Trace started at $(date) ..."
+   echo on >&4
+   if  !(kill -0 $pid) ; then
+         swtrace_error
+   fi
+
+   # ******************************************
+   # *                                        *
+   # *        User is now tracing ...         *
+   # *                                        *
+   # ******************************************
+
+   # Check for the running time parameter
+
+   if [ -z $run_time ]; then
+      echo -e "\n"
+      read -p "***** Tracing. Press ENTER when ready to stop..."
+   else
+      echo "***** Will automatically stop tracing in $run_time seconds..."
+	sleep $run_time
+   fi
+
+   echo off >&4
+   if  !(kill -0 $pid) ; then
+         swtrace_error
+   fi
+
+   echo get >&4
+   if  !(kill -0 $pid) ; then
+         swtrace_error
+   fi
+
+   echo disable >&4
+   echo free >&4
+   echo quit >&4
+   
+   exec 4>&-
+   wait $pid
+   rm -f pipe
+   
+   echo "*****************************************************************"
+   echo -e "  Trace file swtrace.nrm2 generated."
+   echo "*****************************************************************"
+
+   if [ "${HOSTTYPE}" = "s390" ] ||  [ "${HOSTTYPE}" = "s390x" ] ; then
+        /sbin/sysctl -w kernel.hz_timer=${ORIG_HZ} > /dev/null 2>&1
+   fi
+
+   if [ "${IBMPERF_DATA_PATH}" != "${PWD}" ]; then
+      mv swtrace.nrm2 ${IBMPERF_DATA_PATH}/.
+      mv swtrace.msg ${IBMPERF_DATA_PATH}/.
+   fi 
+}
+
+# run_post
+# --------
+# Generates tprof report(s)
+#
+run_post()
+{
+   echo "**"
+   echo "** Generating TPROF report ..."
+   echo "**"
+
+   trace_file=${IBMPERF_DATA_PATH}/swtrace.nrm2 
+
+   if [ $generate_merge_file = "1" ]; then
+
+      post -r ${trace_file} -jdir ${_LP} ${IBMPERF_TPROF_POST_OPTIONS} -show -nv
+      if [ $? -ne 0 ]; then
+         echo "post error"
+         exit 1
+      fi
+
+      mergetprof.sh ${IBMPERF_TPROF_MERGE_FILE_NAME}
+      
+      # ** No need to move anything if DATA_PATH == CurrentDirectory
+      if [ "${IBMPERF_DATA_PATH}" != "${PWD}" ]; then 
+         mv ${IBMPERF_TPROF_MERGE_FILE_NAME} ${IBMPERF_DATA_PATH}/.
+         mv post.show ${IBMPERF_DATA_PATH}/.
+
+
+
+
+      fi
+
+
+
+   else
+
+
+      post -r ${trace_file} -jdir ${_LP} ${IBMPERF_TPROF_POST_OPTIONS}
+      if [ $? -ne 0 ]; then
+         echo "post error"
+         exit 1
+      fi
+
+   fi
+
+   # ** No need to move anything if DATA_PATH == CurrentDirectory
+   if [ "${IBMPERF_DATA_PATH}" != "${PWD}" ]; then 
+      mv tprof.micro  ${IBMPERF_DATA_PATH}/.
+      mv a2n.err      ${IBMPERF_DATA_PATH}/.
+      mv a2n.mod      ${IBMPERF_DATA_PATH}/. 2>/dev/null
+      mv a2n.proc     ${IBMPERF_DATA_PATH}/. 2>/dev/null
+      mv post.msg     ${IBMPERF_DATA_PATH}/. 
+      mv tprof.out    ${IBMPERF_DATA_PATH}/${IBMPERF_TPROF_REPORT_FILENAME} 
+      echo -e "  Output files moved to directory ${IBMPERF_DATA_PATH}"  
+
+   else
+      if [ "${IBMPERF_TPROF_REPORT_FILENAME}" != "tprof.out" ]; then
+         mv tprof.out   ${IBMPERF_TPROF_REPORT_FILENAME}
+      fi
+
+
+   fi
+
+   echo -e "\n TPROF reports produced."
+   
+
+
+
+
+
+
+
+}
+
+#
+# main
+#------
+#
+
+# **
+# ** Run the "begin" user exit command file
+# **
+   echo
+   echo "run.tprof: Running userxbegin.sh (begin user exit) ..."
+   . userxbegin.sh
+
+
+
+
+
+
+
+
+# get options
+
+generate_merge_file=0
+
+while getopts ":b:B:m:c:e:y:r:s:h:Mapt" options; do
+case $options in
+    a ) _TPROF_RUN_TYPE=-a;;
+    p ) _TPROF_RUN_TYPE=-p;;
+    t ) _TPROF_RUN_TYPE=-t;;
+    b ) bufsize=$OPTARG;;
+    B ) mte_bufsize=$OPTARG;;
+    m ) mode=$OPTARG;;
+    c ) tickrate=$OPTARG;;
+    e ) _TPROF_EVENT=$OPTARG;;
+    s ) start_delay=$OPTARG;;
+    r ) run_time=$OPTARG;;
+    y ) trace_mode=$OPTARG;;
+    M ) generate_merge_file=1;;
+    h ) usage_msg; long_help; profile_java_msg; exit 0;;
+    \? ) usage_msg; profile_java_msg; exit 1;;
+    * ) usage_msg; profile_java_msg; exit 1;;
+  esac
+done
+
+
+# set values if not set in options/environment variables
+
+
+# set tprof report name, reports path
+
+if [ -z "${IBMPERF_DATA_PATH}" ]; then 
+   IBMPERF_DATA_PATH=${PWD}
+fi
+
+if [ -z "${IBMPERF_TPROF_REPORT_FILENAME}" ]; then 
+   IBMPERF_TPROF_REPORT_FILENAME=tprof.out
+fi
+
+# set jprof log files path, prefix
+
+if [ -z "${IBMPERF_JPROF_LOG_FILES_PATH}" ]; then 
+   IBMPERF_JPROF_LOG_FILES_PATH=${IBMPERF_DATA_PATH}
+fi
+
+if [ -z "${IBMPERF_JPROF_LOG_FILES_NAME_PREFIX}" ]; then 
+   IBMPERF_JPROF_LOG_FILES_NAME_PREFIX=log
+fi
+
+if [ -z "${IBMPERF_TPROF_POST_OPTIONS}" ]; then 
+   IBMPERF_TPROF_POST_OPTIONS="-clip 0 -off -a2nrdup"
+fi
+
+
+# set default run type if not passed as an option
+
+if [ -z "$_TPROF_RUN_TYPE" ]; then
+    _TPROF_RUN_TYPE=-a
+fi
+
+
+# set merge file name
+
+if [ -n "${IBMPERF_TPROF_GENERATE_MERGE_FILE}" ]; then
+   generate_merge_file=1
+fi
+
+
+
+if [ -z "${IBMPERF_TPROF_MERGE_FILE_NAME}" ]; then 
+
+
+   IBMPERF_TPROF_MERGE_FILE_NAME=tprof_e.out
+
+
+fi
+
+
+# set buffer size
+
+if [ -z "$bufsize" ]; then
+   if [ -z "${IBMPERF_TPROF_BUFFER_SIZE}" ]; then 
+       bufsize=5
+   else
+       bufsize=${IBMPERF_TPROF_BUFFER_SIZE}
+   fi
+fi
+
+
+# set mte buffer size
+
+if [ -z "$mte_bufsize" ]; then
+   if [ -z "${IBMPERF_MTE_TPROF_BUFFER_SIZE}" ]; then 
+       mte_bufsize=5
+   else
+       mte_bufsize=${IBMPERF_MTE_TPROF_BUFFER_SIZE}
+   fi
+fi
+
+
+
+# ** Do some minor checking
+if [[ ! -d ${IBMPERF_DATA_PATH} ]]; then
+    echo "No directory IBMPERF_DATA_PATH ${IBMPERF_DATA_PATH}. Quitting."
+    exit 1
+fi
+
+if [[ ! -d ${IBMPERF_JPROF_LOG_FILES_PATH} ]]; then
+    echo "No directory IBMPERF_JPROF_LOG_FILES_PATH ${IBMPERF_JPROF_LOG_FILES_PATH}. Quitting."
+    exit 1
+fi
+
+# Set log-prefix variable LP
+_LP=${IBMPERF_JPROF_LOG_FILES_PATH}/${IBMPERF_JPROF_LOG_FILES_NAME_PREFIX}
+
+
+# call run_trace and/or run_post
+
+if [ "${_TPROF_RUN_TYPE}" = "-a" ] || [ "${_TPROF_RUN_TYPE}" = "-t" ] ; then
+    run_trace    
+fi
+
+if [ "${_TPROF_RUN_TYPE}" = "-a" ] || [ "${_TPROF_RUN_TYPE}" = "-p" ] ; then
+    run_post    
+fi
+
+# **
+# ** Run the "end" user exit command file
+# **
+   echo
+   echo "run.tprof: Running userxend.sh (end user exit) ..."
+   userxend.sh
+
