@@ -73,39 +73,46 @@ def upload():
         flag = True
         errorType = ""
         csvCount = 0
-        javaCount = 0
+        jarCount = 0
 
         #Preliminary Check
         for f in files:
             filename = secure_filename(f.filename)
             
-            if filename not in accepted_filenames and not filename.endswith(".java"):
+            if filename not in accepted_filenames and not filename.endswith(".jar"):
                 flag = False
                 errorType = "FileNameError"
                 break
             if filename.endswith(".csv"):
                 csvCount += 1
             else:
-                javaCount += 1
-        if csvCount != 3 or javaCount != 1:
+                jarCount += 1
+        if csvCount != 3 or jarCount != 1:
             flag = False
             errorType = "FileCountError"
 
 
         if flag == True:
+
+            #The following 2 lines replace the block of commented out code below
+            fileDB.session.query(File).delete()
+            fileDB.session.commit()
+
             for f in files:
                 filename = secure_filename(f.filename)
 
                 data = f.read()
-                exists = bool(fileDB.session.query(File).filter_by(filename=filename).first())
-                if exists:
-                    file = fileDB.session.query(File).filter(File.filename == filename).one()
-                    file.data = data
-                    fileDB.session.commit()
-                else:
-                    file = File(filename=filename, data=data) #Create a 'File' object of the File class in the DATABASE CONFIGURATION part of the code
-                    fileDB.session.add(file)
-                    fileDB.session.commit()
+                # exists = bool(fileDB.session.query(File).filter_by(filename=filename).first())
+                # if filename.endswith(".jar") and fileDB.session.query(File).filter(File.filename.like('%.jar')).count() == 1:
+                #     fileDB.session.query(File).filter(File.filename.like('%.jar')).delete()
+                # if exists:
+                #     file = fileDB.session.query(File).filter(File.filename == filename).one()
+                #     file.data = data
+                #     fileDB.session.commit()
+                # else:
+                file = File(filename=filename, data=data) #Create a 'File' object of the File class in the DATABASE CONFIGURATION part of the code
+                fileDB.session.add(file)
+                fileDB.session.commit()
 
                 #Save locally (for testing purposes)
                 #f.save(os.getcwd() + '\\Uploads\\' + filename)
