@@ -59,7 +59,13 @@ def getFiles():
             # Read binary data and convert it into a csv format
             data = file.data
             csv = str(data)[2:-1]
-            csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+
+            #Windows
+            # csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+            # csv = csv.replace("\\xef\\xbb\\xbf", "")   #Clean some utf-8 escape characters
+
+            #Linux
+            csv = csv.replace("\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
             csv = csv.replace("\\xef\\xbb\\xbf", "")   #Clean some utf-8 escape characters
             
             print(csv, file=open(f'{filesPath}{file.filename}', 'w'))
