@@ -77,8 +77,8 @@ def localize():
     jarFile = fileDB.session.query(File).filter(File.filename.like('%.jar')).first()    #another option, instead of .first(), use .all()
     print(jarFile.filename)
 
-    filename = "./Files/Hot_1.jar"
-    args = "4 100"
+    # filename = "./Files/Hot_1.jar"
+    # args = "4 100"
 
     # start_time = "15"
     # recording_length = "20"
