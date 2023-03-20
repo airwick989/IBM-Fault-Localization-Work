@@ -9,7 +9,7 @@
 
   (JVM Info : OpenJDK 64-Bit Server VM,17.0.4+8-Ubuntu-120.04,mixed mode, sharing,Private Build)
 
- JPROF started at 13:23:15 on 2023/03/20
+ JPROF started at 14:10:42 on 2023/03/20
 
  JPROF Options: scs=monitor_contended_entered+,logpath=/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs
 
@@ -24,14 +24,14 @@
   EVENT      :: Callstack Monitor Event samples
   NAME       :: Name of Method or Thread
 
- Process_Number_ID=1179
+ Process_Number_ID=278
 
   LV      EVENT  NAME
-   0          0  000004b5_Thread-4
+   0          0  0000012f_Thread-3
    1          0  Hot.run()V
    2          0  Hot.retriveData(I)Ljava/lang/Object;
    3          1  (java/lang/Object)
-   0          0  000004b6_Thread-5
+   0          0  00000130_Thread-4
    1          0  Hot.run()V
    2          0  Hot.retriveData(I)Ljava/lang/Object;
-   3          1  (java/lang/Object)
+   3          2  (java/lang/Object)
