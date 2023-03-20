@@ -1,0 +1,28 @@
+
+ JPROF Version_9.8.7 (JVMTI)
+
+  (Built    : Thr Dec 9 2010 at 16:05:13)
+
+  (Source   : Thr Dec 9 2010 at 16:05:13)
+
+  (Platform : Linux-x86_64, OS=5.10.16.3-microsoft-standard-WSL2, PerfUtil=v9.8.7, PERFDD=v00000000, CPUS=8, HT=0, MC=0, CpuSig=0x00000000, (null), Hostname=LAPTOP-L8EKDQ3T)
+
+  (JVM Info : OpenJDK 64-Bit Server VM,17.0.4+8-Ubuntu-120.04,mixed mode, sharing,Private Build)
+
+ JPROF started at 13:23:15 on 2023/03/20
+
+ JPROF Options: scs=monitor_contended_entered+,logpath=/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs
+
+TNM: 174e30762f8af42c      4ae PuWorkerThread START
+TNM: 174e30762f984528      4af RtdriverListenerThread START
+TNM: 174e30762faa0f10      4b0 Notification_Thread START
+TNM: 174e30762fafbd5c      49c main START
+TNM: 174e30762fdb005c      4b2 Common-Cleaner START
+TNM: 174e307631894dc8      4b3 Thread-2 START
+TNM: 174e30763193267c      4b4 Thread-3 START
+TNM: 174e3076319e0740      4b5 Thread-4 START
+TNM: 174e307631a87aa4      4b6 Thread-5 START
+TNM: 174e307631abd5a0      49c main END
+TNM: 174e307631b8b6e4      49c DestroyJavaVM START
+TNM: 174e307eb79436b4      4bb SIGTERM_handler START
+TNM: 174e307eb7a8f8c4      4bb SIGTERM_handler END

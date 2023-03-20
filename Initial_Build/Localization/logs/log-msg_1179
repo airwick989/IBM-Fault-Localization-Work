@@ -9,7 +9,7 @@
 
   (JVM Info : OpenJDK 64-Bit Server VM,17.0.4+8-Ubuntu-120.04,mixed mode, sharing,Private Build)
 
- JPROF started at 13:29:31 on 2023/03/13
+ JPROF started at 13:23:15 on 2023/03/20
 
  JPROF Options: scs=monitor_contended_entered+,logpath=/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs
 
@@ -32,9 +32,9 @@ JVMTI Ver    = 30110000
 
  Path and prefix for log files: /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log
 
- Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-msg_3735
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-msg_1179
 
- Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-jtnm_3735
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-jtnm_1179
 
  Logical Metric #0 = RAW_CYCLES
 Physical Metric #0 = RAW_CYCLES
@@ -57,7 +57,7 @@ SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
 << EnableEvents1x(1)
 <<< Agent_OnLoad
- ==> cbVMInit, jvmti = 0x7f7df80099e0, tid = 0xe98
+ ==> cbVMInit, jvmti = 0x7f121c0099e0, tid = 0x49c
 hashInit: buckets =     2053, itemsize =      432, name = ThreadTable
 hashInit: buckets =    64007, itemsize =       40, name = ClassTable
 Get Primitive Classes
@@ -79,14 +79,14 @@ Element Size:   40
 Empty Buckets:  63559
 Largest Bucket: 1
 
-**INFO** (13:29:31) SCS initialization starting
+**INFO** (13:23:15) SCS initialization starting
 **INFO** gv->scs_monitorEvent = 76 (MONITOR_CONTENDED_ENTERED)
 
-Server socket (8) created for PID 3735. Listening on port 8888
+Server socket (9) created for PID 1179. Listening on port 8888
  <== cbVMInit
 
- (13:29:46) RTDriver Cmd: <start>
- (0x174C0AC1:6603B340) RTDriver Token: <start>
+ (13:23:30) RTDriver Cmd: <start>
+ (0x174E3079:D46AA494) RTDriver Token: <start>
  Parsed:  1 = START
 Entering RTD_LOCK : treset(STATE)
   Inside RTD_LOCK : treset(STATE)
@@ -100,8 +100,8 @@ SetEventNotificationMode:  rc = 0,  Enable MONITOR_CONTENDED_ENTERED
  << RTD_LOCK : RTArcfTraceStart(1)
 hashInit: buckets =    20011, itemsize =       36, name = MethodTable
 
- (13:30:06) RTDriver Cmd: <stop>
- (0x174C0AC6:0E7BA088) RTDriver Token: <stop>
+ (13:23:50) RTDriver Cmd: <stop>
+ (0x174E307E:7CE24A60) RTDriver Token: <stop>
  Parsed:  1 = STOP
  EnableEvents2x: Disable
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
@@ -116,13 +116,13 @@ Entering RTD_LOCK : treset(SYNC)
  Begin TREE 1
 
 
- Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-rt.1_3735
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-rt.1_1179
 gv->calltree  = 0
 gv->calltrace = 0
 gv->usermets  = 1
 gv->physmets  = 0
 gv->start     = 0
-Start at 174c0ac16603b340, Flush at 174c0ac60e7ba088
+Start at 174e3079d46aa494, Flush at 174e307e7ce24a60
 
 
  End Tree 1
@@ -158,11 +158,11 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
 << EnableEvents2x(0)
-Freeing dead thread: 00000e98_main
+Freeing dead thread: 0000049c_main
  Leaving RTD_LOCK : treset(FULL)
- RTWaitForClient: Client connection closed. Re-Initializing Socket 8 on port 8888 ...
+ RTWaitForClient: Client connection closed. Re-Initializing Socket 9 on port 8888 ...
  RTWaitForClient: ready to accept connections on port 8888 again ...
- (13:30:07) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
+ (13:23:51) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
 
 # of xMalloc:   1514
 # of xFree:     23
@@ -180,8 +180,8 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 << EnableEvents1x(0)
 
- (13:30:07) RTDriver Cmd: <END>
- (0x174C0AC6:49ADEFA8) RTDriver Token: <END>
+ (13:23:51) RTDriver Cmd: <END>
+ (0x174E307E:B7F178EC) RTDriver Token: <END>
  Parsed:  1 = END
  EnableEvents2x: Disable
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
@@ -198,7 +198,7 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
 << EnableEvents2x(0)
-Freeing dead thread: 00000eb7_SIGTERM_handler
+Freeing dead thread: 000004bb_SIGTERM_handler
  Leaving RTD_LOCK : treset(FULL)
 
 hashFree: name = MethodTable
@@ -240,5 +240,5 @@ Max Footprint:  808688
 
 Number of GCs: 0
 
- JPROF ending at 13:30:07 on 2023/03/13
+ JPROF ending at 13:23:51 on 2023/03/20
 

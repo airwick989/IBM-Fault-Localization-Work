@@ -107,6 +107,7 @@ def localize():
     # methods = []
     # r = re.compile("^log-rt")
     # log_rt_file = list(filter(r.match, os.listdir('./logs/')))[0]
+    # prevLine = ""
     # with open(f'./logs/{log_rt_file}') as file:
     #     flag = False
     #     for line in file:
@@ -114,8 +115,13 @@ def localize():
     #             flag = True
 
     #         if flag:
-    #             if line.split()[0] == '1':
-    #                 methods.append(line.split()[2])
+    #             if line.split()[1] not in ['0', 'EVENT']:
+    #                 # print(line.split())
+    #                 # print(prevLine)
+    #                 # print(prevLine.split())
+    #                 methods.append(prevLine.split()[2])
+
+    #         prevLine = line
 
     # methods = list(set(methods))
     # print("\n\n")
