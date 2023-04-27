@@ -1,0 +1,397 @@
+
+ JPROF Version_9.8.7 (JVMTI)
+
+  (Built    : Thr Dec 9 2010 at 16:05:13)
+
+  (Source   : Thr Dec 9 2010 at 16:05:13)
+
+  (Platform : Linux-x86_64, OS=5.10.16.3-microsoft-standard-WSL2, PerfUtil=v9.8.7, PERFDD=v00000000, CPUS=8, HT=0, MC=0, CpuSig=0x00000000, (null), Hostname=LAPTOP-L8EKDQ3T)
+
+  (JVM Info : OpenJDK 64-Bit Server VM,17.0.4+8-Ubuntu-120.04,mixed mode, sharing,Private Build)
+
+ JPROF started at 16:38:17 on 2023/04/27
+
+ JPROF Options: scs=monitor_contended_entered+,logpath=/mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs
+
+
+Version for IBM Internal Use Only
+JVMTI Ver    = 30110000
+ The following are valid metrics on this platform:
+    0 <COUNTER0>
+    1 <COUNTER1>
+  254 <PTT_INSTS>
+  255 <PTT_CYCLES>
+  259 <RAW_CYCLES>
+  260 <LAT_CYCLES>
+  261 <CPI>
+  262 <NOMETRICS>
+
+ Path and prefix for log files: ./log
+ Parsed: +1 = SCS=MONITOR_CONTENDED_ENTERED
+ Parsed:  1 = LOGPATH=/MNT/D/DESKTOP/GITHUB/IBM-FAULT-LOCALIZATION-WORK/INITIAL_BUILD/LOCALIZATION/LOGS
+
+ Path and prefix for log files: /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log
+
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-msg_633
+
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-jtnm_633
+
+ Logical Metric #0 = RAW_CYCLES
+Physical Metric #0 = RAW_CYCLES
+Logical Mapping #0 = 0
+Node    Size = 88
+Class   Size = 40
+Method  Size = 48
+Thread  Size = 432
+RTEvent Size = 32
+ Logical Metrics    = 1
+ Physical Metrics   = 0
+SetEventNotificationMode:  rc = 0,  Enable VM_INIT
+SetEventNotificationMode:  rc = 0,  Enable VM_DEATH
+ EnableEvents1x:  Enable
+SetEventNotificationMode:  rc = 0,  Enable THREAD_START
+SetEventNotificationMode:  rc = 0,  Enable THREAD_END
+SetEventNotificationMode:  rc = 0,  Enable CLASS_LOAD
+SetEventNotificationMode:  rc = 0,  Enable CLASS_PREPARE
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
+<< EnableEvents1x(1)
+<<< Agent_OnLoad
+ ==> cbVMInit, jvmti = 0x7f6348009a20, tid = 0x27a
+hashInit: buckets =     2053, itemsize =      432, name = ThreadTable
+hashInit: buckets =    64007, itemsize =       40, name = ClassTable
+Get Primitive Classes
+ EnableEvents1x:  Enable
+SetEventNotificationMode:  rc = 0,  Enable THREAD_START
+SetEventNotificationMode:  rc = 0,  Enable THREAD_END
+SetEventNotificationMode:  rc = 0,  Enable CLASS_LOAD
+SetEventNotificationMode:  rc = 0,  Enable CLASS_PREPARE
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
+<< EnableEvents1x(1)
+GetLoadedClasses() found 440 classes
+
+Statistics for ClassTable
+
+Total Elements: 448
+Total Buckets:  64007
+Element Size:   40
+Empty Buckets:  63559
+Largest Bucket: 1
+
+**INFO** (16:38:17) SCS initialization starting
+**INFO** gv->scs_monitorEvent = 76 (MONITOR_CONTENDED_ENTERED)
+
+Server socket (8) created for PID 633. Listening on port 8888
+ <== cbVMInit
+
+ (16:38:28) RTDriver Cmd: <start>
+ (0x1759E52A:E8BA7174) RTDriver Token: <start>
+ Parsed:  1 = START
+Entering RTD_LOCK : treset(STATE)
+  Inside RTD_LOCK : treset(STATE)
+ Leaving RTD_LOCK : treset(STATE)
+ >> RTD_LOCK : RTArcfTraceStart(1)
+ EnableEvents2x:  Enable
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0,  Enable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(1)
+ << RTD_LOCK : RTArcfTraceStart(1)
+hashInit: buckets =    20011, itemsize =       36, name = MethodTable
+
+ (16:38:48) RTDriver Cmd: <stop>
+ (0x1759E52F:92F39C34) RTDriver Token: <stop>
+ Parsed:  1 = STOP
+ EnableEvents2x: Disable
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(0)
+Entering RTD_LOCK : treset(SYNC)
+  Inside RTD_LOCK : treset(SYNC)
+ Leaving RTD_LOCK : treset(SYNC)
+ >> RTD_LOCK : flush
+
+ Begin TREE 1
+
+
+ Writing /mnt/d/Desktop/GitHub/IBM-Fault-Localization-Work/Initial_Build/Localization/logs/log-rt.1_633
+gv->calltree  = 0
+gv->calltrace = 0
+gv->usermets  = 1
+gv->physmets  = 0
+gv->start     = 0
+Start at 1759e52ae8ba7174, Flush at 1759e52f92f39c34
+
+ (16:38:49) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
+
+# of xMalloc:   9783
+# of xFree:     205
+# of xStrDup:   3659
+# of xFreeStr:  163
+Mem Requested:  1312686
+Memory In Use:  1402336
+Memory Freed:   67080
+Max Footprint:  1402240
+ EnableEvents1x: Disable
+SetEventNotificationMode:  rc = 0, Disable THREAD_START
+SetEventNotificationMode:  rc = 0, Disable CLASS_LOAD
+SetEventNotificationMode:  rc = 0, Disable CLASS_PREPARE
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+<< EnableEvents1x(0)
+
+ (16:38:49) RTDriver Cmd: <END>
+ (0x1759E52F:D381E9CC) RTDriver Token: <END>
+ Parsed:  1 = END
+ EnableEvents2x: Disable
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(0)
+Entering RTD_LOCK : treset(SYNC)
+
+ End Tree 1
+
+ OverCal               0
+ Tree Nodes         1549
+ Node Size            88
+ Class Size           40
+ Event Size           32
+ Tree Size        136312
+
+# of xMalloc:   9783
+# of xFree:     205
+# of xStrDup:   3659
+# of xFreeStr:  163
+Mem Requested:  1312686
+Memory In Use:  1402336
+Memory Freed:   67080
+Max Footprint:  1402240
+Number of GCs: 342
+
+ LOCK STATS
+ ge.lockcnt[02] =        320 Thread_Tbl
+ ge.lockcnt[04] =       5666 Class_Tbl
+ ge.lockcnt[08] =         88 Method_Tbl
+ ge.lockcnt[20] =          4 RtDrvrLock
+ ge.lockcnt[40] =       3010 ObjectTags
+ << RTD_LOCK : flush
+Entering RTD_LOCK : treset(FULL)
+  Inside RTD_LOCK : treset(SYNC)
+ Leaving RTD_LOCK : treset(SYNC)
+Entering RTD_LOCK : treset(FULL)
+  Inside RTD_LOCK : treset(FULL)
+ EnableEvents2x: Disable
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(0)
+Freeing dead thread: 0000034a_Logging-Cleaner
+Freeing dead thread: 00000349_Thread-3
+Freeing dead thread: 00000348_Thread-2
+Freeing dead thread: 00000347_SIGTERM_handler
+Freeing dead thread: 00000344_Secondary_finalizer
+Freeing dead thread: 00000341_Thread-136
+Freeing dead thread: 00000340_Thread-135
+Freeing dead thread: 0000033e_Thread-133
+Freeing dead thread: 0000033d_Thread-132
+Freeing dead thread: 0000033c_Thread-131
+Freeing dead thread: 0000033f_Thread-134
+Freeing dead thread: 00000343_Thread-138
+Freeing dead thread: 00000342_Thread-137
+Freeing dead thread: 0000033b_Thread-130
+Freeing dead thread: 0000033a_Secondary_finalizer
+Freeing dead thread: 00000337_Thread-127
+Freeing dead thread: 00000338_Thread-128
+Freeing dead thread: 00000336_Thread-126
+Freeing dead thread: 00000333_Thread-123
+Freeing dead thread: 00000332_Thread-122
+Freeing dead thread: 00000335_Thread-125
+Freeing dead thread: 00000339_Thread-129
+Freeing dead thread: 00000334_Thread-124
+Freeing dead thread: 00000331_Thread-121
+Freeing dead thread: 00000330_Secondary_finalizer
+Freeing dead thread: 0000032f_Thread-120
+Freeing dead thread: 0000032b_Thread-116
+Freeing dead thread: 00000328_Thread-113
+Freeing dead thread: 0000032d_Thread-118
+Freeing dead thread: 0000032c_Thread-117
+Freeing dead thread: 00000329_Thread-114
+Freeing dead thread: 0000032e_Thread-119
+Freeing dead thread: 0000032a_Thread-115
+Freeing dead thread: 00000327_Thread-112
+Freeing dead thread: 00000326_Secondary_finalizer
+Freeing dead thread: 00000322_Thread-108
+Freeing dead thread: 00000325_Thread-111
+Freeing dead thread: 00000323_Thread-109
+Freeing dead thread: 00000320_Thread-106
+Freeing dead thread: 00000321_Thread-107
+Freeing dead thread: 00000324_Thread-110
+Freeing dead thread: 0000031e_Thread-104
+Freeing dead thread: 0000031f_Thread-105
+Freeing dead thread: 0000031d_Thread-103
+Freeing dead thread: 0000031c_Secondary_finalizer
+Freeing dead thread: 00000314_Thread-95
+Freeing dead thread: 0000031a_Thread-101
+Freeing dead thread: 0000031b_Thread-102
+Freeing dead thread: 00000318_Thread-99
+Freeing dead thread: 00000316_Thread-97
+Freeing dead thread: 00000315_Thread-96
+Freeing dead thread: 00000319_Thread-100
+Freeing dead thread: 00000317_Thread-98
+Freeing dead thread: 00000313_Thread-94
+Freeing dead thread: 00000312_Secondary_finalizer
+Freeing dead thread: 0000030b_Thread-87
+Freeing dead thread: 00000310_Thread-92
+Freeing dead thread: 0000030f_Thread-91
+Freeing dead thread: 0000030c_Thread-88
+Freeing dead thread: 0000030d_Thread-89
+Freeing dead thread: 00000311_Thread-93
+Freeing dead thread: 0000030e_Thread-90
+Freeing dead thread: 0000030a_Thread-86
+Freeing dead thread: 00000309_Thread-85
+Freeing dead thread: 00000308_Secondary_finalizer
+Freeing dead thread: 00000305_Thread-82
+Freeing dead thread: 00000303_Thread-80
+Freeing dead thread: 00000301_Thread-78
+Freeing dead thread: 00000307_Thread-84
+Freeing dead thread: 00000304_Thread-81
+Freeing dead thread: 00000300_Thread-77
+Freeing dead thread: 00000302_Thread-79
+Freeing dead thread: 00000306_Thread-83
+Freeing dead thread: 000002ff_Thread-76
+Freeing dead thread: 000002fe_Secondary_finalizer
+Freeing dead thread: 000002fd_Thread-75
+Freeing dead thread: 000002f6_Thread-68
+Freeing dead thread: 000002fa_Thread-72
+Freeing dead thread: 000002fb_Thread-73
+Freeing dead thread: 000002fc_Thread-74
+Freeing dead thread: 000002f8_Thread-70
+Freeing dead thread: 000002f9_Thread-71
+Freeing dead thread: 000002f7_Thread-69
+Freeing dead thread: 000002f5_Thread-67
+Freeing dead thread: 000002f4_Secondary_finalizer
+Freeing dead thread: 000002ec_Thread-60
+Freeing dead thread: 000002eb_Thread-59
+Freeing dead thread: 000002f2_Thread-66
+Freeing dead thread: 000002f0_Thread-64
+Freeing dead thread: 000002f1_Thread-65
+Freeing dead thread: 000002ed_Thread-61
+Freeing dead thread: 000002ee_Thread-62
+Freeing dead thread: 000002ef_Thread-63
+Freeing dead thread: 000002ea_Thread-58
+Freeing dead thread: 000002e9_Secondary_finalizer
+Freeing dead thread: 000002e1_Thread-50
+Freeing dead thread: 000002e5_Thread-54
+Freeing dead thread: 000002e2_Thread-51
+Freeing dead thread: 000002e7_Thread-56
+Freeing dead thread: 000002e6_Thread-55
+Freeing dead thread: 000002e4_Thread-53
+Freeing dead thread: 000002e8_Thread-57
+Freeing dead thread: 000002e3_Thread-52
+Freeing dead thread: 000002df_Thread-49
+Freeing dead thread: 000002de_Secondary_finalizer
+Freeing dead thread: 000002d8_Thread-43
+Freeing dead thread: 000002da_Thread-45
+Freeing dead thread: 000002d7_Thread-42
+Freeing dead thread: 000002dd_Thread-48
+Freeing dead thread: 000002db_Thread-46
+Freeing dead thread: 000002dc_Thread-47
+Freeing dead thread: 000002d9_Thread-44
+Freeing dead thread: 000002d6_Thread-41
+Freeing dead thread: 000002d5_Thread-40
+Freeing dead thread: 000002d4_Secondary_finalizer
+Freeing dead thread: 000002d1_Thread-37
+Freeing dead thread: 000002cc_Thread-32
+Freeing dead thread: 000002d0_Thread-36
+Freeing dead thread: 000002cf_Thread-35
+Freeing dead thread: 000002d2_Thread-38
+Freeing dead thread: 000002ce_Thread-34
+Freeing dead thread: 000002d3_Thread-39
+Freeing dead thread: 000002cd_Thread-33
+Freeing dead thread: 000002cb_Thread-31
+Freeing dead thread: 000002ca_Secondary_finalizer
+Freeing dead thread: 000002c5_Thread-27
+Freeing dead thread: 000002c7_Thread-29
+Freeing dead thread: 000002c4_Thread-26
+Freeing dead thread: 000002c3_Thread-25
+Freeing dead thread: 000002c2_Thread-24
+Freeing dead thread: 000002c6_Thread-28
+Freeing dead thread: 000002c8_Thread-30
+Freeing dead thread: 000002c1_Thread-23
+Freeing dead thread: 000002c0_Thread-22
+Freeing dead thread: 000002bf_Secondary_finalizer
+Freeing dead thread: 000002b8_Thread-17
+Freeing dead thread: 000002b6_Thread-15
+Freeing dead thread: 000002b9_Thread-18
+Freeing dead thread: 000002bc_Thread-21
+Freeing dead thread: 000002bb_Thread-20
+Freeing dead thread: 000002b5_Thread-14
+Freeing dead thread: 000002ba_Thread-19
+Freeing dead thread: 000002b7_Thread-16
+Freeing dead thread: 000002b3_Thread-13
+Freeing dead thread: 000002b2_Secondary_finalizer
+Freeing dead thread: 000002af_Thread-11
+Freeing dead thread: 000002a9_Thread-5
+Freeing dead thread: 000002ac_Thread-8
+Freeing dead thread: 000002aa_Thread-6
+Freeing dead thread: 000002ad_Thread-9
+Freeing dead thread: 000002b0_Thread-12
+Freeing dead thread: 000002ae_Thread-10
+Freeing dead thread: 000002ab_Thread-7
+Freeing dead thread: 0000029d_Thread-4
+Freeing dead thread: 00000295_Secondary_finalizer
+ Leaving RTD_LOCK : treset(FULL)
+  Inside RTD_LOCK : treset(FULL)
+ EnableEvents2x: Disable
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(0)
+ RTWaitForClient: Client connection closed. Re-Initializing Socket 8 on port 8888 ...
+ RTWaitForClient: ready to accept connections on port 8888 again ...
+ Leaving RTD_LOCK : treset(FULL)
+
+hashFree: name = MethodTable
+
+Statistics for MethodTable
+
+Total Elements: 87
+Total Buckets:  20011
+Element Size:   36
+Empty Buckets:  19924
+Largest Bucket: 1
+
+hashFree: name = ClassTable
+
+Statistics for ClassTable
+
+Total Elements: 3010
+Total Buckets:  64007
+Element Size:   40
+Empty Buckets:  60997
+Largest Bucket: 1
+
+Statistics for ThreadTable
+
+Total Elements: 318
+Total Buckets:  2053
+Element Size:   432
+Empty Buckets:  1890
+Largest Bucket: 1
+
+# of xMalloc:   9783
+# of xFree:     7023
+# of xStrDup:   3659
+# of xFreeStr:  3416
+Mem Requested:  272427
+Memory In Use:  295408
+Memory Freed:   1174008
+Max Footprint:  1402240
+
+Number of GCs: 342
+
+ JPROF ending at 16:38:49 on 2023/04/27
+
