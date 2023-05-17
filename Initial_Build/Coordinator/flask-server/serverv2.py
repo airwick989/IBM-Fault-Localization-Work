@@ -152,6 +152,10 @@ if __name__ == "__main__":
         if msg.error():
             print('Error: {}'.format(msg.error()))
             continue
-        data=msg.value().decode('utf-8')
-        print(data)
+        # data=msg.value().decode('utf-8')
+        # print(data)
+        if msg.topic() == "classifierBackToCoordinator":
+            print("classifier")
+        elif msg.topic() == "localizerBackToCoordinator":
+            print("localizer")
     consumerListener.close()
