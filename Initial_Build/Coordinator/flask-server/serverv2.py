@@ -6,6 +6,7 @@ from time import sleep
 from json import dumps, loads
 from kafka import KafkaProducer, KafkaConsumer
 from threading import Thread
+from confluent_kafka import Consumer
 
 app = Flask(__name__)
 CORS(app)
@@ -40,22 +41,22 @@ def deserialize(message):
     except Exception:
         return "Error: Message is not JSON Deserializable"
 
-consumerClassifier = KafkaConsumer(
-    'classifierBackToCoordinator',
-    bootstrap_servers = ['localhost:9092'],
-    auto_offset_reset = 'latest',
-    enable_auto_commit = True,
-    group_id = None,
-    value_deserializer = deserialize
-)
+# consumerClassifier = KafkaConsumer(
+#     'classifierBackToCoordinator',
+#     bootstrap_servers = ['localhost:9092'],
+#     auto_offset_reset = 'latest',
+#     enable_auto_commit = True,
+#     group_id = None,
+#     value_deserializer = deserialize
+# )
 
-def listen(consumer, signalMessage, producer, producerTopic, producerMessage):
-    for message in consumer:
-        data = message.value
+# def listen(consumer, signalMessage, producer, producerTopic, producerMessage):
+#     for message in consumer:
+#         data = message.value
 
-        if 'signal' in data:
-            if data['signal'] == signalMessage:
-                producer.send(producerTopic, value=producerMessage)
+#         if 'signal' in data:
+#             if data['signal'] == signalMessage:
+#                 producer.send(producerTopic, value=producerMessage)
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
@@ -131,6 +132,6 @@ def upload():
         return Exception
 
 if __name__ == "__main__":
-    classifierListener = Thread(target= listen, args=[consumerClassifier, "classifierDone", producer, 'coordinatorToLocalizer', {'signal': "startLocalizer"}])
-    classifierListener.start()
+    # classifierListener = Thread(target= listen, args=[consumerClassifier, "classifierDone", producer, 'coordinatorToLocalizer', {'signal': "startLocalizer"}])
+    # classifierListener.start()
     app.run(debug=True)
