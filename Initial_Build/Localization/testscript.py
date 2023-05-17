@@ -10,11 +10,11 @@ else:
         os.remove(f'./logs/{file}')
 
 
-filename = "./Files/dacapo-9.12-MR1-bach.jar" #Hot_1.jar
-args = "jython -t 64 -n 100"    #4 100
+filename = "./Files/Hot_1.jar" #Hot_1.jar
+args = "4 100"    #4 100
 
-start_time = "20"   #15
-recording_length = "64" #20
+start_time = "15"   #15
+recording_length = "20" #20
 
 delay = 1
 script_running_time = delay + int(start_time) + int(recording_length) + delay
