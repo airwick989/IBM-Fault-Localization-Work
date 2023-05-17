@@ -50,6 +50,14 @@ def deserialize(message):
 #     value_deserializer = deserialize
 # )
 
+consumerListener = Consumer({
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'coordinator-group',
+    'auto.offset.reset': 'latest'
+})
+
+consumerListener.subscribe(['classifierBackToCoordinator', 'localizerBackToCoordinator'])
+
 # def listen(consumer, signalMessage, producer, producerTopic, producerMessage):
 #     for message in consumer:
 #         data = message.value
@@ -134,4 +142,16 @@ def upload():
 if __name__ == "__main__":
     # classifierListener = Thread(target= listen, args=[consumerClassifier, "classifierDone", producer, 'coordinatorToLocalizer', {'signal': "startLocalizer"}])
     # classifierListener.start()
-    app.run(debug=True)
+    
+    #app.run(debug=True)
+
+    while True:
+        msg=consumerListener.poll(1.0) #timeout
+        if msg is None:
+            continue
+        if msg.error():
+            print('Error: {}'.format(msg.error()))
+            continue
+        data=msg.value().decode('utf-8')
+        print(data)
+    consumerListener.close()
