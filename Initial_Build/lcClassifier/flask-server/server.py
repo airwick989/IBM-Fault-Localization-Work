@@ -16,8 +16,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from json import loads, dumps
-from kafka import KafkaConsumer, KafkaProducer
 import pickle
+from confluent_kafka import Consumer, Producer
 
 app = Flask(__name__)
 CORS(app)
@@ -61,10 +61,10 @@ def getFiles():
             csv = str(data)[2:-1]
 
             #Windows
-            # csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+            csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
 
             #Linux
-            csv = csv.replace("\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+            #csv = csv.replace("\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
 
             
             csv = csv.replace("\\xef\\xbb\\xbf", "")   #Clean some utf-8 escape characters
@@ -146,8 +146,7 @@ def classify(pca_DF_train):
     fileDB.session.add(resultsFile)
     fileDB.session.commit()
 
-    message = {'signal': "classifierDone"}
-    producer.send('classifierBackToCoordinator', value=message)
+    produce('classifierBackToCoordinator', {'fromClassifier': 'classifierComplete'})
 
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
@@ -155,37 +154,43 @@ def classify(pca_DF_train):
 
 """---- KAFKA CONSUMER / PRODUCER ------------------------------------------------------------------------------------------------------------------"""
 
-def deserialize(message):
-    try:
-        return loads(message.decode('utf-8'))
-    except Exception:
-        return "Error: Message is not JSON Deserializable"
-
-consumer = KafkaConsumer(
-    'coordinatorToClassifier',
-    bootstrap_servers = ['localhost:9092'],
-    auto_offset_reset = 'latest',
-    enable_auto_commit = True,
-    group_id = None,
-    value_deserializer = deserialize
-)
+consumerClassifier = Consumer({
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'module-group',
+    'auto.offset.reset': 'latest'
+})
+consumerClassifier.subscribe(['coordinatorToClassifier'])
 
 #---
 
-producer = KafkaProducer(
-    bootstrap_servers = ['localhost:9092'],
-    value_serializer = lambda x:dumps(x).encode('utf-8')
-)
+def receipt(err, msg):
+    if err is not None:
+        print('Error: {}'.format(err))
+    else:
+        message = 'Produced message on topic {} with value of {}\n'.format(msg.topic(), msg.value().decode('utf-8'))
+        print(message)
+
+producerClassifier = Producer({'bootstrap.servers': 'localhost:9092'})
+def produce(topic, message):
+    data = dumps(message)
+    producerClassifier.poll(1)
+    producerClassifier.produce(topic, data.encode('utf-8'), callback=receipt)
+    producerClassifier.flush()
 
 """---- KAFKA CONSUMER / PRODUCER ------------------------------------------------------------------------------------------------------------------"""
 
 
-for message in consumer:
-    data = message.value
-    if 'signal' in data:
-        if data['signal'] == 'startClassifier':
-            getFiles()
-            processData()
+while True:
+    msg=consumerClassifier.poll(1.0) #timeout
+    if msg is None:
+        continue
+    if msg.error():
+        print('Error: {}'.format(msg.error()))
+        continue
+    if msg.topic() == "coordinatorToClassifier":
+        getFiles()
+        processData()
+consumerListener.close()
             
 
 
