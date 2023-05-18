@@ -181,6 +181,7 @@ def produce(topic, message):
 
 
 while True:
+    error = False
     msg=consumerClassifier.poll(1.0) #timeout
     if msg is None:
         continue
@@ -188,8 +189,17 @@ while True:
         print('Error: {}'.format(msg.error()))
         continue
     if msg.topic() == "coordinatorToClassifier":
-        getFiles()
-        processData()
+        try:
+            getFiles()
+        except Exception:
+            produce('classifierBackToCoordinator', {'fromClassifier': 'fileProcessingError'})
+            error = True
+
+        if not error: 
+            try:
+                processData()
+            except Exception:
+                produce('classifierBackToCoordinator', {'fromClassifier': 'classificationError'})
 consumerListener.close()
             
 
