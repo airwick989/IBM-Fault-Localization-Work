@@ -6,7 +6,8 @@ from time import sleep
 from json import dumps, loads
 from kafka import KafkaProducer, KafkaConsumer
 from threading import Thread
-from confluent_kafka import Consumer
+from confluent_kafka import Consumer, Producer
+import time
 
 app = Flask(__name__)
 CORS(app)
@@ -28,43 +29,44 @@ class File(fileDB.Model):
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
-producer = KafkaProducer(
-    bootstrap_servers = ['localhost:9092'],
-    value_serializer = lambda x:dumps(x).encode('utf-8')
-)
+producerCoordinator = Producer({'bootstrap.servers': 'localhost:9092'})
 
-#---
+def receipt(err, msg):
+    if err is not None:
+        print('Error: {}'.format(err))
+    else:
+        message = 'Produced message on topic {} with value of {}\n'.format(msg.topic(), msg.value().decode('utf-8'))
+        print(message)
 
-def deserialize(message):
-    try:
-        return loads(message.decode('utf-8'))
-    except Exception:
-        return "Error: Message is not JSON Deserializable"
+def produce(topic, message):
+    data = dumps(message)
+    producerCoordinator.poll(1)
+    producerCoordinator.produce(topic, data.encode('utf-8'), callback=receipt)
+    producerCoordinator.flush()
 
-# consumerClassifier = KafkaConsumer(
-#     'classifierBackToCoordinator',
-#     bootstrap_servers = ['localhost:9092'],
-#     auto_offset_reset = 'latest',
-#     enable_auto_commit = True,
-#     group_id = None,
-#     value_deserializer = deserialize
-# )
+def listen():
+    consumerListener = Consumer({
+        'bootstrap.servers': 'localhost:9092',
+        'group.id': 'coordinator-group',
+        'auto.offset.reset': 'latest'
+    })
+    consumerListener.subscribe(['classifierBackToCoordinator', 'localizerBackToCoordinator'])
 
-consumerListener = Consumer({
-    'bootstrap.servers': 'localhost:9092',
-    'group.id': 'coordinator-group',
-    'auto.offset.reset': 'latest'
-})
+    while True:
+        msg=consumerListener.poll(1.0) #timeout
+        if msg is None:
+            continue
+        if msg.error():
+            print('Error: {}'.format(msg.error()))
+            continue
+        # data=msg.value().decode('utf-8')
+        # print(data)
+        if msg.topic() == "classifierBackToCoordinator":
+            produce('coordinatorToLocalizer', {'fromCoordinator': 'startLocalizer'})
+        elif msg.topic() == "localizerBackToCoordinator":
+            print("localizer")
+    consumerListener.close()
 
-consumerListener.subscribe(['classifierBackToCoordinator', 'localizerBackToCoordinator'])
-
-# def listen(consumer, signalMessage, producer, producerTopic, producerMessage):
-#     for message in consumer:
-#         data = message.value
-
-#         if 'signal' in data:
-#             if data['signal'] == signalMessage:
-#                 producer.send(producerTopic, value=producerMessage)
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
@@ -131,7 +133,8 @@ def upload():
                 #Save locally (for testing purposes)
                 #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
-            producer.send('coordinatorToClassifier', value={'signal': "startClassifier"})
+            #producer.send('coordinatorToClassifier', value={'signal': "startClassifier"})
+            produce('coordinatorToClassifier', {'fromCoordinator': 'startClassifier'})
 
             return "ok"
         else:
@@ -140,22 +143,10 @@ def upload():
         return Exception
 
 if __name__ == "__main__":
-    # classifierListener = Thread(target= listen, args=[consumerClassifier, "classifierDone", producer, 'coordinatorToLocalizer', {'signal': "startLocalizer"}])
-    # classifierListener.start()
-    
-    #app.run(debug=True)
+    # listener = Thread(target= listen, args=[consumerClassifier, "classifierDone", producer, 'coordinatorToLocalizer', {'signal': "startLocalizer"}])
+    # listener.start()
 
-    while True:
-        msg=consumerListener.poll(1.0) #timeout
-        if msg is None:
-            continue
-        if msg.error():
-            print('Error: {}'.format(msg.error()))
-            continue
-        # data=msg.value().decode('utf-8')
-        # print(data)
-        if msg.topic() == "classifierBackToCoordinator":
-            print("classifier")
-        elif msg.topic() == "localizerBackToCoordinator":
-            print("localizer")
-    consumerListener.close()
+    listener = Thread(target= listen)
+    listener.start()
+    
+    app.run(debug=True)
