@@ -55,9 +55,12 @@ def localize():
             os.remove(f'./Files/{file}') 
 
     jarFile = fileDB.session.query(File).filter(File.filename.like('%.jar')).first()    #another option, instead of .first(), use .all()
-    print(jarFile.filename)
+    filename = f"./Files/{jarFile.filename}"
+    
+    data = jarFile.data
+    print(data, file=open(filename, 'w'))
+    #print(csv, file=open(f'{filesPath}{file.filename}', 'w'))
 
-    filename = "./Files/{jarFile.filename}"
     # args = "4 100"
 
     # start_time = "15"
@@ -114,15 +117,17 @@ def localize():
 
 
 
-
-time_threshold = 5  #message time delta threshold of 5 seconds
-checkpoint_time = 0
-for message in consumer:
-    if time.time() - checkpoint_time > time_threshold:
-        data = message.value
-        if 'signal' in data:
-            if data['signal'] == 'startLocalizer':
-                localize()
+# #THE FOLLOWING IS IMPORTANT FOR THE TIMING THRESHOLD MECHANISM FOR AVOIDING DUPLICATE MESSAGES
+# time_threshold = 5  #message time delta threshold of 5 seconds
+# checkpoint_time = 0
+# for message in consumer:
+#     if time.time() - checkpoint_time > time_threshold:
+#         data = message.value
+#         if 'signal' in data:
+#             if data['signal'] == 'startLocalizer':
+#                 localize()
         
-    checkpoint_time = time.time()
-    
+#     checkpoint_time = time.time()
+
+
+localize()    

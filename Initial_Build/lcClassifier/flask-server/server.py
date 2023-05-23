@@ -61,10 +61,10 @@ def getFiles():
             csv = str(data)[2:-1]
 
             #Windows
-            csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+            #csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
 
             #Linux
-            #csv = csv.replace("\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+            csv = csv.replace("\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
 
             
             csv = csv.replace("\\xef\\xbb\\xbf", "")   #Clean some utf-8 escape characters
