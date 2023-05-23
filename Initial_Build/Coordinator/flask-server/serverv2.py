@@ -68,7 +68,11 @@ def listen():
             else:
                 print(f"ERROR in Classifier: {data['fromClassifier']}")
         elif msg.topic() == "localizerBackToCoordinator":
-            print("localizer")
+            data = loads(msg.value().decode('utf-8'))
+            if data["fromLocalizer"] == "localizerComplete":
+                produce('coordinatorToPatternMatcher', {'fromCoordinator': 'startPatternMatching'})
+            else:
+                print(f"ERROR in Localizer: {data['fromLocalizer']}")
     consumerListener.close()
 
 

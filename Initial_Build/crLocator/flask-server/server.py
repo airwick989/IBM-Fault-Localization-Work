@@ -6,6 +6,7 @@ from json import loads, dumps
 from kafka import KafkaConsumer, KafkaProducer
 import os, time, re
 from threading import Thread
+from confluent_kafka import Consumer, Producer
 
 app = Flask(__name__)
 CORS(app)
@@ -31,7 +32,28 @@ class File(fileDB.Model):
 
 """---- KAFKA CONSUMER / PRODUCER ------------------------------------------------------------------------------------------------------------------"""
 
-#GET CONSUMER/PRODUCER STUFF FROM OTHER MODULES
+consumerLocalizer = Consumer({
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'module-group',
+    'auto.offset.reset': 'latest'
+})
+consumerLocalizer.subscribe(['coordinatorToLocalizer'])
+
+#---
+
+def receipt(err, msg):
+    if err is not None:
+        print('Error: {}'.format(err))
+    else:
+        message = 'Produced message on topic {} with value of {}\n'.format(msg.topic(), msg.value().decode('utf-8'))
+        print(message)
+
+producerLocalizer = Producer({'bootstrap.servers': 'localhost:9092'})
+def produce(topic, message):
+    data = dumps(message)
+    producerLocalizer.poll(1)
+    producerLocalizer.produce(topic, data.encode('utf-8'), callback=receipt)
+    producerLocalizer.flush()
 
 """---- KAFKA CONSUMER / PRODUCER ------------------------------------------------------------------------------------------------------------------"""
 
@@ -66,8 +88,12 @@ def localize():
     for file in os.listdir(jarSaveDirectory):
         filename = f"{jarSaveDirectory}{file}"
 
-
-    args = "4 100"
+    #Get program arguments if they exist
+    args = fileDB.session.query(File).filter(File.filename.like("javaProgramArgs.txt")).first()
+    if args == None:
+        args = ""
+    else:
+        args = str(args.data)[1:].strip("'")
 
     start_time = "15"
     recording_length = "20"
@@ -119,6 +145,8 @@ def localize():
         methods_str = methods_str + method + ", "
     print(methods_str)
 
+    produce('localizerBackToCoordinator', {'fromLocalizer': 'localizerComplete'})
+
 """---- LOCALIZER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
 
@@ -136,4 +164,17 @@ def localize():
 #     checkpoint_time = time.time()
 
 
-localize()    
+
+while True:
+    msg=consumerLocalizer.poll(1.0) #timeout
+    if msg is None:
+        continue
+    if msg.error():
+        print('Error: {}'.format(msg.error()))
+        continue
+    if msg.topic() == "coordinatorToLocalizer":
+        try:
+            localize()
+        except Exception:
+            produce('localizerBackToCoordinator', {'fromLocalizer': 'localizationError'})
+consumerLocalizer.close()
