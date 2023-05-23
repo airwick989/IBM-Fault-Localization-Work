@@ -5,9 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 from json import dumps, loads
 from threading import Thread
 from confluent_kafka import Consumer, Producer
+import os
 
 app = Flask(__name__)
 CORS(app)
+
+jarSaveDirectory = '../../jarFile/'
 
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
@@ -118,21 +121,29 @@ def upload():
             for f in files:
                 filename = secure_filename(f.filename)
 
-                data = f.read()
-                # exists = bool(fileDB.session.query(File).filter_by(filename=filename).first())
-                # if filename.endswith(".jar") and fileDB.session.query(File).filter(File.filename.like('%.jar')).count() == 1:
-                #     fileDB.session.query(File).filter(File.filename.like('%.jar')).delete()
-                # if exists:
-                #     file = fileDB.session.query(File).filter(File.filename == filename).one()
-                #     file.data = data
-                #     fileDB.session.commit()
-                # else:
-                file = File(filename=filename, data=data) #Create a 'File' object of the File class in the DATABASE CONFIGURATION part of the code
-                fileDB.session.add(file)
-                fileDB.session.commit()
+                #added if statement and put rest in else block for localization
+                if filename.endswith(".jar"):
+                    #Clearing out the jarFile directory
+                    if len(os.listdir(jarSaveDirectory)) > 0:
+                        for file in os.listdir(jarSaveDirectory):
+                            os.remove(f'{jarSaveDirectory}{file}') 
+                    f.save(f"{jarSaveDirectory}{filename}")
+                else:
+                    data = f.read()
+                    # exists = bool(fileDB.session.query(File).filter_by(filename=filename).first())
+                    # if filename.endswith(".jar") and fileDB.session.query(File).filter(File.filename.like('%.jar')).count() == 1:
+                    #     fileDB.session.query(File).filter(File.filename.like('%.jar')).delete()
+                    # if exists:
+                    #     file = fileDB.session.query(File).filter(File.filename == filename).one()
+                    #     file.data = data
+                    #     fileDB.session.commit()
+                    # else:
+                    file = File(filename=filename, data=data) #Create a 'File' object of the File class in the DATABASE CONFIGURATION part of the code
+                    fileDB.session.add(file)
+                    fileDB.session.commit()
 
-                #Save locally (for testing purposes)
-                #f.save(os.getcwd() + '\\Uploads\\' + filename)
+                    #Save locally (for testing purposes)
+                    #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
             #producer.send('coordinatorToClassifier', value={'signal': "startClassifier"})
             produce('coordinatorToClassifier', {'fromCoordinator': 'startClassifier'})

@@ -49,17 +49,24 @@ def localize():
         for file in os.listdir('./logs/'):
             os.remove(f'./logs/{file}')
 
-    #Clearing out the Files directory
-    if len(os.listdir('./Files/')) > 0:
-        for file in os.listdir('./Files/'):
-            os.remove(f'./Files/{file}') 
+    # #Clearing out the Files directory
+    # if len(os.listdir('./Files/')) > 0:
+    #     for file in os.listdir('./Files/'):
+    #         os.remove(f'./Files/{file}') 
 
-    jarFile = fileDB.session.query(File).filter(File.filename.like('%.jar')).first()    #another option, instead of .first(), use .all()
-    filename = f"./Files/{jarFile.filename}"
+    # #Pull Jar file from the common data store
+    # jarFile = fileDB.session.query(File).filter(File.filename.like('%.jar')).first()    #another option, instead of .first(), use .all()
+    # filename = f"./Files/{jarFile.filename}"
+    # data = jarFile.data
+    # print(data, file=open(filename, 'w'))
+
+    #"Pull" Jar file from jarFile directory
+    jarSaveDirectory = '../../jarFile/'
+    #Clearing out the jarFile directory
+    if len(os.listdir(jarSaveDirectory)) > 0:
+        for file in os.listdir(jarSaveDirectory):
+            os.remove(f'./Files/{file}') 
     
-    data = jarFile.data
-    print(data, file=open(filename, 'w'))
-    #print(csv, file=open(f'{filesPath}{file.filename}', 'w'))
 
     # args = "4 100"
 
