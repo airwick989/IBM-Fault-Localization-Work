@@ -31,27 +31,7 @@ class File(fileDB.Model):
 
 """---- KAFKA CONSUMER / PRODUCER ------------------------------------------------------------------------------------------------------------------"""
 
-def deserialize(message):
-    try:
-        return loads(message.decode('utf-8'))
-    except Exception:
-        return "Error: Message is not JSON Deserializable"
-
-consumer = KafkaConsumer(
-    'coordinatorToLocalizer',
-    bootstrap_servers = ['localhost:9092'],
-    auto_offset_reset = 'latest',
-    enable_auto_commit = True,
-    group_id = None,
-    value_deserializer = deserialize
-)
-
-#---
-
-producer = KafkaProducer(
-    bootstrap_servers = ['localhost:9092'],
-    value_serializer = lambda x:dumps(x).encode('utf-8')
-)
+#GET CONSUMER/PRODUCER STUFF FROM OTHER MODULES
 
 """---- KAFKA CONSUMER / PRODUCER ------------------------------------------------------------------------------------------------------------------"""
 
