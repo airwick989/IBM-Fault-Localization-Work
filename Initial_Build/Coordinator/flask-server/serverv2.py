@@ -124,11 +124,8 @@ def upload():
                 fileDB.session.add(argsFile)
                 fileDB.session.commit()
 
-            localizationParams = {
-                "start_time": start_time,
-                "recording_length": recording_length
-            }
-            localizationParams = str(localizationParams).encode()
+            localizationParams = f"{start_time} {recording_length}"
+            localizationParams = localizationParams.encode()
             localizationParams = File(filename="localizationParams.txt", data=localizationParams)
             fileDB.session.add(localizationParams)
             fileDB.session.commit()

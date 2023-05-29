@@ -3,6 +3,7 @@ from flask_cors import CORS;
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from json import loads, dumps
+import ast
 from kafka import KafkaConsumer, KafkaProducer
 import os, time, re
 from threading import Thread
@@ -93,10 +94,16 @@ def localize():
     if args == None:
         args = ""
     else:
-        args = str(args.data)[1:].strip("'")
+        args = str(args.data)[2:-1]
 
-    start_time = "15"
-    recording_length = "20"
+    #Get start_time and recording
+    localizationParams = str(fileDB.session.query(File).filter(File.filename.like("localizationParams.txt")).first().data)[2:-1]
+    localizationParams = localizationParams.split()
+
+    # start_time = "15"
+    # recording_length = "20"
+    start_time = localizationParams[0]
+    recording_length = localizationParams[1]
 
     delay = 1
     script_running_time = delay + int(start_time) + int(recording_length) + delay
