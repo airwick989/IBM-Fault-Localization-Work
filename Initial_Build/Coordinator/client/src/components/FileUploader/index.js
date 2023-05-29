@@ -1,16 +1,39 @@
 import { useState } from "react";
 import axios from 'axios';
 
+const default_start_time = "15"
+const default_recording_length = "20"
+
 // eslint-disable-next-line
 export const FileUploader = ({}) => {
 
     //the reason the initial state is '[]' instead of 'null' is because its an array of files, not just one
     const [files, setFiles] = useState([]);
     const [args, setArgs] = useState("");
+    const [start_time, setStartTime] = useState(default_start_time);
+    const [recording_length, setRecordingLength] = useState(default_recording_length);
 
     //e is the parameter, in this case, e is an event
     const onFileInputChange = (e) => {
         setFiles(e.target.files);
+    }
+
+    const onStartTimeChange = (e) => {
+        if(/^0\d*$/.test(e.target.value)){
+            setStartTime("0")
+        }
+        else if(/^\d*$/.test(e.target.value)){
+            setStartTime(e.target.value)
+        }
+    }
+
+    const onRecordingLengthChange = (e) => {
+        if(/^0\d*$/.test(e.target.value)){
+            setRecordingLength("0")
+        }
+        else if(/^\d*$/.test(e.target.value)){
+            setRecordingLength(e.target.value)
+        }
     }
 
     const submitHandler = (e) => {
@@ -28,6 +51,25 @@ export const FileUploader = ({}) => {
             }
 
             data.append('args', args)
+            
+            if(start_time === ""){
+                data.append('start_time', parseInt(default_start_time))
+            }
+            else{
+                data.append('start_time', parseInt(start_time))
+            }
+
+            if(recording_length === ""){
+                data.append('recording_length', parseInt(default_recording_length))
+            }
+            else{
+                data.append('recording_length', parseInt(recording_length))
+            }
+
+            // // print data to console
+            // for (var pair of data.entries()) {
+            //     console.log(pair[0]+ ', ' + pair[1]); 
+            // }
 
             axios.post('http://localhost:5000/upload', data)
                 .then( (e) => {
@@ -133,6 +175,26 @@ export const FileUploader = ({}) => {
                     value={args}
                     placeholder="arg0 arg1 arg2"
                     onChange={(e)=>setArgs(e.target.value)}
+                />
+
+                <label class="label">
+                    <span class="label-text" style={{marginTop: 50}}>Insert How Long You Want Your Application to Run Before Localization Begins. The Default Value is {default_start_time}.<br/>(Integer Values Only, Time is in Seconds)</span>
+                </label>
+                <input type="text" 
+                    class="input input-bordered input-accent w-full max-w-xs" 
+                    value={start_time}
+                    placeholder={default_start_time}
+                    onChange={onStartTimeChange}
+                />
+
+                <label class="label">
+                    <span class="label-text" style={{marginTop: 50}}>Insert How Long You Want the Localization to Run for. The Default Value is {default_recording_length}.<br/>(Integer Values Only, Time is in Seconds)</span>
+                </label>
+                <input type="text" 
+                    class="input input-bordered input-accent w-full max-w-xs" 
+                    value={recording_length}
+                    placeholder={default_recording_length}
+                    onChange={onRecordingLengthChange}
                 />
                 
                 <button className='btn btn-primary' type='submit' style={{marginTop: 50}}>Send to Classifier</button>
