@@ -89,6 +89,8 @@ def upload():
         files = request.files.getlist("file")
         flag = True
         javaProgramArgs = request.form.get('args')
+        start_time = request.form.get('start_time')
+        recording_length = request.form.get('recording_length')
         errorType = ""
         csvCount = 0
         jarCount = 0
@@ -121,6 +123,15 @@ def upload():
                 argsFile = File(filename="javaProgramArgs.txt", data=javaProgramArgs)
                 fileDB.session.add(argsFile)
                 fileDB.session.commit()
+
+            localizationParams = {
+                "start_time": start_time,
+                "recording_length": recording_length
+            }
+            localizationParams = str(localizationParams).encode()
+            localizationParams = File(filename="localizationParams.txt", data=localizationParams)
+            fileDB.session.add(localizationParams)
+            fileDB.session.commit()
 
             for f in files:
                 filename = secure_filename(f.filename)
