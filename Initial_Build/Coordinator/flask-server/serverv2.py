@@ -1,28 +1,31 @@
 from flask import Flask, request
 from flask_cors import CORS;
 from werkzeug.utils import secure_filename
-from flask_sqlalchemy import SQLAlchemy
 from json import dumps, loads
 from threading import Thread
 from confluent_kafka import Consumer, Producer
 import os
+import requests
 
 app = Flask(__name__)
 CORS(app)
 
 jarSaveDirectory = '../../jarFile/'
+inputSavePath = 'Uploads/'  #/Uploads/ caused a ridiculous wsgi error, something not iterable or whatever
 
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../../../files.db'
-fileDB = SQLAlchemy(app)
+#FOLLOWING CODE WAS COMMENTED OUT FOR FILE SERVER IMPLEMENTATION
 
-#Creates a database model, ie, a table. We will refer to this table as 'File'
-class File(fileDB.Model):
-    filename = fileDB.Column(fileDB.String(50) , primary_key = True)
-    data = fileDB.Column(fileDB.LargeBinary)
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../../../files.db'
+# fileDB = SQLAlchemy(app)
+
+# #Creates a database model, ie, a table. We will refer to this table as 'File'
+# class File(fileDB.Model):
+#     filename = fileDB.Column(fileDB.String(50) , primary_key = True)
+#     data = fileDB.Column(fileDB.LargeBinary)
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
@@ -77,7 +80,9 @@ def listen():
 
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
-
+def string_to_file(string, savePath):
+    with open(savePath, 'w') as file:
+        file.write(string)
 
 
 @app.route("/upload", methods=['GET', 'POST'])
@@ -86,7 +91,9 @@ def upload():
     accepted_filenames = ['jlm.csv', 'perf.csv', 'test.csv']
 
     try:
-        files = request.files.getlist("file")
+        files = request.files
+        filelist = files.getlist("file")
+        #files = jsonpickle.encode(files)
         flag = True
         javaProgramArgs = request.form.get('args')
         start_time = request.form.get('start_time')
@@ -96,7 +103,7 @@ def upload():
         jarCount = 0
 
         #Preliminary Check
-        for f in files:
+        for f in filelist:
             filename = secure_filename(f.filename)
             
             if filename not in accepted_filenames and not filename.endswith(".jar"):
@@ -114,51 +121,70 @@ def upload():
 
         if flag == True:
 
-            #The following 2 lines replace the block of commented out code below
-            fileDB.session.query(File).delete()
-            fileDB.session.commit()
+            # #The following 2 lines replace the block of commented out code below
+            # fileDB.session.query(File).delete()
+            # fileDB.session.commit()
 
+            # if javaProgramArgs != "":
+            #     javaProgramArgs = javaProgramArgs.encode()
+            #     argsFile = File(filename="javaProgramArgs.txt", data=javaProgramArgs)
+            #     fileDB.session.add(argsFile)
+            #     fileDB.session.commit()
+
+            # localizationParams = f"{start_time} {recording_length}"
+            # localizationParams = localizationParams.encode()
+            # localizationParams = File(filename="localizationParams.txt", data=localizationParams)
+            # fileDB.session.add(localizationParams)
+            # fileDB.session.commit()
+
+            #ABOVE CODE WAS COMMENTED OUT FOR FILE SERVER IMPLEMENTATION
+
+            #Clear Uploads directory
+            if len(os.listdir(inputSavePath)) > 0:
+                for file in os.listdir(inputSavePath):
+                    os.remove(f'{inputSavePath}{file}')
+
+            #Store Application args if there are any
             if javaProgramArgs != "":
-                javaProgramArgs = javaProgramArgs.encode()
-                argsFile = File(filename="javaProgramArgs.txt", data=javaProgramArgs)
-                fileDB.session.add(argsFile)
-                fileDB.session.commit()
+                string_to_file(javaProgramArgs, f"{inputSavePath}javaProgramArgs.txt")
 
-            localizationParams = f"{start_time} {recording_length}"
-            localizationParams = localizationParams.encode()
-            localizationParams = File(filename="localizationParams.txt", data=localizationParams)
-            fileDB.session.add(localizationParams)
-            fileDB.session.commit()
+            #Store localization parameters
+            string_to_file(f"{start_time} {recording_length}", f"{inputSavePath}localizationParams.txt")
 
-            for f in files:
+            for f in filelist:
                 filename = secure_filename(f.filename)
+                f.save(f"{inputSavePath}{filename}")
+                #EVERYTHING BELOW WAS COMMENTED OUT FOR FILE SERVER IMPLEMENTATION
+                
+                # #added if statement and put rest in else block for localization
+                # if filename.endswith(".jar"):
+                #     #Clearing out the jarFile directory
+                #     if len(os.listdir(jarSaveDirectory)) > 0:
+                #         for file in os.listdir(jarSaveDirectory):
+                #             os.remove(f'{jarSaveDirectory}{file}') 
+                #     f.save(f"{jarSaveDirectory}{filename}")
+                # else:
+                #     data = f.read()
+                #     # exists = bool(fileDB.session.query(File).filter_by(filename=filename).first())
+                #     # if filename.endswith(".jar") and fileDB.session.query(File).filter(File.filename.like('%.jar')).count() == 1:
+                #     #     fileDB.session.query(File).filter(File.filename.like('%.jar')).delete()
+                #     # if exists:
+                #     #     file = fileDB.session.query(File).filter(File.filename == filename).one()
+                #     #     file.data = data
+                #     #     fileDB.session.commit()
+                #     # else:
+                #     file = File(filename=filename, data=data) #Create a 'File' object of the File class in the DATABASE CONFIGURATION part of the code
+                #     fileDB.session.add(file)
+                #     fileDB.session.commit()
 
-                #added if statement and put rest in else block for localization
-                if filename.endswith(".jar"):
-                    #Clearing out the jarFile directory
-                    if len(os.listdir(jarSaveDirectory)) > 0:
-                        for file in os.listdir(jarSaveDirectory):
-                            os.remove(f'{jarSaveDirectory}{file}') 
-                    f.save(f"{jarSaveDirectory}{filename}")
-                else:
-                    data = f.read()
-                    # exists = bool(fileDB.session.query(File).filter_by(filename=filename).first())
-                    # if filename.endswith(".jar") and fileDB.session.query(File).filter(File.filename.like('%.jar')).count() == 1:
-                    #     fileDB.session.query(File).filter(File.filename.like('%.jar')).delete()
-                    # if exists:
-                    #     file = fileDB.session.query(File).filter(File.filename == filename).one()
-                    #     file.data = data
-                    #     fileDB.session.commit()
-                    # else:
-                    file = File(filename=filename, data=data) #Create a 'File' object of the File class in the DATABASE CONFIGURATION part of the code
-                    fileDB.session.add(file)
-                    fileDB.session.commit()
-
-                    #Save locally (for testing purposes)
-                    #f.save(os.getcwd() + '\\Uploads\\' + filename)
+                #     #Save locally (for testing purposes)
+                #     #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
             #producer.send('coordinatorToClassifier', value={'signal': "startClassifier"})
             produce('coordinatorToClassifier', {'fromCoordinator': 'startClassifier'})
+
+           
+            #saveInputReq = requests.post('http://localhost:5000/cds/storeInput')
 
             return "ok"
         else:
