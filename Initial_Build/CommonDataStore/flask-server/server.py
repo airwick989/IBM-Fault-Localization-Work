@@ -15,7 +15,7 @@ CORS(app)
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
-
+#'http://localhost:5000/cds/storeInput'
 
 @app.route("/cds/storeInput", methods=['GET', 'POST'])
 def upload():
