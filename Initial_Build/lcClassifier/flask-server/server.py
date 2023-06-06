@@ -1,20 +1,7 @@
 from pickle import TRUE
 from flask import Flask, request
 from flask_cors import CORS;
-from werkzeug.utils import secure_filename
-from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
-import numpy as np
-from sklearn.cluster import KMeans
-from sklearn.cluster import DBSCAN
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import silhouette_score
-from sklearn.model_selection import train_test_split
-import seaborn as sns
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import LabelEncoder
 from json import loads, dumps
 import pickle
 from confluent_kafka import Consumer, Producer
@@ -173,10 +160,16 @@ def classify(pca_DF_train):
     }
     print(f"Your Java program is experiencing {cluster_mappings[pca_DF_train['Cluster'].iloc[0]]}.")
 
-    # results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]].encode()
+    #results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]].encode()
     # resultsFile = File(filename="results.txt", data=results)
     # fileDB.session.add(resultsFile)
     # fileDB.session.commit()
+
+    #Store results in file server
+    results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]]
+    with open(f"{filesPath}results.txt", "w") as resultsFile:
+        resultsFile.write(results)
+    r = requests.post('http://localhost:5001/cds/storeInput', files={'file': ('results.txt', open(f"{filesPath}results.txt", 'rb'))})
 
     produce('classifierBackToCoordinator', {'fromClassifier': 'classifierComplete'})
 
