@@ -184,7 +184,7 @@ def upload():
             for file in os.listdir(inputSavePath):
                 files.append(('file', open(f"{inputSavePath}{file}", 'rb')))
             headers = {
-                'clear_flag': True
+                'clear_flag': 'True'
             }
             saveInputReq = requests.post('http://localhost:5001/cds/storeInput', files=files, headers=headers)
 

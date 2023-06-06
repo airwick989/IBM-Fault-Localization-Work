@@ -22,7 +22,12 @@ uploadsDirectory = "Uploads/"
 @app.route("/cds/storeInput", methods=['POST'])
 def storeInput():
     try:
-        print(request.headers)
+        if 'clear_flag' in request.headers:
+            if request.headers['clear_flag'] == 'True':
+                #Clear Uploads directory
+                if len(os.listdir(uploadsDirectory)) > 0:
+                    for file in os.listdir(uploadsDirectory):
+                        os.remove(f'{uploadsDirectory}{file}')
         
         files = request.files
         filelist = files.getlist("file")
