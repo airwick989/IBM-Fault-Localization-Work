@@ -35,6 +35,7 @@ test = None
 filesPath = './Files/Uploads/'
 modelPath = './Files/Models/'
 zipPath = f"{filesPath}files.zip"
+embeddedUploadsPath = f"{filesPath}Uploads/"
 
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
@@ -66,10 +67,10 @@ def getFiles():
     if len(os.listdir(filesPath)) > 0:
         for file in os.listdir(filesPath):
             #Checks for uploads directory in the directory and clears it
-            if os.path.isdir(file):
-
-
-            os.remove(f'{filesPath}{file}')
+            if os.path.isdir(f"{filesPath}{file}"):
+                shutil.rmtree(embeddedUploadsPath)
+            else:
+                os.remove(f'{filesPath}{file}')
     #Write zip file
     open(zipPath, "wb").write(response.content)
 
@@ -77,8 +78,10 @@ def getFiles():
     with zipfile.ZipFile(zipPath, 'r') as zip:
         zip.extractall(filesPath)
     #Move files to correct directory and remove unecessary folder
-    if os.path.isdir(f"{filesPath}Uploads/"):
-        print("yup")
+    if os.path.isdir(embeddedUploadsPath):
+        for file in os.listdir(embeddedUploadsPath):
+            os.rename(f"{embeddedUploadsPath}{file}", f"{filesPath}{file}")
+        shutil.rmtree(embeddedUploadsPath)
 
 
 
@@ -170,10 +173,10 @@ def classify(pca_DF_train):
     }
     print(f"Your Java program is experiencing {cluster_mappings[pca_DF_train['Cluster'].iloc[0]]}.")
 
-    results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]].encode()
-    resultsFile = File(filename="results.txt", data=results)
-    fileDB.session.add(resultsFile)
-    fileDB.session.commit()
+    # results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]].encode()
+    # resultsFile = File(filename="results.txt", data=results)
+    # fileDB.session.add(resultsFile)
+    # fileDB.session.commit()
 
     produce('classifierBackToCoordinator', {'fromClassifier': 'classifierComplete'})
 
@@ -218,18 +221,17 @@ while True:
         print('Error: {}'.format(msg.error()))
         continue
     if msg.topic() == "coordinatorToClassifier":
-        getFiles()
-        # try:
-        #     getFiles()
-        # except Exception:
-        #     produce('classifierBackToCoordinator', {'fromClassifier': 'fileProcessingError'})
-        #     error = True
+        try:
+            getFiles()
+        except Exception:
+            produce('classifierBackToCoordinator', {'fromClassifier': 'fileProcessingError'})
+            error = True
 
-        # if not error: 
-        #     try:
-        #         processData()
-        #     except Exception:
-        #         produce('classifierBackToCoordinator', {'fromClassifier': 'classificationError'})
+        if not error: 
+            try:
+                processData()
+            except Exception:
+                produce('classifierBackToCoordinator', {'fromClassifier': 'classificationError'})
 consumerListener.close()
             
 
