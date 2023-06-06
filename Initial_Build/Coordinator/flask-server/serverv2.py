@@ -180,11 +180,16 @@ def upload():
                 #     #Save locally (for testing purposes)
                 #     #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
+            files = []
+            for file in os.listdir(inputSavePath):
+                files.append(('file', open(f"{inputSavePath}{file}", 'rb')))
+            headers = {
+                'clear_flag': True
+            }
+            saveInputReq = requests.post('http://localhost:5001/cds/storeInput', files=files, headers=headers)
+
             #producer.send('coordinatorToClassifier', value={'signal': "startClassifier"})
             produce('coordinatorToClassifier', {'fromCoordinator': 'startClassifier'})
-
-           
-            #saveInputReq = requests.post('http://localhost:5000/cds/storeInput')
 
             return "ok"
         else:

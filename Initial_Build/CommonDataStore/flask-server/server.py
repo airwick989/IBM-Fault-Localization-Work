@@ -8,7 +8,9 @@ import os
 
 app = Flask(__name__)
 CORS(app)
+app.app_context().push()  
 
+uploadsDirectory = "Uploads/"
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
@@ -17,11 +19,20 @@ CORS(app)
 
 #'http://localhost:5000/cds/storeInput'
 
-@app.route("/cds/storeInput", methods=['GET', 'POST'])
-def upload():
-
-    accepted_filenames = ['jlm.csv', 'perf.csv', 'test.csv']
+@app.route("/cds/storeInput", methods=['POST'])
+def storeInput():
+    try:
+        print(request.headers)
+        
+        files = request.files
+        filelist = files.getlist("file")
+        for f in filelist:
+            filename = secure_filename(f.filename)
+            f.save(f"{uploadsDirectory}{filename}")
+        return "ok"
+    except Exception:
+        return Exception
 
 
 if __name__ == "__main__":    
-    app.run(debug=True)
+    app.run(port=5001, debug=True)
