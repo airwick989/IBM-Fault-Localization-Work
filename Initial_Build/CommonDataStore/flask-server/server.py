@@ -1,10 +1,11 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 from flask_cors import CORS;
 from werkzeug.utils import secure_filename
 from json import dumps, loads
 from threading import Thread
 from confluent_kafka import Consumer, Producer
 import os
+import zipfile
 
 app = Flask(__name__)
 CORS(app)
@@ -17,7 +18,7 @@ uploadsDirectory = "Uploads/"
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
-#'http://localhost:5000/cds/storeInput'
+#'http://localhost:5001/cds/storeInput'
 
 @app.route("/cds/storeInput", methods=['POST'])
 def storeInput():
@@ -37,6 +38,21 @@ def storeInput():
         return "ok"
     except Exception:
         return Exception
+    
+@app.route("/cds/getFiles", methods=['GET'])
+def getFiles():
+
+    targetExtensions = request.args.get('targetExtensions')
+    #files = []
+    with zipfile.ZipFile(f'{uploadsDirectory}files.zip', 'w') as zip:
+        for file in os.listdir(uploadsDirectory):
+            for extension in targetExtensions:
+                if file.endswith(extension):
+                    #files.append(('file', open(f"{uploadsDirectory}{file}", 'rb')))
+                    zip.write(f"{uploadsDirectory}{file}", compress_type=zipfile.ZIP_DEFLATED)
+
+    return send_file(f"{uploadsDirectory}files.zip")
+    #return "ok"
 
 
 if __name__ == "__main__":    

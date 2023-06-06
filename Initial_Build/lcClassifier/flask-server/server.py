@@ -18,6 +18,10 @@ from sklearn.preprocessing import LabelEncoder
 from json import loads, dumps
 import pickle
 from confluent_kafka import Consumer, Producer
+import requests
+import os
+import zipfile
+import shutil
 
 app = Flask(__name__)
 CORS(app)
@@ -30,18 +34,19 @@ test = None
 
 filesPath = './Files/Uploads/'
 modelPath = './Files/Models/'
+zipPath = f"{filesPath}files.zip"
 
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../../../files.db'
-fileDB = SQLAlchemy(app)
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../../../files.db'
+# fileDB = SQLAlchemy(app)
 
-#Creates a database model, ie, a table. We will refer to this table as 'File'
-class File(fileDB.Model):
-    filename = fileDB.Column(fileDB.String(50) , primary_key = True)
-    data = fileDB.Column(fileDB.LargeBinary)
+# #Creates a database model, ie, a table. We will refer to this table as 'File'
+# class File(fileDB.Model):
+#     filename = fileDB.Column(fileDB.String(50) , primary_key = True)
+#     data = fileDB.Column(fileDB.LargeBinary)
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
@@ -51,36 +56,60 @@ class File(fileDB.Model):
 
 def getFiles():
     global filesPath
-    readfiles = fileDB.session.query(File)
+    #readfiles = fileDB.session.query(File)
+    params = {
+        'targetExtensions': '.csv'
+    }
+    response = requests.get('http://localhost:5001/cds/getFiles', params=params)
 
-    for file in readfiles:
+    #Clear Uploads directory
+    if len(os.listdir(filesPath)) > 0:
+        for file in os.listdir(filesPath):
+            #Checks for uploads directory in the directory and clears it
+            if os.path.isdir(file):
+
+
+            os.remove(f'{filesPath}{file}')
+    #Write zip file
+    open(zipPath, "wb").write(response.content)
+
+    #Extract all files from zip
+    with zipfile.ZipFile(zipPath, 'r') as zip:
+        zip.extractall(filesPath)
+    #Move files to correct directory and remove unecessary folder
+    if os.path.isdir(f"{filesPath}Uploads/"):
+        print("yup")
+
+
+
+    # for file in readfiles:
         
-        if file.filename.endswith(".csv"):
-            # Read binary data and convert it into a csv format
-            data = file.data
-            csv = str(data)[2:-1]
+    #     if file.filename.endswith(".csv"):
+    #         # Read binary data and convert it into a csv format
+    #         data = file.data
+    #         csv = str(data)[2:-1]
 
-            #Windows
-            #csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+    #         #Windows
+    #         #csv = csv.replace("\\r\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
 
-            #Linux
-            csv = csv.replace("\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
+    #         #Linux
+    #         csv = csv.replace("\\n", "\n")   #'\r\n' if windows, just '\n' if linux?
 
             
-            csv = csv.replace("\\xef\\xbb\\xbf", "")   #Clean some utf-8 escape characters
+    #         csv = csv.replace("\\xef\\xbb\\xbf", "")   #Clean some utf-8 escape characters
             
-            print(csv, file=open(f'{filesPath}{file.filename}', 'w'))
-            # if file.filename == "jlm.csv":
-            #     data = file.data
-            #     csv = str(data)[2:-1]
-            #     print(csv[0:5000])
+    #         print(csv, file=open(f'{filesPath}{file.filename}', 'w'))
+    #         # if file.filename == "jlm.csv":
+    #         #     data = file.data
+    #         #     csv = str(data)[2:-1]
+    #         #     print(csv[0:5000])
 
-            #String to dataframe format
-            # csvData = csv.split('\n')
-            # for i in range(0,len(csvData)):
-            #     csvData[i] = csvData[i].split(",")
-            # headers = csvData[0]
-            # csvData = csvData[1:-1]
+    #         #String to dataframe format
+    #         # csvData = csv.split('\n')
+    #         # for i in range(0,len(csvData)):
+    #         #     csvData[i] = csvData[i].split(",")
+    #         # headers = csvData[0]
+    #         # csvData = csvData[1:-1]
 
 
 def scale_standard(df):
@@ -189,17 +218,18 @@ while True:
         print('Error: {}'.format(msg.error()))
         continue
     if msg.topic() == "coordinatorToClassifier":
-        try:
-            getFiles()
-        except Exception:
-            produce('classifierBackToCoordinator', {'fromClassifier': 'fileProcessingError'})
-            error = True
+        getFiles()
+        # try:
+        #     getFiles()
+        # except Exception:
+        #     produce('classifierBackToCoordinator', {'fromClassifier': 'fileProcessingError'})
+        #     error = True
 
-        if not error: 
-            try:
-                processData()
-            except Exception:
-                produce('classifierBackToCoordinator', {'fromClassifier': 'classificationError'})
+        # if not error: 
+        #     try:
+        #         processData()
+        #     except Exception:
+        #         produce('classifierBackToCoordinator', {'fromClassifier': 'classificationError'})
 consumerListener.close()
             
 
