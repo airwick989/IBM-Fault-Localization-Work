@@ -20,8 +20,8 @@ uploadsDirectory = "Uploads/"
 
 #'http://localhost:5001/cds/storeInput'
 
-@app.route("/cds/storeInput", methods=['POST'])
-def storeInput():
+@app.route("/cds/storeData", methods=['POST'])
+def storeData():
     try:
         if 'clear_flag' in request.headers:
             if request.headers['clear_flag'] == 'True':
@@ -42,8 +42,8 @@ def storeInput():
 
     
     
-@app.route("/cds/getFiles", methods=['GET'])
-def getFiles():
+@app.route("/cds/getData", methods=['GET'])
+def getData():
 
     targetExtensions = request.args.get('targetExtensions')
     #files = []

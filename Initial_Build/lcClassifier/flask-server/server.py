@@ -48,7 +48,7 @@ def getFiles():
     params = {
         'targetExtensions': '.csv'
     }
-    response = requests.get('http://localhost:5001/cds/getFiles', params=params)
+    response = requests.get('http://localhost:5001/cds/getData', params=params)
 
     #Clear Uploads directory
     if len(os.listdir(filesPath)) > 0:
@@ -169,7 +169,7 @@ def classify(pca_DF_train):
     results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]]
     with open(f"{filesPath}results.txt", "w") as resultsFile:
         resultsFile.write(results)
-    r = requests.post('http://localhost:5001/cds/storeInput', files={'file': ('results.txt', open(f"{filesPath}results.txt", 'rb'))})
+    r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('results.txt', open(f"{filesPath}results.txt", 'rb'))})
 
     produce('classifierBackToCoordinator', {'fromClassifier': 'classifierComplete'})
 

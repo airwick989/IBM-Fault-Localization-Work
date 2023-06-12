@@ -186,7 +186,7 @@ def upload():
             headers = {
                 'clear_flag': 'True'
             }
-            saveInputReq = requests.post('http://localhost:5001/cds/storeInput', files=files, headers=headers)
+            saveInputReq = requests.post('http://localhost:5001/cds/storeData', files=files, headers=headers)
 
             #producer.send('coordinatorToClassifier', value={'signal': "startClassifier"})
             produce('coordinatorToClassifier', {'fromCoordinator': 'startClassifier'})
