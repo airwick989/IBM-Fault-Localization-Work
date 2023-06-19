@@ -146,10 +146,10 @@ def upload():
 
             #Store Application args if there are any
             if javaProgramArgs != "":
-                string_to_file(javaProgramArgs, f"{inputSavePath}javaProgramArgs.txt")
+                string_to_file(javaProgramArgs, f"{inputSavePath}javaProgramArgs.args")
 
             #Store localization parameters
-            string_to_file(f"{start_time} {recording_length}", f"{inputSavePath}localizationParams.txt")
+            string_to_file(f"{start_time} {recording_length}", f"{inputSavePath}localizationParams.params")
 
             for f in filelist:
                 filename = secure_filename(f.filename)

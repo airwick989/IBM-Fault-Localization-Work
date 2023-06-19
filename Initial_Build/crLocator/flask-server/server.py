@@ -18,14 +18,14 @@ app.app_context().push()    #added to mitigate "working outside of application c
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../../../files.db'
-fileDB = SQLAlchemy(app)
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../../../files.db'
+# fileDB = SQLAlchemy(app)
 
-#Creates a database model, ie, a table. We will refer to this table as 'File'
-class File(fileDB.Model):
-    filename = fileDB.Column(fileDB.String(50) , primary_key = True)
-    data = fileDB.Column(fileDB.LargeBinary)
+# #Creates a database model, ie, a table. We will refer to this table as 'File'
+# class File(fileDB.Model):
+#     filename = fileDB.Column(fileDB.String(50) , primary_key = True)
+#     data = fileDB.Column(fileDB.LargeBinary)
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
