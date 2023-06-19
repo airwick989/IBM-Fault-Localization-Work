@@ -179,6 +179,17 @@ def localize():
         methods_str = methods_str + method + ", "
     print(methods_str)
 
+    #save results to the results file
+    results = None
+    with open(f'{filesPath}results.results', 'r') as resultsfile:
+        results = resultsfile.read().replace('\n', '')
+    methods = ','.join(methods)
+    results = results + f"\n{methods}"
+    with open(f"{filesPath}results.results", "w") as resultsFile:
+        resultsFile.write(results)
+    #push results file to the file server
+    r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('results.results', open(f"{filesPath}results.results", 'rb'))})
+
     produce('localizerBackToCoordinator', {'fromLocalizer': 'localizerComplete'})
 
 """---- LOCALIZER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
@@ -200,7 +211,6 @@ def localize():
 
 
 
-#localize()
 while True:
     msg=consumerLocalizer.poll(1.0) #timeout
     if msg is None:

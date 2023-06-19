@@ -5,11 +5,11 @@
 
   (Source   : Thr Dec 9 2010 at 16:05:13)
 
-  (Platform : Linux-x86_64, OS=5.15.0-69-generic, PerfUtil=v9.8.7, PERFDD=v00007F15, CPUS=6, HT=0, MC=0, CpuSig=0x00000000, (null), Hostname=rtemsoft-G5-5090)
+  (Platform : Linux-x86_64, OS=5.15.0-69-generic, PerfUtil=v9.8.7, PERFDD=v00007F28, CPUS=6, HT=0, MC=0, CpuSig=0x00000000, (null), Hostname=rtemsoft-G5-5090)
 
   (JVM Info : OpenJDK 64-Bit Server VM,17.0.7+7-Ubuntu-0ubuntu120.04,mixed mode, sharing,Private Build)
 
- JPROF started at 14:28:27 on 2023/06/19
+ JPROF started at 15:12:00 on 2023/06/19
 
  JPROF Options: scs=monitor_contended_entered+,logpath=/home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs
 
@@ -32,9 +32,9 @@ JVMTI Ver    = 30110000
 
  Path and prefix for log files: /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log
 
- Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-msg_1900383
+ Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-msg_1905138
 
- Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-jtnm_1900383
+ Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-jtnm_1905138
 
  Logical Metric #0 = RAW_CYCLES
 Physical Metric #0 = RAW_CYCLES
@@ -57,7 +57,7 @@ SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
 << EnableEvents1x(1)
 <<< Agent_OnLoad
- ==> cbVMInit, jvmti = 0x7f1590009f10, tid = 0x1cff60
+ ==> cbVMInit, jvmti = 0x7f2878009f10, tid = 0x1d11f4
 hashInit: buckets =     2053, itemsize =      432, name = ThreadTable
 hashInit: buckets =    64007, itemsize =       40, name = ClassTable
 Get Primitive Classes
@@ -79,14 +79,14 @@ Element Size:   40
 Empty Buckets:  63559
 Largest Bucket: 1
 
-**INFO** (14:28:27) SCS initialization starting
+**INFO** (15:12:00) SCS initialization starting
 **INFO** gv->scs_monitorEvent = 76 (MONITOR_CONTENDED_ENTERED)
 
-Server socket (22) created for PID 1900383. Listening on port 8888
+Server socket (22) created for PID 1905138. Listening on port 8888
  <== cbVMInit
 
- (14:28:43) RTDriver Cmd: <start>
- (0x176A22D8:89D84ABB) RTDriver Token: <start>
+ (15:12:16) RTDriver Cmd: <start>
+ (0x176A2538:C6F66031) RTDriver Token: <start>
  Parsed:  1 = START
 Entering RTD_LOCK : treset(STATE)
   Inside RTD_LOCK : treset(STATE)
@@ -100,8 +100,8 @@ SetEventNotificationMode:  rc = 0,  Enable MONITOR_CONTENDED_ENTERED
  << RTD_LOCK : RTArcfTraceStart(1)
 hashInit: buckets =    20011, itemsize =       36, name = MethodTable
 
- (14:29:03) RTDriver Cmd: <stop>
- (0x176A22DD:31FAB344) RTDriver Token: <stop>
+ (15:12:36) RTDriver Cmd: <stop>
+ (0x176A253D:6F14ED0B) RTDriver Token: <stop>
  Parsed:  1 = STOP
  EnableEvents2x: Disable
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
@@ -116,32 +116,32 @@ Entering RTD_LOCK : treset(SYNC)
  Begin TREE 1
 
 
- Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-rt.1_1900383
+ Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-rt.1_1905138
 gv->calltree  = 0
 gv->calltrace = 0
 gv->usermets  = 1
 gv->physmets  = 0
 gv->start     = 0
-Start at 176a22d889d84abb, Flush at 176a22dd31fab344
+Start at 176a2538c6f66031, Flush at 176a253d6f14ed0b
 
 
  End Tree 1
 
  OverCal               0
- Tree Nodes            2
+ Tree Nodes            4
  Node Size            88
  Class Size           40
  Event Size           32
- Tree Size           176
+ Tree Size           352
 
-# of xMalloc:   1487
+# of xMalloc:   1491
 # of xFree:     12
 # of xStrDup:   737
 # of xFreeStr:  12
-Mem Requested:  792233
-Memory In Use:  806696
+Mem Requested:  793081
+Memory In Use:  807576
 Memory Freed:   456
-Max Footprint:  806656
+Max Footprint:  807536
 Number of GCs: 0
 
  LOCK STATS
@@ -158,20 +158,20 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
 << EnableEvents2x(0)
-Freeing dead thread: 001cff60_main
+Freeing dead thread: 001d11f4_main
  Leaving RTD_LOCK : treset(FULL)
  RTWaitForClient: Client connection closed. Re-Initializing Socket 22 on port 8888 ...
  RTWaitForClient: ready to accept connections on port 8888 again ...
- (14:29:04) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
+ (15:12:37) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
 
-# of xMalloc:   1510
-# of xFree:     20
+# of xMalloc:   1514
+# of xFree:     23
 # of xStrDup:   745
 # of xFreeStr:  14
-Mem Requested:  793578
-Memory In Use:  808176
-Memory Freed:   1280
-Max Footprint:  808080
+Mem Requested:  794218
+Memory In Use:  808824
+Memory Freed:   1512
+Max Footprint:  808728
  EnableEvents1x: Disable
 SetEventNotificationMode:  rc = 0, Disable THREAD_START
 SetEventNotificationMode:  rc = 0, Disable CLASS_LOAD
@@ -180,8 +180,8 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 << EnableEvents1x(0)
 
- (14:29:04) RTDriver Cmd: <END>
- (0x176A22DD:7028C97A) RTDriver Token: <END>
+ (15:12:37) RTDriver Cmd: <END>
+ (0x176A253D:AC77D77C) RTDriver Token: <END>
  Parsed:  1 = END
  EnableEvents2x: Disable
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
@@ -198,7 +198,7 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
 << EnableEvents2x(0)
-Freeing dead thread: 001d00eb_SIGTERM_handler
+Freeing dead thread: 001d1380_SIGTERM_handler
  Leaving RTD_LOCK : treset(FULL)
 
 hashFree: name = MethodTable
@@ -229,16 +229,16 @@ Element Size:   432
 Empty Buckets:  2042
 Largest Bucket: 1
 
-# of xMalloc:   1510
-# of xFree:     1434
+# of xMalloc:   1514
+# of xFree:     1437
 # of xStrDup:   745
 # of xFreeStr:  719
-Mem Requested:  24572
-Memory In Use:  25280
-Memory Freed:   784176
-Max Footprint:  808080
+Mem Requested:  25212
+Memory In Use:  25928
+Memory Freed:   784408
+Max Footprint:  808728
 
 Number of GCs: 0
 
- JPROF ending at 14:29:04 on 2023/06/19
+ JPROF ending at 15:12:37 on 2023/06/19
 
