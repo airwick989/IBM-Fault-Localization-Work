@@ -8,13 +8,17 @@ from kafka import KafkaConsumer, KafkaProducer
 import os, time, re
 from threading import Thread
 from confluent_kafka import Consumer, Producer
+import requests
+import zipfile
+import shutil
 
 app = Flask(__name__)
 CORS(app)
 app.app_context().push()    #added to mitigate "working outside of application context" error
 
-
-
+filesPath = './Files/Uploads/'
+zipPath = f'{filesPath}files.zip'
+embeddedUploadsPath = f"{filesPath}Uploads/"
 
 """---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
 
@@ -72,32 +76,49 @@ def localize():
         for file in os.listdir('./logs/'):
             os.remove(f'./logs/{file}')
 
-    # #Clearing out the Files directory
-    # if len(os.listdir('./Files/')) > 0:
-    #     for file in os.listdir('./Files/'):
-    #         os.remove(f'./Files/{file}') 
-
     # #Pull Jar file from the common data store
     # jarFile = fileDB.session.query(File).filter(File.filename.like('%.jar')).first()    #another option, instead of .first(), use .all()
     # filename = f"./Files/{jarFile.filename}"
     # data = jarFile.data
     # print(data, file=open(filename, 'w'))
 
-    #"Pull" Jar file from jarFile directory
-    jarSaveDirectory = '../../jarFile/'
-    filename = ""
-    for file in os.listdir(jarSaveDirectory):
-        filename = f"{jarSaveDirectory}{file}"
+    #Clear Uploads directory
+    if len(os.listdir(filesPath)) > 0:
+        for file in os.listdir(filesPath):
+            #Checks for uploads directory in the directory and clears it
+            if os.path.isdir(f"{filesPath}{file}"):
+                shutil.rmtree(embeddedUploadsPath)
+            else:
+                os.remove(f'{filesPath}{file}')
+
+    #Pull necessary files from file server
+    params = {
+        'targetExtensions': ".jar, .args, .params, .results"
+    }
+    response = requests.get('http://localhost:5001/cds/getData', params=params)
+    #Write the zip file
+    open(zipPath, "wb").write(response.content)
+
+    #Extract all files from zip
+    with zipfile.ZipFile(zipPath, 'r') as zip:
+        zip.extractall(filesPath)
+    #Move files to correct directory and remove unecessary folder
+    if os.path.isdir(embeddedUploadsPath):
+        for file in os.listdir(embeddedUploadsPath):
+            os.rename(f"{embeddedUploadsPath}{file}", f"{filesPath}{file}")
+        shutil.rmtree(embeddedUploadsPath)
 
     #Get program arguments if they exist
-    args = fileDB.session.query(File).filter(File.filename.like("javaProgramArgs.txt")).first()
-    if args == None:
-        args = ""
-    else:
-        args = str(args.data)[2:-1]
+    args = ""
+    argsPath = f'{filesPath}javaProgramArgs.args'
+    if os.path.exists(argsPath):
+        with open(argsPath, 'r') as file:
+            args = file.read().rstrip()
 
     #Get start_time and recording
-    localizationParams = str(fileDB.session.query(File).filter(File.filename.like("localizationParams.txt")).first().data)[2:-1]
+    localizationParams = None
+    with open(f'{filesPath}localizationParams.params', 'r') as file:
+        localizationParams = file.read().rstrip()
     localizationParams = localizationParams.split()
 
     # start_time = "15"
@@ -111,6 +132,12 @@ def localize():
     def run_rtdriver():
         time.sleep(delay)
         os.system(f"./run_rtdriver.sh {start_time} {recording_length}")
+
+    #get filename of jar file
+    filename = ""
+    for file in os.listdir(filesPath):
+        if file.endswith(".jar"):
+            filename = f"{filesPath}{file}"
 
     def run_jlm():
         os.system(f"./run_jlm.sh {script_running_time} {filename} {args}")
@@ -172,6 +199,8 @@ def localize():
 
 
 
+
+#localize()
 while True:
     msg=consumerLocalizer.poll(1.0) #timeout
     if msg is None:

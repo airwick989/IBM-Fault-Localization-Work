@@ -46,10 +46,12 @@ def storeData():
 def getData():
 
     targetExtensions = request.args.get('targetExtensions')
+    targetExtensions = targetExtensions.split(',')
     #files = []
     with zipfile.ZipFile(f'{uploadsDirectory}files.zip', 'w') as zip:
         for file in os.listdir(uploadsDirectory):
             for extension in targetExtensions:
+                extension = extension.strip()
                 if file.endswith(extension):
                     #files.append(('file', open(f"{uploadsDirectory}{file}", 'rb')))
                     zip.write(f"{uploadsDirectory}{file}", compress_type=zipfile.ZIP_DEFLATED)

@@ -167,9 +167,9 @@ def classify(pca_DF_train):
 
     #Store results in file server
     results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]]
-    with open(f"{filesPath}results.txt", "w") as resultsFile:
+    with open(f"{filesPath}results.results", "w") as resultsFile:
         resultsFile.write(results)
-    r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('results.txt', open(f"{filesPath}results.txt", 'rb'))})
+    r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('results.results', open(f"{filesPath}results.results", 'rb'))})
 
     produce('classifierBackToCoordinator', {'fromClassifier': 'classifierComplete'})
 
