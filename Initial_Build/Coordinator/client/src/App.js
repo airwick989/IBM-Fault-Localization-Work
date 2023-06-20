@@ -4,7 +4,7 @@ import React, {useState, useEffect} from 'react'
 import styles from "./index.css"  //This import is important, ignore the warning
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './Home';
-import Loading from './components/Loading';
+import Loading from './components/Loading/Loading';
 
 
 

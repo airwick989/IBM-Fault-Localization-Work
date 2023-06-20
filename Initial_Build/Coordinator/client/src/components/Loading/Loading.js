@@ -1,7 +1,10 @@
+import LoaderComp from "./Loader";
+
 const Loading = () => {
     return ( 
         <div className="Loading">
-            <h2>Loading</h2>
+            <h2>Loading beep boop</h2>
+            <LoaderComp/>
         </div>
     );
 }
