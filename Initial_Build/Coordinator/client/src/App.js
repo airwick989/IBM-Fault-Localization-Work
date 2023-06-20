@@ -4,7 +4,7 @@ import React, {useState, useEffect} from 'react'
 import styles from "./index.css"  //This import is important, ignore the warning
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './Home';
-import Classifier from './Classifier';
+import Loading from './components/Loading';
 
 
 
@@ -40,9 +40,9 @@ function App(){
               <Route exact path="/">
                 <Home/>
               </Route>
-              {/* Classifier results page */}
-              <Route path="/classifier">
-                <Classifier/>
+              {/* Loading page */}
+              <Route path="/loading">
+                <Loading/>
               </Route>
           </Switch>
         </div>
