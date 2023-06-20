@@ -1,9 +1,10 @@
 import LoaderComp from "./Loader";
+import './styles.css';
 
 const Loading = () => {
     return ( 
-        <div className="Loading">
-            <h2>Loading beep boop</h2>
+        <div className="container">
+            <h1 style={{marginBottom: 25}}>Loading Results</h1>
             <LoaderComp/>
         </div>
     );

@@ -3,9 +3,9 @@ const LoaderComp = () => {
  
     return (
         <Circles
-            height="80"
-            width="80"
-            color="#4fa94d"
+            height="150"
+            width="150"
+            color="#36ccbe"
             ariaLabel="circles-loading"
             wrapperStyle={{}}
             wrapperClass=""

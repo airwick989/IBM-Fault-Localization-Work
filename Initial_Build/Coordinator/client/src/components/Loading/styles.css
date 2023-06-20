@@ -1,0 +1,7 @@
+.container {
+    display: flex;
+    justify-content: center; /* horizontally centers the child elements */
+    align-items: center; /* vertically centers the child elements */
+    height: 100vh; /* set the height of the container to take up the full viewport height */
+    flex-direction: column;
+}
