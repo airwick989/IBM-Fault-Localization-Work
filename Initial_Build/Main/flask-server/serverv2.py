@@ -34,6 +34,13 @@ inputSavePath = 'Uploads/'  #/Uploads/ caused a ridiculous wsgi error, something
 
 producerCoordinator = Producer({'bootstrap.servers': 'localhost:9092'})
 
+consumerListener = Consumer({
+        'bootstrap.servers': 'localhost:9092',
+        'group.id': 'coordinator-group',
+        'auto.offset.reset': 'latest'
+    })
+consumerListener.subscribe(['classifierBackToCoordinator', 'localizerBackToCoordinator'])
+
 def receipt(err, msg):
     if err is not None:
         print('Error: {}'.format(err))
@@ -47,39 +54,12 @@ def produce(topic, message):
     producerCoordinator.produce(topic, data.encode('utf-8'), callback=receipt)
     producerCoordinator.flush()
 
-def listen():
-    consumerListener = Consumer({
-        'bootstrap.servers': 'localhost:9092',
-        'group.id': 'coordinator-group',
-        'auto.offset.reset': 'latest'
-    })
-    consumerListener.subscribe(['classifierBackToCoordinator', 'localizerBackToCoordinator'])
-
-    while True:
-        msg=consumerListener.poll(1.0) #timeout
-        if msg is None:
-            continue
-        if msg.error():
-            print('Error: {}'.format(msg.error()))
-            continue
-        # data=msg.value().decode('utf-8')
-        # print(data)
-        if msg.topic() == "classifierBackToCoordinator":
-            data = loads(msg.value().decode('utf-8'))
-            if data["fromClassifier"] == "classifierComplete":
-                produce('coordinatorToLocalizer', {'fromCoordinator': 'startLocalizer'})
-            else:
-                print(f"ERROR in Classifier: {data['fromClassifier']}")
-        elif msg.topic() == "localizerBackToCoordinator":
-            data = loads(msg.value().decode('utf-8'))
-            if data["fromLocalizer"] == "localizerComplete":
-                produce('coordinatorToPatternMatcher', {'fromCoordinator': 'startPatternMatching'})
-            else:
-                print(f"ERROR in Localizer: {data['fromLocalizer']}")
-    consumerListener.close()
-
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
+
+
+
+
 def string_to_file(string, savePath):
     with open(savePath, 'w') as file:
         file.write(string)
@@ -121,24 +101,6 @@ def upload():
 
         if flag == True:
 
-            # #The following 2 lines replace the block of commented out code below
-            # fileDB.session.query(File).delete()
-            # fileDB.session.commit()
-
-            # if javaProgramArgs != "":
-            #     javaProgramArgs = javaProgramArgs.encode()
-            #     argsFile = File(filename="javaProgramArgs.txt", data=javaProgramArgs)
-            #     fileDB.session.add(argsFile)
-            #     fileDB.session.commit()
-
-            # localizationParams = f"{start_time} {recording_length}"
-            # localizationParams = localizationParams.encode()
-            # localizationParams = File(filename="localizationParams.txt", data=localizationParams)
-            # fileDB.session.add(localizationParams)
-            # fileDB.session.commit()
-
-            #ABOVE CODE WAS COMMENTED OUT FOR FILE SERVER IMPLEMENTATION
-
             #Clear Uploads directory
             if len(os.listdir(inputSavePath)) > 0:
                 for file in os.listdir(inputSavePath):
@@ -154,31 +116,6 @@ def upload():
             for f in filelist:
                 filename = secure_filename(f.filename)
                 f.save(f"{inputSavePath}{filename}")
-                #EVERYTHING BELOW WAS COMMENTED OUT FOR FILE SERVER IMPLEMENTATION
-                
-                # #added if statement and put rest in else block for localization
-                # if filename.endswith(".jar"):
-                #     #Clearing out the jarFile directory
-                #     if len(os.listdir(jarSaveDirectory)) > 0:
-                #         for file in os.listdir(jarSaveDirectory):
-                #             os.remove(f'{jarSaveDirectory}{file}') 
-                #     f.save(f"{jarSaveDirectory}{filename}")
-                # else:
-                #     data = f.read()
-                #     # exists = bool(fileDB.session.query(File).filter_by(filename=filename).first())
-                #     # if filename.endswith(".jar") and fileDB.session.query(File).filter(File.filename.like('%.jar')).count() == 1:
-                #     #     fileDB.session.query(File).filter(File.filename.like('%.jar')).delete()
-                #     # if exists:
-                #     #     file = fileDB.session.query(File).filter(File.filename == filename).one()
-                #     #     file.data = data
-                #     #     fileDB.session.commit()
-                #     # else:
-                #     file = File(filename=filename, data=data) #Create a 'File' object of the File class in the DATABASE CONFIGURATION part of the code
-                #     fileDB.session.add(file)
-                #     fileDB.session.commit()
-
-                #     #Save locally (for testing purposes)
-                #     #f.save(os.getcwd() + '\\Uploads\\' + filename)
 
             files = []
             for file in os.listdir(inputSavePath):
@@ -190,6 +127,31 @@ def upload():
 
             #producer.send('coordinatorToClassifier', value={'signal': "startClassifier"})
             produce('coordinatorToClassifier', {'fromCoordinator': 'startClassifier'})
+
+            listeningFlag = True
+            while listeningFlag:
+                msg=consumerListener.poll(1.0) #timeout
+                if msg is None:
+                    continue
+                if msg.error():
+                    print('Error: {}'.format(msg.error()))
+                    continue
+                # data=msg.value().decode('utf-8')
+                # print(data)
+                if msg.topic() == "classifierBackToCoordinator":
+                    data = loads(msg.value().decode('utf-8'))
+                    if data["fromClassifier"] == "classifierComplete":
+                        produce('coordinatorToLocalizer', {'fromCoordinator': 'startLocalizer'})
+                    else:
+                        print(f"ERROR in Classifier: {data['fromClassifier']}")
+                elif msg.topic() == "localizerBackToCoordinator":
+                    data = loads(msg.value().decode('utf-8'))
+                    if data["fromLocalizer"] == "localizerComplete":
+                        produce('coordinatorToPatternMatcher', {'fromCoordinator': 'startPatternMatching'})
+                    else:
+                        print(f"ERROR in Localizer: {data['fromLocalizer']}")
+
+
 
             return "ok"
         else:
