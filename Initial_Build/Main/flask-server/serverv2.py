@@ -104,8 +104,6 @@ def upload():
 
             produce('coordinatorToClassifier', {'fromCoordinator': 'startClassifier'})
 
-            print("DOG")
-
             return "ok"
         else:
             return errorType
@@ -121,10 +119,10 @@ def loading():
     #Consumer to aid loading screens
     consumerLoading = Consumer({
         'bootstrap.servers': 'localhost:9092',
-        'group.id': 'coordinator-group',
+        'group.id': 'middleware-group',
         'auto.offset.reset': 'latest'
     })
-    consumerLoading.subscribe(['localizerBackToCoordinator'])
+    consumerLoading.subscribe(['middlewareNotifier'])
 
     loadingFlag = True
     success = None
@@ -137,7 +135,7 @@ def loading():
         if msg.error():
             print('Error: {}'.format(msg.error()))
             continue
-        if msg.topic() == "localizerBackToCoordinator":
+        if msg.topic() == "middlewareNotifier":
             data = loads(msg.value().decode('utf-8'))
             if data["fromLocalizer"] == "localizerComplete":
                 success = True

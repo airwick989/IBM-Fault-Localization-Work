@@ -191,6 +191,7 @@ def localize():
     r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('results.results', open(f"{filesPath}results.results", 'rb'))})
 
     produce('localizerBackToCoordinator', {'fromLocalizer': 'localizerComplete'})
+    produce('middlewareNotifier', {'fromLocalizer': 'localizerComplete'})
 
 """---- LOCALIZER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
@@ -223,4 +224,5 @@ while True:
             localize()
         except Exception:
             produce('localizerBackToCoordinator', {'fromLocalizer': 'localizationError'})
+            produce('middlewareNotifier', {'fromLocalizer': 'localizerError'})
 consumerLocalizer.close()
