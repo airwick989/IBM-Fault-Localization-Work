@@ -78,7 +78,7 @@ export const FileUploader = ({}) => {
                 .then( (e) => {
                     if(e.data === "ok"){
                         console.log('Files Uploaded Successfully')
-                        alert('Files Uploaded Successfully')
+                        //alert('Files Uploaded Successfully')
                         history.push('/loading'); 
                         //window.location.reload();
                     }

@@ -14,32 +14,9 @@ jarSaveDirectory = '../../jarFile/'
 inputSavePath = 'Uploads/'  #/Uploads/ caused a ridiculous wsgi error, something not iterable or whatever
 
 
-"""---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
-
-#FOLLOWING CODE WAS COMMENTED OUT FOR FILE SERVER IMPLEMENTATION
-
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../../../files.db'
-# fileDB = SQLAlchemy(app)
-
-# #Creates a database model, ie, a table. We will refer to this table as 'File'
-# class File(fileDB.Model):
-#     filename = fileDB.Column(fileDB.String(50) , primary_key = True)
-#     data = fileDB.Column(fileDB.LargeBinary)
-
-"""---- DATABASE CONFIGURATION ----------------------------------------------------------------------------------------------------------"""
-
-
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
 producerCoordinator = Producer({'bootstrap.servers': 'localhost:9092'})
-
-consumerListener = Consumer({
-        'bootstrap.servers': 'localhost:9092',
-        'group.id': 'coordinator-group',
-        'auto.offset.reset': 'latest'
-    })
-consumerListener.subscribe(['classifierBackToCoordinator', 'localizerBackToCoordinator'])
 
 def receipt(err, msg):
     if err is not None:
@@ -125,33 +102,9 @@ def upload():
             }
             saveInputReq = requests.post('http://localhost:5001/cds/storeData', files=files, headers=headers)
 
-            #producer.send('coordinatorToClassifier', value={'signal': "startClassifier"})
             produce('coordinatorToClassifier', {'fromCoordinator': 'startClassifier'})
 
-            listeningFlag = True
-            while listeningFlag:
-                msg=consumerListener.poll(1.0) #timeout
-                if msg is None:
-                    continue
-                if msg.error():
-                    print('Error: {}'.format(msg.error()))
-                    continue
-                # data=msg.value().decode('utf-8')
-                # print(data)
-                if msg.topic() == "classifierBackToCoordinator":
-                    data = loads(msg.value().decode('utf-8'))
-                    if data["fromClassifier"] == "classifierComplete":
-                        produce('coordinatorToLocalizer', {'fromCoordinator': 'startLocalizer'})
-                    else:
-                        print(f"ERROR in Classifier: {data['fromClassifier']}")
-                elif msg.topic() == "localizerBackToCoordinator":
-                    data = loads(msg.value().decode('utf-8'))
-                    if data["fromLocalizer"] == "localizerComplete":
-                        produce('coordinatorToPatternMatcher', {'fromCoordinator': 'startPatternMatching'})
-                    else:
-                        print(f"ERROR in Localizer: {data['fromLocalizer']}")
-
-
+            print("DOG")
 
             return "ok"
         else:
@@ -162,51 +115,46 @@ def upload():
 
 
 
-# @app.route("/loading", methods=['GET'])
-# def loading():
+@app.route("/loading", methods=['GET'])
+def loading():
 
-#     #Consumer to aid loading screens
-#     consumerLoading = Consumer({
-#         'bootstrap.servers': 'localhost:9092',
-#         'group.id': 'coordinator-group',
-#         'auto.offset.reset': 'latest'
-#     })
-#     consumerLoading.subscribe(['localizerBackToCoordinator'])
+    #Consumer to aid loading screens
+    consumerLoading = Consumer({
+        'bootstrap.servers': 'localhost:9092',
+        'group.id': 'coordinator-group',
+        'auto.offset.reset': 'latest'
+    })
+    consumerLoading.subscribe(['localizerBackToCoordinator'])
 
-#     loadingFlag = True
-#     success = None
-#     data = None
+    loadingFlag = True
+    success = None
+    data = None
 
-#     while loadingFlag:
-#         msg=consumerLoading.poll(1.0) #timeout
-#         if msg is None:
-#             continue
-#         if msg.error():
-#             print('Error: {}'.format(msg.error()))
-#             continue
-#         if msg.topic() == "localizerBackToCoordinator":
-#             data = loads(msg.value().decode('utf-8'))
-#             if data["fromLocalizer"] == "localizerComplete":
-#                 success = True
-#             else:
-#                 success = False
-#             loadingFlag = False
+    while loadingFlag:
+        msg=consumerLoading.poll(1.0) #timeout
+        if msg is None:
+            continue
+        if msg.error():
+            print('Error: {}'.format(msg.error()))
+            continue
+        if msg.topic() == "localizerBackToCoordinator":
+            data = loads(msg.value().decode('utf-8'))
+            if data["fromLocalizer"] == "localizerComplete":
+                success = True
+            else:
+                success = False
+            loadingFlag = False
 
-#     consumerLoading.close()
+    consumerLoading.close()
 
-#     if success:
-#         return "completed"
-#     else:
-#         return f"ERROR in Localizer: {data['fromLocalizer']}"
+    if success:
+        return "completed"
+    else:
+        return f"ERROR in Localizer: {data['fromLocalizer']}"
 
 
 
 
 if __name__ == "__main__":
-    # listener = Thread(target= listen, args=[consumerClassifier, "classifierDone", producer, 'coordinatorToLocalizer', {'signal': "startLocalizer"}])
-    # listener.start()
-
-    listener = Thread(target= listen)
-    listener.start()
     
     app.run(debug=True)
