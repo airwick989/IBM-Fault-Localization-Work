@@ -204,7 +204,8 @@ def produce(topic, message):
 
 """---- KAFKA CONSUMER / PRODUCER ------------------------------------------------------------------------------------------------------------------"""
 
-
+# getFiles()
+# processData()
 while True:
     error = False
     msg=consumerClassifier.poll(1.0) #timeout

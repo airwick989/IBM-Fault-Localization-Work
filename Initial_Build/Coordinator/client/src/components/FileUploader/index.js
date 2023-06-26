@@ -100,7 +100,7 @@ export const FileUploader = ({}) => {
                     alert('Error: ' + e)
                 })
 
-            }
+        }
 
     }
 

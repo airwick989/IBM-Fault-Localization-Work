@@ -196,6 +196,49 @@ def upload():
             return errorType
     except Exception:
         return Exception
+    
+
+
+
+# @app.route("/loading", methods=['GET'])
+# def loading():
+
+#     #Consumer to aid loading screens
+#     consumerLoading = Consumer({
+#         'bootstrap.servers': 'localhost:9092',
+#         'group.id': 'coordinator-group',
+#         'auto.offset.reset': 'latest'
+#     })
+#     consumerLoading.subscribe(['localizerBackToCoordinator'])
+
+#     loadingFlag = True
+#     success = None
+#     data = None
+
+#     while loadingFlag:
+#         msg=consumerLoading.poll(1.0) #timeout
+#         if msg is None:
+#             continue
+#         if msg.error():
+#             print('Error: {}'.format(msg.error()))
+#             continue
+#         if msg.topic() == "localizerBackToCoordinator":
+#             data = loads(msg.value().decode('utf-8'))
+#             if data["fromLocalizer"] == "localizerComplete":
+#                 success = True
+#             else:
+#                 success = False
+#             loadingFlag = False
+
+#     consumerLoading.close()
+
+#     if success:
+#         return "completed"
+#     else:
+#         return f"ERROR in Localizer: {data['fromLocalizer']}"
+
+
+
 
 if __name__ == "__main__":
     # listener = Thread(target= listen, args=[consumerClassifier, "classifierDone", producer, 'coordinatorToLocalizer', {'signal': "startLocalizer"}])
