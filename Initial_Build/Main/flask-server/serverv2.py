@@ -115,38 +115,35 @@ def upload():
 
 @app.route("/loading", methods=['GET'])
 def loading():
-
+    
     #Consumer to aid loading screen
     consumerLoading = Consumer({
         'bootstrap.servers': 'localhost:9092',
         'group.id': 'middleware-group',
         'auto.offset.reset': 'latest'
     })
-    consumerLoading.subscribe(['middlewareNotifier'])
-
-    loadingFlag = True
-    success = None
+    consumerLoading.subscribe(['localizerBackToCoordinator'])
+    
+    success = False
     data = None
 
-    while loadingFlag:
+    while True:
         msg=consumerLoading.poll(1.0) #timeout
         if msg is None:
             continue
         if msg.error():
             print('Error: {}'.format(msg.error()))
             continue
-        if msg.topic() == "middlewareNotifier":
+        if msg.topic() == "localizerBackToCoordinator":
             data = loads(msg.value().decode('utf-8'))
             if data["fromLocalizer"] == "localizerComplete":
                 success = True
-            else:
-                success = False
-            loadingFlag = False
+            
+            break
 
-    consumerLoading.close()
+    #consumerLoading.close()
 
     if success:
-        print("DOG")
         return "completed"
     else:
         return f"ERROR in Localizer: {data['fromLocalizer']}"

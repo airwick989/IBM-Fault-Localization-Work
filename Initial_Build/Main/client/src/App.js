@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from 'react'
 // eslint-disable-next-line
 import styles from "./index.css"  //This import is important, ignore the warning
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes,Route } from 'react-router-dom';
 import Home from './Home';
 import Loading from './components/Loading/Loading';
 import LocalizationResults from './components/LocalizationResults/LocalizationResults';
@@ -36,31 +36,15 @@ function App(){
       <div className='App'>
 
         <div className='Content'>
-          <Switch>
+          <Routes>
               {/* Home page */}
-              <Route exact path="/">
-                <Home/>
-              </Route>
+              <Route exact path="/" element={<Home/>}/>
               {/* Loading page */}
-              <Route path="/loading">
-                <Loading/>
-              </Route>
+              <Route path="/loading" element={<Loading/>}/>
               {/* Localization Results page */}
-              <Route path="/localizationResults">
-                <LocalizationResults/>
-              </Route>
-          </Switch>
+              <Route path="/localizationResults" element={<LocalizationResults/>}/>
+          </Routes>
         </div>
-        
-
-        {/* {(typeof data.members == 'undefined') ? (
-          <p>Loading ...</p>
-        ) : (
-          data.members.map((member, i) => (
-            <p key={i}>{member}</p>
-          ))
-        )} */}
-
       </div>
 
     </Router>

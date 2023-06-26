@@ -37,6 +37,8 @@ embeddedUploadsPath = f"{filesPath}Uploads/"
 
 """---- KAFKA CONSUMER / PRODUCER ------------------------------------------------------------------------------------------------------------------"""
 
+producerLocalizer = Producer({'bootstrap.servers': 'localhost:9092'})
+
 consumerLocalizer = Consumer({
     'bootstrap.servers': 'localhost:9092',
     'group.id': 'module-group',
@@ -53,7 +55,6 @@ def receipt(err, msg):
         message = 'Produced message on topic {} with value of {}\n'.format(msg.topic(), msg.value().decode('utf-8'))
         print(message)
 
-producerLocalizer = Producer({'bootstrap.servers': 'localhost:9092'})
 def produce(topic, message):
     data = dumps(message)
     producerLocalizer.poll(1)

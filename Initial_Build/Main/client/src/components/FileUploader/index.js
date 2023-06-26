@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useHistory, Redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const default_start_time = "15"
@@ -8,7 +8,7 @@ const default_recording_length = "20"
 // eslint-disable-next-line
 export const FileUploader = ({}) => {
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     //the reason the initial state is '[]' instead of 'null' is because its an array of files, not just one
     const [files, setFiles] = useState([]);
@@ -79,7 +79,7 @@ export const FileUploader = ({}) => {
                     if(e.data === "ok"){
                         console.log('Files Uploaded Successfully')
                         //alert('Files Uploaded Successfully')
-                        return <Redirect to="/loading"/>;
+                        navigate("/loading");
                         //window.location.reload();
                     }
                     else if(e.data === "FileNameError"){
