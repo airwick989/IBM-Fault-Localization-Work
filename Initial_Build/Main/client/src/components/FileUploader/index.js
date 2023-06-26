@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 import axios from 'axios';
 
 const default_start_time = "15"
@@ -79,7 +79,7 @@ export const FileUploader = ({}) => {
                     if(e.data === "ok"){
                         console.log('Files Uploaded Successfully')
                         //alert('Files Uploaded Successfully')
-                        history.push('/loading'); 
+                        return <Redirect to="/loading"/>;
                         //window.location.reload();
                     }
                     else if(e.data === "FileNameError"){

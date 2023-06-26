@@ -5,44 +5,22 @@ import { useHistory } from "react-router-dom";
 import axios from 'axios';
 
 const Loading = () => {
-    const [res, setRes] = useState('');
-
-
+    const history = useHistory();
 
     axios.get('http://localhost:5000/loading').then( (e) => {
         console.log(e.data)
+        if(e.data === "complete"){
+            console.log("very nice")
+        }
+        else{
+            //alert('Files Uploaded Successfully')
+            //history.push('/');
+        }
     })
     .catch( (e) => {
         console.error('Error: ', e)
         alert('Error: ' + e)
     })
-
-    // axios.post('http://localhost:5000/upload', data)
-    // .then( (e) => {
-    //     if(e.data === "ok"){
-    //         console.log('Files Uploaded Successfully')
-    //         alert('Files Uploaded Successfully')
-    //         history.push('/loading'); 
-    //         //window.location.reload();
-    //     }
-    //     else if(e.data === "FileNameError"){
-    //         console.error('FileNameError: Please ensure you upload only CSV files and a Jar file with the correct names.')
-    //         alert('FileNameError: Please ensure you upload only CSV files and a Jar file with the correct names.')
-    //     }
-    //     else if(e.data === "FileCountError"){
-    //         console.error('FileCountError: Please enter EXACTLY 3 CSV files according to the specified naming conventions and EXACTLY 1 Jar file.')
-    //         alert('FileCountError: Please enter EXACTLY 3 CSV files according to the specified naming conventions and EXACTLY 1 Jar file.')
-    //     }
-    //     else{
-    //         console.error('Error: ', e)
-    //         alert('Error: ' + e)
-    //     }
-    // })
-    // .catch( (e) => {
-    //     console.error('Error: ', e)
-    //     alert('Error: ' + e)
-    // })
-
     
 
     return ( 

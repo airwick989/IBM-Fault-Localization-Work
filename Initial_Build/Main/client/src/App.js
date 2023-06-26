@@ -5,6 +5,7 @@ import styles from "./index.css"  //This import is important, ignore the warning
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './Home';
 import Loading from './components/Loading/Loading';
+import LocalizationResults from './components/LocalizationResults/LocalizationResults';
 
 
 
@@ -43,6 +44,10 @@ function App(){
               {/* Loading page */}
               <Route path="/loading">
                 <Loading/>
+              </Route>
+              {/* Localization Results page */}
+              <Route path="/localizationResults">
+                <LocalizationResults/>
               </Route>
           </Switch>
         </div>

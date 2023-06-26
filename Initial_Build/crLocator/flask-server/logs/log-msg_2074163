@@ -5,11 +5,11 @@
 
   (Source   : Thr Dec 9 2010 at 16:05:13)
 
-  (Platform : Linux-x86_64, OS=5.15.0-69-generic, PerfUtil=v9.8.7, PERFDD=v00007F6E, CPUS=6, HT=0, MC=0, CpuSig=0x00000000, (null), Hostname=rtemsoft-G5-5090)
+  (Platform : Linux-x86_64, OS=5.15.0-69-generic, PerfUtil=v9.8.7, PERFDD=v00007F52, CPUS=6, HT=0, MC=0, CpuSig=0x00000000, (null), Hostname=rtemsoft-G5-5090)
 
   (JVM Info : OpenJDK 64-Bit Server VM,17.0.7+7-Ubuntu-0ubuntu120.04,mixed mode, sharing,Private Build)
 
- JPROF started at 15:48:16 on 2023/06/26
+ JPROF started at 16:32:25 on 2023/06/26
 
  JPROF Options: scs=monitor_contended_entered+,logpath=/home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs
 
@@ -32,9 +32,9 @@ JVMTI Ver    = 30110000
 
  Path and prefix for log files: /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log
 
- Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-msg_2065684
+ Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-msg_2074163
 
- Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-jtnm_2065684
+ Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-jtnm_2074163
 
  Logical Metric #0 = RAW_CYCLES
 Physical Metric #0 = RAW_CYCLES
@@ -57,7 +57,7 @@ SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
 << EnableEvents1x(1)
 <<< Agent_OnLoad
- ==> cbVMInit, jvmti = 0x7f6ec0009f10, tid = 0x1f8515
+ ==> cbVMInit, jvmti = 0x7f52d0009f10, tid = 0x1fa634
 hashInit: buckets =     2053, itemsize =      432, name = ThreadTable
 hashInit: buckets =    64007, itemsize =       40, name = ClassTable
 Get Primitive Classes
@@ -79,14 +79,14 @@ Element Size:   40
 Empty Buckets:  63559
 Largest Bucket: 1
 
-**INFO** (15:48:16) SCS initialization starting
+**INFO** (16:32:25) SCS initialization starting
 **INFO** gv->scs_monitorEvent = 76 (MONITOR_CONTENDED_ENTERED)
 
-Server socket (22) created for PID 2065684. Listening on port 8888
+Server socket (22) created for PID 2074163. Listening on port 8888
  <== cbVMInit
 
- (15:48:32) RTDriver Cmd: <start>
- (0x176C4D43:85D881BC) RTDriver Token: <start>
+ (16:32:41) RTDriver Cmd: <start>
+ (0x176C4FAC:3E37822E) RTDriver Token: <start>
  Parsed:  1 = START
 Entering RTD_LOCK : treset(STATE)
   Inside RTD_LOCK : treset(STATE)
@@ -100,8 +100,8 @@ SetEventNotificationMode:  rc = 0,  Enable MONITOR_CONTENDED_ENTERED
  << RTD_LOCK : RTArcfTraceStart(1)
 hashInit: buckets =    20011, itemsize =       36, name = MethodTable
 
- (15:48:52) RTDriver Cmd: <stop>
- (0x176C4D48:2DFC3187) RTDriver Token: <stop>
+ (16:33:01) RTDriver Cmd: <stop>
+ (0x176C4FB0:E659DC02) RTDriver Token: <stop>
  Parsed:  1 = STOP
  EnableEvents2x: Disable
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
@@ -116,13 +116,13 @@ Entering RTD_LOCK : treset(SYNC)
  Begin TREE 1
 
 
- Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-rt.1_2065684
+ Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-rt.1_2074163
 gv->calltree  = 0
 gv->calltrace = 0
 gv->usermets  = 1
 gv->physmets  = 0
 gv->start     = 0
-Start at 176c4d4385d881bc, Flush at 176c4d482dfc3187
+Start at 176c4fac3e37822e, Flush at 176c4fb0e659dc02
 
 
  End Tree 1
@@ -158,11 +158,11 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
 << EnableEvents2x(0)
-Freeing dead thread: 001f8515_main
+Freeing dead thread: 001fa634_main
  Leaving RTD_LOCK : treset(FULL)
  RTWaitForClient: Client connection closed. Re-Initializing Socket 22 on port 8888 ...
  RTWaitForClient: ready to accept connections on port 8888 again ...
- (15:48:53) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
+ (16:33:02) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
 
 # of xMalloc:   1510
 # of xFree:     20
@@ -180,8 +180,8 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 << EnableEvents1x(0)
 
- (15:48:53) RTDriver Cmd: <END>
- (0x176C4D48:6B56D6BC) RTDriver Token: <END>
+ (16:33:02) RTDriver Cmd: <END>
+ (0x176C4FB1:244C0537) RTDriver Token: <END>
  Parsed:  1 = END
  EnableEvents2x: Disable
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
@@ -198,7 +198,7 @@ SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
 SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
 SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
 << EnableEvents2x(0)
-Freeing dead thread: 001f86b8_SIGTERM_handler
+Freeing dead thread: 001fa7d7_SIGTERM_handler
  Leaving RTD_LOCK : treset(FULL)
 
 hashFree: name = MethodTable
@@ -240,5 +240,5 @@ Max Footprint:  808080
 
 Number of GCs: 0
 
- JPROF ending at 15:48:53 on 2023/06/26
+ JPROF ending at 16:33:02 on 2023/06/26
 

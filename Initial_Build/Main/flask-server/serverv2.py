@@ -116,7 +116,7 @@ def upload():
 @app.route("/loading", methods=['GET'])
 def loading():
 
-    #Consumer to aid loading screens
+    #Consumer to aid loading screen
     consumerLoading = Consumer({
         'bootstrap.servers': 'localhost:9092',
         'group.id': 'middleware-group',
@@ -146,6 +146,7 @@ def loading():
     consumerLoading.close()
 
     if success:
+        print("DOG")
         return "completed"
     else:
         return f"ERROR in Localizer: {data['fromLocalizer']}"
