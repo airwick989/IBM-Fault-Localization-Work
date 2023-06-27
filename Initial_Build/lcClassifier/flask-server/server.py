@@ -167,7 +167,7 @@ def classify(pca_DF_train):
     # fileDB.session.add(resultsFile)
     # fileDB.session.commit()
 
-    raise Exception("error occurred")
+    #raise Exception("oops")
 
     #Store results in file server
     results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]]

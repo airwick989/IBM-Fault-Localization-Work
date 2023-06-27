@@ -139,6 +139,7 @@ def loading():
         if msg.topic() in "classifierBackToCoordinator":
             data = loads(msg.value().decode('utf-8'))
             if data["fromClassifier"] == "classifierComplete":
+                print("starting localizer")
                 produce('coordinatorToLocalizer', {'fromCoordinator': 'startLocalizer'})
                 continue
             else:
