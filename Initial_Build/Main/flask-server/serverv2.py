@@ -18,6 +18,14 @@ inputSavePath = 'Uploads/'  #/Uploads/ caused a ridiculous wsgi error, something
 
 producerCoordinator = Producer({'bootstrap.servers': 'localhost:9092'})
 
+#Consumer to aid loading screen
+consumerLoading = Consumer({
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'coordinator-group',
+    'auto.offset.reset': 'latest'
+})
+consumerLoading.subscribe(['classifierBackToCoordinator', 'localizerBackToCoordinator'])
+
 def receipt(err, msg):
     if err is not None:
         print('Error: {}'.format(err))
@@ -116,28 +124,38 @@ def upload():
 @app.route("/loading", methods=['GET'])
 def loading():
     
-    #Consumer to aid loading screen
-    consumerLoading = Consumer({
-        'bootstrap.servers': 'localhost:9092',
-        'group.id': 'middleware-group',
-        'auto.offset.reset': 'latest'
-    })
-    consumerLoading.subscribe(['localizerBackToCoordinator'])
-    
     success = False
     data = None
+    errorSource = None
+    errorMessage = ""
 
     while True:
-        msg=consumerLoading.poll(1.0) #timeout
+        msg=consumerLoading.poll(1) #timeout
         if msg is None:
             continue
         if msg.error():
             print('Error: {}'.format(msg.error()))
             continue
-        if msg.topic() == "localizerBackToCoordinator":
+        if msg.topic() in "classifierBackToCoordinator":
+            data = loads(msg.value().decode('utf-8'))
+            if data["fromClassifier"] == "classifierComplete":
+                produce('coordinatorToLocalizer', {'fromCoordinator': 'startLocalizer'})
+                continue
+            else:
+                errorSource = "Classifier"
+                if data["fromClassifier"] == "fileProcessingError":
+                    errorMessage = "Please ensure the csv files you submitted contain the correct data items and are properly formatted."
+                else:
+                    errorMessage = "An error occured within the classification process."
+            
+                break
+        elif msg.topic() in "localizerBackToCoordinator":
             data = loads(msg.value().decode('utf-8'))
             if data["fromLocalizer"] == "localizerComplete":
                 success = True
+            else:
+                errorSource = "Localizer"
+                errorMessage = "Please check the arguments and timing parameters you used, and ensure your Java program runs properly."
             
             break
 
@@ -146,7 +164,7 @@ def loading():
     if success:
         return "completed"
     else:
-        return f"ERROR in Localizer: {data['fromLocalizer']}"
+        return f"ERROR in {errorSource}: {data[f'from{errorSource}']}\n{errorMessage}"
 
 
 

@@ -1,0 +1,157 @@
+
+ JPROF Version_9.8.7 (JVMTI)
+
+  (Built    : Thr Dec 9 2010 at 16:05:13)
+
+  (Source   : Thr Dec 9 2010 at 16:05:13)
+
+  (Platform : Linux-x86_64, OS=5.15.0-69-generic, PerfUtil=v9.8.7, PERFDD=v00007F00, CPUS=6, HT=0, MC=0, CpuSig=0x00000000, (null), Hostname=rtemsoft-G5-5090)
+
+  (JVM Info : OpenJDK 64-Bit Server VM,17.0.7+7-Ubuntu-0ubuntu120.04,mixed mode, sharing,Private Build)
+
+ JPROF started at 17:50:31 on 2023/06/27
+
+ JPROF Options: scs=monitor_contended_entered+,logpath=/home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs
+
+
+Version for IBM Internal Use Only
+JVMTI Ver    = 30110000
+ The following are valid metrics on this platform:
+    0 <COUNTER0>
+    1 <COUNTER1>
+  254 <PTT_INSTS>
+  255 <PTT_CYCLES>
+  259 <RAW_CYCLES>
+  260 <LAT_CYCLES>
+  261 <CPI>
+  262 <NOMETRICS>
+
+ Path and prefix for log files: ./log
+ Parsed: +1 = SCS=MONITOR_CONTENDED_ENTERED
+ Parsed:  1 = LOGPATH=/HOME/RTEMSOFT/DESKTOP/IBM-FAULT-LOCALIZATION-WORK/INITIAL_BUILD/CRLOCATOR/FLASK-SERVER/LOGS
+
+ Path and prefix for log files: /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log
+
+ Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-msg_2176899
+
+ Writing /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/crLocator/flask-server/logs/log-jtnm_2176899
+
+ Logical Metric #0 = RAW_CYCLES
+Physical Metric #0 = RAW_CYCLES
+Logical Mapping #0 = 0
+Node    Size = 88
+Class   Size = 40
+Method  Size = 48
+Thread  Size = 432
+RTEvent Size = 32
+ Logical Metrics    = 1
+ Physical Metrics   = 0
+SetEventNotificationMode:  rc = 0,  Enable VM_INIT
+SetEventNotificationMode:  rc = 0,  Enable VM_DEATH
+ EnableEvents1x:  Enable
+SetEventNotificationMode:  rc = 0,  Enable THREAD_START
+SetEventNotificationMode:  rc = 0,  Enable THREAD_END
+SetEventNotificationMode:  rc = 0,  Enable CLASS_LOAD
+SetEventNotificationMode:  rc = 0,  Enable CLASS_PREPARE
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
+<< EnableEvents1x(1)
+<<< Agent_OnLoad
+ ==> cbVMInit, jvmti = 0x7f00b4009f10, tid = 0x213784
+hashInit: buckets =     2053, itemsize =      432, name = ThreadTable
+hashInit: buckets =    64007, itemsize =       40, name = ClassTable
+Get Primitive Classes
+ EnableEvents1x:  Enable
+SetEventNotificationMode:  rc = 0,  Enable THREAD_START
+SetEventNotificationMode:  rc = 0,  Enable THREAD_END
+SetEventNotificationMode:  rc = 0,  Enable CLASS_LOAD
+SetEventNotificationMode:  rc = 0,  Enable CLASS_PREPARE
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0,  Enable GARBAGE_COLLECTION_FINISH
+<< EnableEvents1x(1)
+GetLoadedClasses() found 440 classes
+
+Statistics for ClassTable
+
+Total Elements: 448
+Total Buckets:  64007
+Element Size:   40
+Empty Buckets:  63559
+Largest Bucket: 1
+
+**INFO** (17:50:31) SCS initialization starting
+**INFO** gv->scs_monitorEvent = 76 (MONITOR_CONTENDED_ENTERED)
+
+Server socket (22) created for PID 2176899. Listening on port 8888
+ <== cbVMInit
+ (17:50:31) Normal JPROF termination, stopcode = 2 (JVMTI_VMDEATH)
+
+# of xMalloc:   1297
+# of xFree:     8
+# of xStrDup:   647
+# of xFreeStr:  8
+Mem Requested:  622916
+Memory In Use:  635520
+Memory Freed:   328
+Max Footprint:  635424
+ EnableEvents1x: Disable
+SetEventNotificationMode:  rc = 0, Disable THREAD_START
+SetEventNotificationMode:  rc = 0, Disable CLASS_LOAD
+SetEventNotificationMode:  rc = 0, Disable CLASS_PREPARE
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+<< EnableEvents1x(0)
+
+ (17:50:31) RTDriver Cmd: <END>
+ (0x176CA280:1283AAFA) RTDriver Token: <END>
+ Parsed:  1 = END
+ EnableEvents2x: Disable
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(0)
+Entering RTD_LOCK : treset(SYNC)
+  Inside RTD_LOCK : treset(SYNC)
+ Leaving RTD_LOCK : treset(SYNC)
+Entering RTD_LOCK : treset(FULL)
+  Inside RTD_LOCK : treset(FULL)
+ EnableEvents2x: Disable
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_START
+SetEventNotificationMode:  rc = 0, Disable GARBAGE_COLLECTION_FINISH
+SetEventNotificationMode:  rc = 0, Disable MONITOR_CONTENDED_ENTERED
+<< EnableEvents2x(0)
+Freeing dead thread: 00213784_DestroyJavaVM
+Freeing dead thread: 00213784_main
+ Leaving RTD_LOCK : treset(FULL)
+
+hashFree: name = ClassTable
+
+Statistics for ClassTable
+
+Total Elements: 619
+Total Buckets:  64007
+Element Size:   40
+Empty Buckets:  63388
+Largest Bucket: 1
+
+Statistics for ThreadTable
+
+Total Elements: 7
+Total Buckets:  2053
+Element Size:   432
+Empty Buckets:  2048
+Largest Bucket: 1
+
+# of xMalloc:   1297
+# of xFree:     1257
+# of xStrDup:   647
+# of xFreeStr:  630
+Mem Requested:  20161
+Memory In Use:  20528
+Memory Freed:   615320
+Max Footprint:  635424
+
+Number of GCs: 0
+
+ JPROF ending at 17:50:31 on 2023/06/27
+

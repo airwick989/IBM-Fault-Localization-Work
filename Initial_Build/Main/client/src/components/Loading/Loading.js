@@ -2,6 +2,7 @@ import LoaderComp from "./Loader";
 import './styles.css';
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 // const Loading = () => {
 
@@ -25,14 +26,22 @@ import axios from 'axios';
 // export default Loading;
 
 function Loading() {
-    const [data, setData] = useState([]);
+
+    const navigate = useNavigate();
   
     useEffect(() => {
 
         const fetchConfirmation = async () => {
-            axios.get('http://localhost:5000/loading', data)
+            axios.get('http://localhost:5000/loading')
                 .then( (e) => {
                     console.log(e.data)
+                    if(e.data === "completed"){
+                        navigate("/localizationResults");
+                    }
+                    else{
+                        alert(e.data);
+                        navigate("/");
+                    }
                 })
                 .catch( (e) => {
                     console.error('Error: ', e)

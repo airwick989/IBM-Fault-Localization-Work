@@ -9,6 +9,8 @@ import requests
 import os
 import zipfile
 import shutil
+from time import sleep
+import sys
 
 app = Flask(__name__)
 CORS(app)
@@ -165,6 +167,8 @@ def classify(pca_DF_train):
     # fileDB.session.add(resultsFile)
     # fileDB.session.commit()
 
+    raise Exception("error occurred")
+
     #Store results in file server
     results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]]
     with open(f"{filesPath}results.results", "w") as resultsFile:
@@ -172,6 +176,7 @@ def classify(pca_DF_train):
     r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('results.results', open(f"{filesPath}results.results", 'rb'))})
 
     produce('classifierBackToCoordinator', {'fromClassifier': 'classifierComplete'})
+    produce('middlewareNotifier', {'fromClassifier': 'classifierComplete'})
 
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 
@@ -208,17 +213,21 @@ def produce(topic, message):
 # processData()
 while True:
     error = False
-    msg=consumerClassifier.poll(1.0) #timeout
+    msg=consumerClassifier.poll(1) #timeout
     if msg is None:
         continue
     if msg.error():
         print('Error: {}'.format(msg.error()))
         continue
     if msg.topic() == "coordinatorToClassifier":
+
+        #sleep(5)
+
         try:
             getFiles()
         except Exception:
             produce('classifierBackToCoordinator', {'fromClassifier': 'fileProcessingError'})
+            produce('middlewareNotifier', {'fromClassifier': 'fileProcessingError'})
             error = True
 
         if not error: 
@@ -226,6 +235,7 @@ while True:
                 processData()
             except Exception:
                 produce('classifierBackToCoordinator', {'fromClassifier': 'classificationError'})
+                produce('middlewareNotifier', {'fromClassifier': 'classificationError'})
 consumerListener.close()
             
 
