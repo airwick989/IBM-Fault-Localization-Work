@@ -157,8 +157,10 @@ def localize():
     methods = []
     r = re.compile("^log-rt")
     log_rt_file = list(filter(r.match, os.listdir('./logs/')))[0]
+    log_rt_file_path = "./logs/stacktraces.log-rt"
+    os.rename(f'./logs/{log_rt_file}', log_rt_file_path)
     prevLine = ""
-    with open(f'./logs/{log_rt_file}') as file:
+    with open(log_rt_file_path) as file:
         flag = False
         for line in file:
             if line.split() == ['LV', 'EVENT', 'NAME']:
@@ -190,6 +192,9 @@ def localize():
         resultsFile.write(results)
     #push results file to the file server
     r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('results.results', open(f"{filesPath}results.results", 'rb'))})
+
+    #push log-rt file to the file server
+    r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('stacktraces.log-rt', open(log_rt_file_path, 'rb'))})
 
     produce('localizerBackToCoordinator', {'fromLocalizer': 'localizerComplete'})
     produce('middlewareNotifier', {'fromLocalizer': 'localizerComplete'})

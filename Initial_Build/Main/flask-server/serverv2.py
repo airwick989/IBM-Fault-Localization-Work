@@ -18,14 +18,6 @@ inputSavePath = 'Uploads/'  #/Uploads/ caused a ridiculous wsgi error, something
 
 producerCoordinator = Producer({'bootstrap.servers': 'localhost:9092'})
 
-#Consumer to aid loading screen
-consumerLoading = Consumer({
-    'bootstrap.servers': 'localhost:9092',
-    'group.id': 'middleware-group',
-    'auto.offset.reset': 'latest'
-})
-consumerLoading.subscribe(['middlewareNotifier'])
-
 def receipt(err, msg):
     if err is not None:
         print('Error: {}'.format(err))
@@ -124,6 +116,14 @@ def upload():
 @app.route("/loading", methods=['GET'])
 def loading():
     
+    #Consumer to aid loading screen
+    consumerLoading = Consumer({
+        'bootstrap.servers': 'localhost:9092',
+        'group.id': 'middleware-group',
+        'auto.offset.reset': 'latest'
+    })
+    consumerLoading.subscribe(['middlewareNotifier'])
+
     success = False
     data = None
     errorSource = None
@@ -139,19 +139,24 @@ def loading():
             print('Error: {}'.format(msg.error()))
             continue
         if msg.topic() == "middlewareNotifier":
-            print("nice")
+            print("signal received")
 
             data = loads(msg.value().decode('utf-8'))
             if "fromClassifier" in data:
+                print("fromClassifier")
                 errorSource = "Classifier"
+                print("Error from Classifier")
                 if data["fromClassifier"] == "fileProcessingError":
                     errorMessage = "Please ensure the csv files you submitted contain the correct data items and are properly formatted."
                 else:
                     errorMessage = "An error occured within the classification process."
             elif "fromLocalizer" in data:
+                print("fromLocalizer")
                 if data["fromLocalizer"] == "localizerComplete":
+                    print("localizerComplete")
                     success = True
                 else:
+                    print("Error from Localizer")
                     errorSource = "Localizer"
                     errorMessage = "Please check the arguments and timing parameters you used, and ensure your Java program runs properly."
 
@@ -181,13 +186,20 @@ def loading():
             
         #     break
 
-    #consumerLoading.close()
+    consumerLoading.close()
 
     if success:
         return "completed"
     else:
         return f"ERROR in {errorSource}: {data[f'from{errorSource}']}\n{errorMessage}"
+    
 
+
+
+@app.route("/interResults", methods=['GET'])
+def interResults():
+
+    return "ok"
 
 
 
