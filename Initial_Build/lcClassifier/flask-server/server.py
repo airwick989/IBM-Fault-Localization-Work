@@ -176,7 +176,6 @@ def classify(pca_DF_train):
     r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('results.results', open(f"{filesPath}results.results", 'rb'))})
 
     produce('classifierBackToCoordinator', {'fromClassifier': 'classifierComplete'})
-    produce('middlewareNotifier', {'fromClassifier': 'classifierComplete'})
 
 """---- CLASSIFIER FUNCTIONS ------------------------------------------------------------------------------------------------------------"""
 

@@ -21,10 +21,10 @@ producerCoordinator = Producer({'bootstrap.servers': 'localhost:9092'})
 #Consumer to aid loading screen
 consumerLoading = Consumer({
     'bootstrap.servers': 'localhost:9092',
-    'group.id': 'coordinator-group',
+    'group.id': 'middleware-group',
     'auto.offset.reset': 'latest'
 })
-consumerLoading.subscribe(['classifierBackToCoordinator', 'localizerBackToCoordinator'])
+consumerLoading.subscribe(['middlewareNotifier'])
 
 def receipt(err, msg):
     if err is not None:
@@ -131,34 +131,55 @@ def loading():
 
     while True:
         msg=consumerLoading.poll(1) #timeout
+        #print("polling")
+        
         if msg is None:
             continue
         if msg.error():
             print('Error: {}'.format(msg.error()))
             continue
-        if msg.topic() in "classifierBackToCoordinator":
+        if msg.topic() == "middlewareNotifier":
+            print("nice")
+
             data = loads(msg.value().decode('utf-8'))
-            if data["fromClassifier"] == "classifierComplete":
-                print("starting localizer")
-                produce('coordinatorToLocalizer', {'fromCoordinator': 'startLocalizer'})
-                continue
-            else:
+            if "fromClassifier" in data:
                 errorSource = "Classifier"
                 if data["fromClassifier"] == "fileProcessingError":
                     errorMessage = "Please ensure the csv files you submitted contain the correct data items and are properly formatted."
                 else:
                     errorMessage = "An error occured within the classification process."
-            
-                break
-        elif msg.topic() in "localizerBackToCoordinator":
-            data = loads(msg.value().decode('utf-8'))
-            if data["fromLocalizer"] == "localizerComplete":
-                success = True
-            else:
-                errorSource = "Localizer"
-                errorMessage = "Please check the arguments and timing parameters you used, and ensure your Java program runs properly."
-            
+            elif "fromLocalizer" in data:
+                if data["fromLocalizer"] == "localizerComplete":
+                    success = True
+                else:
+                    errorSource = "Localizer"
+                    errorMessage = "Please check the arguments and timing parameters you used, and ensure your Java program runs properly."
+
             break
+
+        # if msg.topic() == "classifierBackToCoordinator":
+        #     data = loads(msg.value().decode('utf-8'))
+        #     if data["fromClassifier"] == "classifierComplete":
+        #         print("starting localizer")
+        #         produce('coordinatorToLocalizer', {'fromCoordinator': 'startLocalizer'})
+        #         continue
+        #     else:
+        #         errorSource = "Classifier"
+        #         if data["fromClassifier"] == "fileProcessingError":
+        #             errorMessage = "Please ensure the csv files you submitted contain the correct data items and are properly formatted."
+        #         else:
+        #             errorMessage = "An error occured within the classification process."
+            
+        #         break
+        # elif msg.topic() == "localizerBackToCoordinator":
+        #     data = loads(msg.value().decode('utf-8'))
+        #     if data["fromLocalizer"] == "localizerComplete":
+        #         success = True
+        #     else:
+        #         errorSource = "Localizer"
+        #         errorMessage = "Please check the arguments and timing parameters you used, and ensure your Java program runs properly."
+            
+        #     break
 
     #consumerLoading.close()
 
