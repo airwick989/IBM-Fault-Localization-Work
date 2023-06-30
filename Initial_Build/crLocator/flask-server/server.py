@@ -94,7 +94,7 @@ def localize():
 
     #Pull necessary files from file server
     params = {
-        'targetExtensions': ".jar, .args, .params, .results"
+        'targetExtensions': ".args, .params, .results"
     }
     response = requests.get('http://localhost:5001/cds/getData', params=params)
     #Write the zip file
@@ -134,11 +134,19 @@ def localize():
         time.sleep(delay)
         os.system(f"./run_rtdriver.sh {start_time} {recording_length}")
 
+
+    #TEMPORARY SOLUTION
+    jarPath = '../../CommonDataStore/flask-server/Uploads/'
     #get filename of jar file
     filename = ""
-    for file in os.listdir(filesPath):
+    for file in os.listdir(jarPath):
+    #for file in os.listdir(filesPath):
         if file.endswith(".jar"):
-            filename = f"{filesPath}{file}"
+            #filename = f"{filesPath}{file}"
+            filename = file
+    shutil.copy(f"{jarPath}{filename}", f"{filesPath}{filename}")    
+    filename = f"{filesPath}{filename}"
+
 
     def run_jlm():
         os.system(f"./run_jlm.sh {script_running_time} {filename} {args}")
@@ -177,17 +185,20 @@ def localize():
 
     methods = list(set(methods))
     print("\n\n")
-    methods_str = "The method(s) causing contention in your Java program are: "
+    methods_str = ""
     for method in methods:
         methods_str = methods_str + method + ", "
-    print(methods_str)
+    print(f"The method(s) causing contention in your Java program are: {methods_str}")
+
+    #delete the jar file
+    os.remove(filename)
 
     #save results to the results file
     results = None
     with open(f'{filesPath}results.results', 'r') as resultsfile:
         results = resultsfile.read().replace('\n', '')
-    methods = ','.join(methods)
-    results = results + f"\n{methods}"
+    #methods = ','.join(methods)
+    results = results + f"\n{methods_str}"
     with open(f"{filesPath}results.results", "w") as resultsFile:
         resultsFile.write(results)
     #push results file to the file server
@@ -217,7 +228,7 @@ def localize():
 
 
 
-
+# localize()
 while True:
     msg=consumerLocalizer.poll(1.0) #timeout
     if msg is None:

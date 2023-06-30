@@ -192,14 +192,7 @@ def loading():
         return "completed"
     else:
         return f"ERROR in {errorSource}: {data[f'from{errorSource}']}\n{errorMessage}"
-    
 
-
-
-@app.route("/interResults", methods=['GET'])
-def interResults():
-
-    return "ok"
 
 
 

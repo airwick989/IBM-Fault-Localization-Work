@@ -10,8 +10,8 @@ else:
         os.remove(f'./logs/{file}')
 
 
-filename = "./Files/Hot_1.jar" #Hot_1.jar
-args = "4 100"    #4 100
+filename = "./Files/dacapo-9.12-MR1-bach.jar" #./Files/Hot_1.jar
+args = "lusearch -t 64 -n 100"    #4 100
 
 start_time = "15"   #15
 recording_length = "20" #20
@@ -58,7 +58,7 @@ with open(f'./logs/{log_rt_file}') as file:
 
 methods = list(set(methods))
 print("\n\n")
-methods_str = "The method(s) causing contention in your Java program are: "
+methods_str = ""
 for method in methods:
     methods_str = methods_str + method + ", "
-print(methods_str)
+print(f"The method(s) causing contention in your Java program are: {methods_str}")
