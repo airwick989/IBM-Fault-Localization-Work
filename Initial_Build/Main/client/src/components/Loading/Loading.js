@@ -54,7 +54,7 @@ function Loading() {
   
     return ( 
         <div className="container">
-            <h1 style={{marginBottom: 25}}>Loading Results</h1>
+            <h1 class="text-5xl font-bold" style={{marginBottom: 50}}>Loading Results</h1>
             <LoaderComp/>
         </div>
     );
