@@ -59,8 +59,12 @@ def zipFiles(targetExtensions):
 def getData():
     targetExtensions = request.args.get('targetExtensions')
     targetExtensions = targetExtensions.split(',')
-    zipFiles(targetExtensions)
-    return send_file(f"{uploadsDirectory}files.zip")
+    if len(targetExtensions) > 1:
+        zipFiles(targetExtensions)
+        return send_file(f"{uploadsDirectory}files.zip")
+    else:
+        filename = targetExtensions[0].strip()
+        return send_file(f"{uploadsDirectory}{filename}")
     #return "ok"
 
 
@@ -68,9 +72,6 @@ def getData():
 
 @app.route("/cds/interResults", methods=['GET'])
 def interResults():
-    log_rt = []
-    with open(f'{uploadsDirectory}stacktraces.log-rt', 'r') as log_rt_file:
-        log_rt = log_rt_file.read().strip()
     
     results = []
     with open(f'{uploadsDirectory}results.results', 'r') as results_file:
@@ -79,8 +80,7 @@ def interResults():
 
     data = {
         'lctype': results[0],
-        'methods': results[1][:-1].split(", "),
-        'stacktraces': log_rt
+        'methods': results[1][:-1].split(", ")
     }
 
     data = dumps(data)

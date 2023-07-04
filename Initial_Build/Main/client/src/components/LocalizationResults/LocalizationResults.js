@@ -5,22 +5,20 @@ import './styles.css';
 function LocalizationResults() {
     const [lctype, setLctype] = useState("");
     const [methods, setMethods] = useState([]);
-    const [stacktraces, setStacktraces] = useState("");
     var lcDescription = "";
     
     useEffect(() => {
 
         const fetchResults = async () => {
             axios.get('http://localhost:5001/cds/interResults')
-                .then( (e) => {
-                    setLctype(e.data['lctype']);
-                    setMethods(e.data['methods']);
-                    setStacktraces(e.data['stacktraces']);
-                })
-                .catch( (e) => {
-                    console.error('Error: ', e)
-                    alert('Error: ' + e)
-                })
+            .then( (e) => {
+                setLctype(e.data['lctype']);
+                setMethods(e.data['methods']);
+            })
+            .catch( (e) => {
+                console.error('Error: ', e)
+                alert('Error: ' + e)
+            })
         };
 
         fetchResults();
@@ -40,9 +38,28 @@ function LocalizationResults() {
     //     <li>{method}</li>
     // );
 
+
+    const getStacktraces = async () => {
+        axios.get('http://localhost:5001/cds/getData', { params: { targetExtensions: 'stacktraces.log-rt' }, responseType: 'blob'})
+            .then( (e) => {
+                const href = URL.createObjectURL(e.data);
+                const link = document.createElement('a');
+                link.href = href;
+                link.setAttribute('download', 'stacktraces.txt');
+                document.body.appendChild(link)
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(href);
+            })
+            .catch( (e) => {
+                console.error('Error: ', e)
+                alert('Error: ' + e)
+            })
+    }
+
     
     return ( 
-        <div className="container">
+        <div className="container" style={{overflowY: 'scroll'}}>
             <h1 class="text-5xl font-bold">Results Until Fault Localization</h1>
 
             <div className="stats bg-primary text-primary-content" style={{margin: 50}}>
@@ -51,7 +68,7 @@ function LocalizationResults() {
                     <div className="stat-title">Lock Contention Type</div>
                     <div className="stat-value">{lctype}</div>
                     <div className="stat-actions">
-                        <button onClick={ () => alert(lcDescription)} className="btn btn-sm btn-success">What does this mean?</button>
+                        <button onClick={ () => alert(lcDescription)} className="btn btn-sm">What does this mean?</button>
                     </div>
                 </div>
                 
@@ -61,8 +78,9 @@ function LocalizationResults() {
                         {methods.map( method => <li>{method}</li> )}
                     </ul>
                     <div className="stat-actions">
+                        <button onClick={e => getStacktraces()} style={{marginRight: 25}} className="btn btn-sm btn-success">View Complete Stack Traces</button>
                         <a href="/">
-                            <button className="btn btn-sm">Return to Home</button>
+                            <button className="btn btn-sm">Return Home</button>
                         </a>
                     </div>
                 </div>
