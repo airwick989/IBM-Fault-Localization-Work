@@ -48,7 +48,8 @@ def getFiles():
     global filesPath
     #readfiles = fileDB.session.query(File)
     params = {
-        'targetExtensions': '.csv'
+        'target': '.csv',
+        'isMultiple': 'true'
     }
     response = requests.get('http://localhost:5001/cds/getData', params=params)
 

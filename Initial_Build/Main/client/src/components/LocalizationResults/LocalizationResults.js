@@ -40,7 +40,7 @@ function LocalizationResults() {
 
 
     const getStacktraces = async () => {
-        axios.get('http://localhost:5001/cds/getData', { params: { targetExtensions: 'stacktraces.log-rt' }, responseType: 'blob'})
+        axios.get('http://localhost:5001/cds/getData', { params: { target: 'stacktraces.log-rt', isMultiple: 'false' }, responseType: 'blob'})
             .then( (e) => {
                 const href = URL.createObjectURL(e.data);
                 const link = document.createElement('a');

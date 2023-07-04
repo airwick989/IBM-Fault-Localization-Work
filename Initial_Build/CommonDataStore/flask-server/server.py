@@ -57,13 +57,15 @@ def zipFiles(targetExtensions):
 
 @app.route("/cds/getData", methods=['GET'])
 def getData():
-    targetExtensions = request.args.get('targetExtensions')
-    targetExtensions = targetExtensions.split(',')
-    if len(targetExtensions) > 1:
-        zipFiles(targetExtensions)
+    target = request.args.get('target')
+    target = target.split(',')
+    isMultiple = request.args.get('isMultiple')
+    print(isMultiple)
+    if isMultiple == 'true':
+        zipFiles(target)
         return send_file(f"{uploadsDirectory}files.zip")
     else:
-        filename = targetExtensions[0].strip()
+        filename = target[0].strip()
         return send_file(f"{uploadsDirectory}{filename}")
     #return "ok"
 

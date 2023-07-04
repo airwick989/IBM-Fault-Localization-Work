@@ -94,7 +94,8 @@ def localize():
 
     #Pull necessary files from file server
     params = {
-        'targetExtensions': ".args, .params, .results"
+        'target': ".args, .params, .results",
+        'isMultiple': 'true'
     }
     response = requests.get('http://localhost:5001/cds/getData', params=params)
     #Write the zip file
