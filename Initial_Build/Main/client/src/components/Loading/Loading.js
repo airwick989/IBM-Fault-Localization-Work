@@ -56,9 +56,6 @@ function Loading() {
         <div className="container">
             <h1 class="text-5xl font-bold" style={{marginBottom: 50}}>Loading Results</h1>
             <LoaderComp/>
-            <a href="/">
-                <button className="btn btn-sm">Return Home</button>
-            </a>
         </div>
     );
 }
