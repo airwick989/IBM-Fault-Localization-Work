@@ -1,2 +1,2 @@
-Type 2 contention
-org/dacapo/lusearch/Search.main([Ljava/lang/String;)V, 0023b84a_unknown_thread, org/dacapo/lusearch/Search$QueryProcessor.run()V, java/lang/ThreadGroup.threadTerminated(Ljava/lang/Thread;)V, jdk/internal/ref/PhantomCleanable.insert()V, java/lang/ref/Finalizer.<init>(Ljava/lang/Object;)V, jdk/internal/ref/PhantomCleanable.remove()Z, org/apache/lucene/store/FSDirectory.getDirectory(Ljava/io/File;Lorg/apache/lucene/store/LockFactory;)Lorg/apache/lucene/store/FSDirectory;, 
+Type 2
+jdk/internal/ref/PhantomCleanable.insert()V, org/dacapo/lusearch/Search.main([Ljava/lang/String;)V, org/dacapo/lusearch/Search$QueryProcessor.run()V, jdk/internal/ref/PhantomCleanable.remove()Z, org/apache/lucene/store/FSDirectory.getDirectory(Ljava/io/File;Lorg/apache/lucene/store/LockFactory;)Lorg/apache/lucene/store/FSDirectory;, 

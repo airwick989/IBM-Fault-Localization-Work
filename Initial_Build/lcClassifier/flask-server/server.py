@@ -156,11 +156,11 @@ def classify(pca_DF_train):
     print(pca_DF_train)
     print("\n\n")
     cluster_mappings = {
-        0 : "Type 2 contention",
-        1 : "Type 1 contention",
-        2 : "low contention"
+        0 : "Type 2",
+        1 : "Type 1",
+        2 : "type 0"
     }
-    print(f"Your Java program is experiencing {cluster_mappings[pca_DF_train['Cluster'].iloc[0]]}.")
+    print(f"Your Java program is experiencing {cluster_mappings[pca_DF_train['Cluster'].iloc[0]]} contention.")
 
     #results = cluster_mappings[pca_DF_train['Cluster'].iloc[0]].encode()
     # resultsFile = File(filename="results.txt", data=results)

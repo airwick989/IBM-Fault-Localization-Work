@@ -3,28 +3,32 @@ import axios from 'axios';
 import './styles.css';
 
 function LocalizationResults() {
+    const [lctype, setLctype] = useState("");
+    const [methods, setMethods] = useState([]);
+    const [stacktraces, setStacktraces] = useState("");
     
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     const fetchResults = async () => {
-    //         axios.get('http://localhost:5001/cds/interResults')
-    //             .then( (e) => {
-    //                 console.log(e.data)
-    //             })
-    //             .catch( (e) => {
-    //                 console.error('Error: ', e)
-    //                 alert('Error: ' + e)
-    //             })
-    //     };
+        const fetchResults = async () => {
+            axios.get('http://localhost:5001/cds/interResults')
+                .then( (e) => {
+                    setLctype(e.data['lctype']);
+                    setMethods(e.data['methods']);
+                    setStacktraces(e.data['stacktraces']);
+                })
+                .catch( (e) => {
+                    console.error('Error: ', e)
+                    alert('Error: ' + e)
+                })
+        };
 
-    //     fetchResults();
-    // }, []);
-    
+        fetchResults();
+    }, []);
 
-    const methods = ["method1", "method2", "method3"]
-    const listMethods = methods.map(method =>
-        <li>{method}</li>
-    );
+    //const methods = ["method1", "method2", "method3"]
+    // const listMethods = methods.map(method =>
+    //     <li>{method}</li>
+    // );
 
     
     return ( 
@@ -35,16 +39,16 @@ function LocalizationResults() {
   
                 <div className="stat">
                     <div className="stat-title">Lock Contention Type</div>
-                    <div className="stat-value">$89,400</div>
+                    <div className="stat-value">{lctype}</div>
                     <div className="stat-actions">
                     <button className="btn btn-sm btn-success">What does this mean?</button>
                     </div>
                 </div>
                 
                 <div className="stat">
-                    <div className="stat-title">Method(s) Causing Contention</div>
-                    <ul>
-                        {listMethods}
+                    <div className="stat-title">Method(s)/Object(s) Causing Contention</div>
+                    <ul style={{listStyleType: 'disc'}}>
+                        {methods.map( method => <li>{method}</li> )}
                     </ul>
                     <div className="stat-actions">
                     <button className="btn btn-sm">Withdrawal</button> 
