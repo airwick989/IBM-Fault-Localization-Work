@@ -1,5 +1,7 @@
 import { useState } from "react";
 import './styles.css';
+import axios from 'axios';
+//import { useNavigate } from "react-router-dom";
 
 function PatternMatcherUploader() {
 
@@ -21,25 +23,17 @@ function PatternMatcherUploader() {
             //console.log(files[i])
         }
 
-        axios.post('http://localhost:5000/upload', data)
+        alert('Pattern Matcher started')
+
+        axios.post('http://localhost:5000/startPatternMatcher', data)
             .then( (e) => {
                 if(e.data === "ok"){
-                    console.log('Files Uploaded Successfully')
-                    //alert('Files Uploaded Successfully')
-                    navigate("/loading");
-                    //window.location.reload();
+                    console.log('nice')
+                    //navigate("/loading");
                 }
                 else if(e.data === "FileNameError"){
                     console.error('FileNameError: Please ensure you upload only CSV files and a Jar file with the correct names.')
                     alert('FileNameError: Please ensure you upload only CSV files and a Jar file with the correct names.')
-                }
-                else if(e.data === "FileCountError"){
-                    console.error('FileCountError: Please enter EXACTLY 3 CSV files according to the specified naming conventions and EXACTLY 1 Jar file.')
-                    alert('FileCountError: Please enter EXACTLY 3 CSV files according to the specified naming conventions and EXACTLY 1 Jar file.')
-                }
-                else{
-                    console.error('Error: ', e)
-                    alert('Error: ' + e)
                 }
             })
             .catch( (e) => {
@@ -57,7 +51,7 @@ function PatternMatcherUploader() {
                 please upload those source files below.</p>
                 
                 <label class="label">
-                    <span class="label-text" style={{marginTop: 50}}>Insert Source Files Here <b style={{color:'orange'}}>(Java source files only)</b></span>
+                    <span class="label-text" style={{marginTop: 10}}>Insert Source Files Here <b style={{color:'orange'}}>(Java source files only)</b></span>
                 </label>
                 <input type="file" 
                     class="file-input file-input-bordered file-input-accent w-full max-w-xs" 

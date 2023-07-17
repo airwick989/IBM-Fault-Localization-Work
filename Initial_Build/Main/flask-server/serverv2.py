@@ -12,6 +12,7 @@ CORS(app)
 
 jarSaveDirectory = '../../jarFile/'
 inputSavePath = 'Uploads/'  #/Uploads/ caused a ridiculous wsgi error, something not iterable or whatever
+sourceFilePath = 'SourceFiles/'
 
 
 """---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
@@ -192,6 +193,32 @@ def loading():
         return "completed"
     else:
         return f"ERROR in {errorSource}: {data[f'from{errorSource}']}\n{errorMessage}"
+    
+
+
+
+@app.route("/startPatternMatcher", methods=['POST'])
+def startPatternMatcher():
+    files = request.files
+    filelist = files.getlist("file")
+
+    #Clear SourceFiles directory
+    if len(os.listdir(sourceFilePath)) > 0:
+        for file in os.listdir(sourceFilePath):
+            os.remove(f'{sourceFilePath}{file}')
+    
+    for f in filelist:
+        filename = secure_filename(f.filename)
+        f.save(f"{sourceFilePath}{filename}")
+
+    files = []
+    for file in os.listdir(sourceFilePath):
+        files.append(('file', open(f"{sourceFilePath}{file}", 'rb')))
+
+    saveSourceFiles = requests.post('http://localhost:5001/cds/storeData', files=files)
+    produce('coordinatorToPatternMatcher', {'fromCoordinator': 'startPatternMatching'})
+
+    return "ok"
 
 
 
