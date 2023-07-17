@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import './styles.css';
+import PatternMatcherUploader from "../PatternMatcherUploader/PatternMatcherUploader";
 
 function LocalizationResults() {
     const [lctype, setLctype] = useState("");
@@ -86,6 +87,8 @@ function LocalizationResults() {
                 </div>
             
             </div>
+
+            <PatternMatcherUploader/>
 
         </div>
     );
