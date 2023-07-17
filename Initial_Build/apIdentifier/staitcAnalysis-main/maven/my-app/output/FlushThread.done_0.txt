@@ -1,9 +1,0 @@
-looking:FlushThread.done
-synchronized (this) {
-    interrupt();
-}
-
-synchronized (this) {
-    interrupt();
-}
-possible Hot1

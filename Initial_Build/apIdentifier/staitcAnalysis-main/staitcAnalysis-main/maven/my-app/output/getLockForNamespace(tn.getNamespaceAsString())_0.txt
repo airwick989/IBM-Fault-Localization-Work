@@ -1,0 +1,91 @@
+looking:getLockForNamespace(tn.getNamespaceAsString())
+FileArchiverNotifierImpl	persistSnapshotSizeChanges
+-----------------------
+// TODO Push this down to the RegionServer with a coprocessor:
+// 
+// We would really like to piggy-back on the row-lock already being grabbed
+// to handle the update of the row in the quota table. However, because the value
+// is a serialized protobuf, the standard Increment API doesn't work for us. With a CP, we
+// can just send the size deltas to the RS and atomically update the serialized PB object
+// while relying on the row-lock for synchronization.
+// 
+// Synchronizing on the namespace string is a "minor smell" but passable as this is
+// only invoked via a single caller (the active Master). Using the namespace name lets us
+// have some parallelism without worry of on caller seeing stale data from the quota table.
+synchronized (getLockForNamespace(tn.getNamespaceAsString())) {
+    final Result[] existingSnapshotSizes = quotaTable.get(snapshotSizeGets);
+    long totalSizeChange = 0;
+    // Read the current size values (if they exist) to generate the new value
+    for (Result result : existingSnapshotSizes) {
+        Entry<String, Long> entry = iterator.next();
+        String snapshot = entry.getKey();
+        Long size = entry.getValue();
+        // Track the total size change for the namespace this table belongs in
+        totalSizeChange += size;
+        // Get the size of the previous value (or zero)
+        long previousSize = getSnapshotSizeFromResult(result);
+        // Create an update. A file was archived from the table, so the table's size goes
+        // down, but the snapshot's size goes up.
+        updates.add(QuotaTableUtil.createPutForSnapshotSize(tn, snapshot, previousSize + size));
+    }
+    // Create an update for the summation of all snapshots in the namespace
+    if (totalSizeChange != 0) {
+        long previousSize = getPreviousNamespaceSnapshotSize(quotaTable, tn.getNamespaceAsString());
+        updates.add(QuotaTableUtil.createPutForNamespaceSnapshotSize(tn.getNamespaceAsString(), previousSize + totalSizeChange));
+    }
+    // Send all of the quota table updates in one batch.
+    List<Object> failures = new ArrayList<>();
+    final Object[] results = new Object[updates.size()];
+    quotaTable.batch(updates, results);
+    for (Object result : results) {
+        // A null result is an error condition (all RPC attempts failed)
+        if (!(result instanceof Result)) {
+            failures.add(result);
+        }
+    }
+    // Propagate a failure if any updates failed
+    if (!failures.isEmpty()) {
+        throw new QuotaSnapshotSizeSerializationException("Failed to write some snapshot size updates: " + failures);
+    }
+}
+-----------------------
+// have some parallelism without worry of on caller seeing stale data from the quota table.
+synchronized (getLockForNamespace(tn.getNamespaceAsString())) {
+    final Result[] existingSnapshotSizes = quotaTable.get(snapshotSizeGets);
+    long totalSizeChange = 0;
+    // Read the current size values (if they exist) to generate the new value
+    for (Result result : existingSnapshotSizes) {
+        Entry<String, Long> entry = iterator.next();
+        String snapshot = entry.getKey();
+        Long size = entry.getValue();
+        // Track the total size change for the namespace this table belongs in
+        totalSizeChange += size;
+        // Get the size of the previous value (or zero)
+        long previousSize = getSnapshotSizeFromResult(result);
+        // Create an update. A file was archived from the table, so the table's size goes
+        // down, but the snapshot's size goes up.
+        updates.add(QuotaTableUtil.createPutForSnapshotSize(tn, snapshot, previousSize + size));
+    }
+    // Create an update for the summation of all snapshots in the namespace
+    if (totalSizeChange != 0) {
+        long previousSize = getPreviousNamespaceSnapshotSize(quotaTable, tn.getNamespaceAsString());
+        updates.add(QuotaTableUtil.createPutForNamespaceSnapshotSize(tn.getNamespaceAsString(), previousSize + totalSizeChange));
+    }
+    // Send all of the quota table updates in one batch.
+    List<Object> failures = new ArrayList<>();
+    final Object[] results = new Object[updates.size()];
+    quotaTable.batch(updates, results);
+    for (Object result : results) {
+        // A null result is an error condition (all RPC attempts failed)
+        if (!(result instanceof Result)) {
+            failures.add(result);
+        }
+    }
+    // Propagate a failure if any updates failed
+    if (!failures.isEmpty()) {
+        throw new QuotaSnapshotSizeSerializationException("Failed to write some snapshot size updates: " + failures);
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

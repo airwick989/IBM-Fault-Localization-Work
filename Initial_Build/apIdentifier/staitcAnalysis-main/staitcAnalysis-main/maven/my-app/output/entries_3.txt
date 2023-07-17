@@ -1,0 +1,17 @@
+looking:entries
+RegionReplicationSink	waitUntilStopped
+-----------------------
+synchronized (entries) {
+    while (!stopped) {
+        entries.wait();
+    }
+}
+-----------------------
+synchronized (entries) {
+    while (!stopped) {
+        entries.wait();
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

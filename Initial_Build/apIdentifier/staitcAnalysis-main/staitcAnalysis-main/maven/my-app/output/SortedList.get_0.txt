@@ -1,0 +1,17 @@
+looking:SortedList.get
+SortedList	get
+-----------------------
+@Override
+public synchronized E get(int index) {
+    return list.get(index);
+}
+-----------------------
+@Override
+public synchronized E get(int index) {
+    return list.get(index);
+    {
+        // FindBugs: UG_SYNC_SET_UNSYNC_GET complaint. Fix!!
+        return list;
+    }
+}-----------------------
+possible Hot1

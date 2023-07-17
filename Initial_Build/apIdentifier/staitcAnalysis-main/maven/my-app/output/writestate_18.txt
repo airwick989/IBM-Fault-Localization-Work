@@ -1,9 +1,0 @@
-looking:writestate
-synchronized (writestate) {
-    writestate.writesEnabled = true;
-}
-
-synchronized (writestate) {
-    writestate.writesEnabled = true;
-}
-possible Hot2

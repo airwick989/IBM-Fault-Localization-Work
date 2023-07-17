@@ -1,0 +1,11 @@
+looking:results
+StoreMockMaker	finishCompaction
+-----------------------
+synchronized (results) {
+    results.add(sfs.size());
+}
+-----------------------
+synchronized (results) {
+    results.add(sfs.size());
+}-----------------------
+possible Hot2

@@ -1,0 +1,15 @@
+looking:BufferingScanResultConsumer.onComplete
+BufferingScanResultConsumer	onComplete
+-----------------------
+@Override
+public synchronized void onComplete() {
+    finished = true;
+    notifyAll();
+}
+-----------------------
+@Override
+public synchronized void onComplete() {
+    finished = true;
+    notifyAll();
+}-----------------------
+possible Hot1

@@ -1,0 +1,19 @@
+looking:region
+TestAtomicOperation	run
+-----------------------
+synchronized (region) {
+    LOG.debug("flushing");
+    region.flush(true);
+    if (i % 100 == 0) {
+        region.compact(false);
+    }
+}
+-----------------------
+synchronized (region) {
+    LOG.debug("flushing");
+    region.flush(true);
+    if (i % 100 == 0) {
+        region.compact(false);
+    }
+}-----------------------
+possible Hot2

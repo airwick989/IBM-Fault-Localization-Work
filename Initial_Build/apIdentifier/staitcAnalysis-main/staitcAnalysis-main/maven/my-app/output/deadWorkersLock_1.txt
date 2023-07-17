@@ -1,0 +1,17 @@
+looking:deadWorkersLock
+SplitLogManager	handleDeadWorkers
+-----------------------
+synchronized (deadWorkersLock) {
+    if (deadWorkers == null) {
+        deadWorkers = new HashSet<>(100);
+    }
+    deadWorkers.addAll(serverNames);
+}
+-----------------------
+synchronized (deadWorkersLock) {
+    if (deadWorkers == null) {
+        deadWorkers = new HashSet<>(100);
+    }
+    deadWorkers.addAll(serverNames);
+}-----------------------
+possible Hot2

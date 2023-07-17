@@ -1,0 +1,33 @@
+looking:QuotaState.update
+QuotaState	update
+-----------------------
+/**
+ * Perform an update of the quota info based on the other quota info object. (This operation is
+ * executed by the QuotaCache)
+ */
+public synchronized void update(final QuotaState other) {
+    if (globalLimiter == NoopQuotaLimiter.get()) {
+        globalLimiter = other.globalLimiter;
+    } else if (other.globalLimiter == NoopQuotaLimiter.get()) {
+        globalLimiter = NoopQuotaLimiter.get();
+    } else {
+        globalLimiter = QuotaLimiterFactory.update(globalLimiter, other.globalLimiter);
+    }
+    lastUpdate = other.lastUpdate;
+}
+-----------------------
+/**
+ * Perform an update of the quota info based on the other quota info object. (This operation is
+ * executed by the QuotaCache)
+ */
+public synchronized void update(final QuotaState other) {
+    if (globalLimiter == NoopQuotaLimiter.get()) {
+        globalLimiter = other.globalLimiter;
+    } else if (other.globalLimiter == NoopQuotaLimiter.get()) {
+        globalLimiter = NoopQuotaLimiter.get();
+    } else {
+        globalLimiter = QuotaLimiterFactory.update(globalLimiter, other.globalLimiter);
+    }
+    lastUpdate = other.lastUpdate;
+}-----------------------
+possible Hot1

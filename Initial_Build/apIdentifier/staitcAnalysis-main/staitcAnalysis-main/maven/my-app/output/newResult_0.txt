@@ -1,0 +1,51 @@
+looking:newResult
+ServerNonceManager	endOperation
+-----------------------
+synchronized (newResult) {
+    assert newResult.getState() == OperationContext.WAIT;
+    // If we failed, other retries can proceed.
+    newResult.setState(success ? OperationContext.DONT_PROCEED : OperationContext.PROCEED);
+    if (success) {
+        // Set time to use for cleanup.
+        newResult.reportActivity();
+    } else {
+        OperationContext val = nonces.remove(nk);
+        assert val == newResult;
+    }
+    if (newResult.hasWait()) {
+        LOG.debug("Conflict with running op ended: " + nk + ", " + newResult);
+        newResult.notifyAll();
+    }
+}
+-----------------------
+synchronized (newResult) {
+    assert newResult.getState() == OperationContext.WAIT;
+    // If we failed, other retries can proceed.
+    newResult.setState(success ? OperationContext.DONT_PROCEED : OperationContext.PROCEED);
+    if (success) {
+        // Set time to use for cleanup.
+        newResult.reportActivity();
+        {
+            long now = EnvironmentEdgeManager.currentTime();
+            this.data = (this.data & ALL_FLAG_BITS) | (now << 3);
+        }
+        {
+            long now = EnvironmentEdgeManager.currentTime();
+            this.data = (this.data & ALL_FLAG_BITS) | (now << 3);
+        }
+    } else {
+        OperationContext val = nonces.remove(nk);
+        assert val == newResult;
+    }
+    if (newResult.hasWait()) {
+        LOG.debug("Conflict with running op ended: " + nk + ", " + newResult);
+        newResult.notifyAll();
+    }
+    {
+        this.data = (this.data & ~STATE_BITS) | state;
+    }
+    {
+        return (this.data & WAITING_BIT) == WAITING_BIT;
+    }
+}-----------------------
+possible Hot1

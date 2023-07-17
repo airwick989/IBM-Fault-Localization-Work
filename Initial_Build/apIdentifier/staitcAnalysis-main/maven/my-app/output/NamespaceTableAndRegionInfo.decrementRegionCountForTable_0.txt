@@ -1,9 +1,0 @@
-looking:NamespaceTableAndRegionInfo.decrementRegionCountForTable
-synchronized int decrementRegionCountForTable(TableName tableName, int count) {
-    return tableAndRegionInfo.get(tableName).decrementAndGet();
-}
-
-synchronized int decrementRegionCountForTable(TableName tableName, int count) {
-    return tableAndRegionInfo.get(tableName).decrementAndGet();
-}
-possible Hot1

@@ -1,0 +1,13 @@
+looking:NoopServerRemoteProcedure.remoteOperationFailed
+NoopServerRemoteProcedure	remoteOperationFailed
+-----------------------
+@Override
+public synchronized void remoteOperationFailed(MasterProcedureEnv env, RemoteProcedureException error) {
+    complete(env, error);
+}
+-----------------------
+@Override
+public synchronized void remoteOperationFailed(MasterProcedureEnv env, RemoteProcedureException error) {
+    complete(env, error);
+}-----------------------
+possible Hot1

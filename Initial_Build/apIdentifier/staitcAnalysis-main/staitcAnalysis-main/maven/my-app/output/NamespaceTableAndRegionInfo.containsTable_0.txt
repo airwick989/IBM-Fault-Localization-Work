@@ -1,0 +1,11 @@
+looking:NamespaceTableAndRegionInfo.containsTable
+NamespaceTableAndRegionInfo	containsTable
+-----------------------
+synchronized boolean containsTable(TableName tableName) {
+    return this.tableAndRegionInfo.containsKey(tableName);
+}
+-----------------------
+synchronized boolean containsTable(TableName tableName) {
+    return this.tableAndRegionInfo.containsKey(tableName);
+}-----------------------
+possible Hot1

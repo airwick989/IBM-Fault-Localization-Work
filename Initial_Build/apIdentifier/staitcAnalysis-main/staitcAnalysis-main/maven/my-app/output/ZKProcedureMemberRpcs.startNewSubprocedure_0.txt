@@ -1,0 +1,121 @@
+looking:ZKProcedureMemberRpcs.startNewSubprocedure
+ZKProcedureMemberRpcs	startNewSubprocedure
+-----------------------
+/**
+ * Kick off a new sub-procedure on the listener with the data stored in the passed znode.
+ * <p>
+ * Will attempt to create the same procedure multiple times if an procedure znode with the same
+ * name is created. It is left up the coordinator to ensure this doesn't occur.
+ * @param path full path to the znode for the procedure to start
+ */
+private synchronized void startNewSubprocedure(String path) {
+    LOG.debug("Found procedure znode: " + path);
+    String opName = ZKUtil.getNodeName(path);
+    // start watching for an abort notification for the procedure
+    String abortZNode = zkController.getAbortZNode(opName);
+    try {
+        if (ZKUtil.watchAndCheckExists(zkController.getWatcher(), abortZNode)) {
+            LOG.debug("Not starting:" + opName + " because we already have an abort notification.");
+            return;
+        }
+    } catch (KeeperException e) {
+        member.controllerConnectionFailure("Failed to get the abort znode (" + abortZNode + ") for procedure :" + opName, e, opName);
+        return;
+    }
+    // get the data for the procedure
+    Subprocedure subproc = null;
+    try {
+        byte[] data = ZKUtil.getData(zkController.getWatcher(), path);
+        if (!ProtobufUtil.isPBMagicPrefix(data)) {
+            String msg = "Data in for starting procedure " + opName + " is illegally formatted (no pb magic). " + "Killing the procedure: " + Bytes.toString(data);
+            LOG.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        LOG.debug("start proc data length is " + data.length);
+        data = Arrays.copyOfRange(data, ProtobufUtil.lengthOfPBMagic(), data.length);
+        LOG.debug("Found data for znode:" + path);
+        subproc = member.createSubprocedure(opName, data);
+        member.submitSubprocedure(subproc);
+    } catch (IllegalArgumentException iae) {
+        LOG.error("Illegal argument exception", iae);
+        sendMemberAborted(subproc, new ForeignException(getMemberName(), iae));
+    } catch (IllegalStateException ise) {
+        LOG.error("Illegal state exception ", ise);
+        sendMemberAborted(subproc, new ForeignException(getMemberName(), ise));
+    } catch (KeeperException e) {
+        member.controllerConnectionFailure("Failed to get data for new procedure:" + opName, e, opName);
+    } catch (InterruptedException e) {
+        member.controllerConnectionFailure("Failed to get data for new procedure:" + opName, e, opName);
+        Thread.currentThread().interrupt();
+    }
+}
+-----------------------
+/**
+ * Kick off a new sub-procedure on the listener with the data stored in the passed znode.
+ * <p>
+ * Will attempt to create the same procedure multiple times if an procedure znode with the same
+ * name is created. It is left up the coordinator to ensure this doesn't occur.
+ * @param path full path to the znode for the procedure to start
+ */
+private synchronized void startNewSubprocedure(String path) {
+    LOG.debug("Found procedure znode: " + path);
+    String opName = ZKUtil.getNodeName(path);
+    // start watching for an abort notification for the procedure
+    String abortZNode = zkController.getAbortZNode(opName);
+    try {
+        if (ZKUtil.watchAndCheckExists(zkController.getWatcher(), abortZNode)) {
+            LOG.debug("Not starting:" + opName + " because we already have an abort notification.");
+            return;
+        }
+    } catch (KeeperException e) {
+        member.controllerConnectionFailure("Failed to get the abort znode (" + abortZNode + ") for procedure :" + opName, e, opName);
+        return;
+    }
+    // get the data for the procedure
+    Subprocedure subproc = null;
+    try {
+        byte[] data = ZKUtil.getData(zkController.getWatcher(), path);
+        if (!ProtobufUtil.isPBMagicPrefix(data)) {
+            String msg = "Data in for starting procedure " + opName + " is illegally formatted (no pb magic). " + "Killing the procedure: " + Bytes.toString(data);
+            LOG.error(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        LOG.debug("start proc data length is " + data.length);
+        data = Arrays.copyOfRange(data, ProtobufUtil.lengthOfPBMagic(), data.length);
+        LOG.debug("Found data for znode:" + path);
+        subproc = member.createSubprocedure(opName, data);
+        member.submitSubprocedure(subproc);
+    } catch (IllegalArgumentException iae) {
+        LOG.error("Illegal argument exception", iae);
+        sendMemberAborted(subproc, new ForeignException(getMemberName(), iae));
+        {
+            if (sub == null) {
+                LOG.error("Failed due to null subprocedure", ee);
+                return;
+            }
+            String procName = sub.getName();
+            LOG.debug("Aborting procedure (" + procName + ") in zk");
+            String procAbortZNode = zkController.getAbortZNode(procName);
+            try {
+                String source = (ee.getSource() == null) ? memberName : ee.getSource();
+                byte[] errorInfo = ProtobufUtil.prependPBMagic(ForeignException.serialize(source, ee));
+                ZKUtil.createAndFailSilent(zkController.getWatcher(), procAbortZNode, errorInfo);
+                LOG.debug("Finished creating abort znode:" + procAbortZNode);
+            } catch (KeeperException e) {
+                // possible that we get this error for the procedure if we already reset the zk state, but in
+                // that case we should still get an error for that procedure anyways
+                zkController.logZKTree(zkController.getBaseZnode());
+                member.controllerConnectionFailure("Failed to post zk node:" + procAbortZNode + " to abort procedure", e, procName);
+            }
+        }
+    } catch (IllegalStateException ise) {
+        LOG.error("Illegal state exception ", ise);
+        sendMemberAborted(subproc, new ForeignException(getMemberName(), ise));
+    } catch (KeeperException e) {
+        member.controllerConnectionFailure("Failed to get data for new procedure:" + opName, e, opName);
+    } catch (InterruptedException e) {
+        member.controllerConnectionFailure("Failed to get data for new procedure:" + opName, e, opName);
+        Thread.currentThread().interrupt();
+    }
+}-----------------------
+possible Hot1

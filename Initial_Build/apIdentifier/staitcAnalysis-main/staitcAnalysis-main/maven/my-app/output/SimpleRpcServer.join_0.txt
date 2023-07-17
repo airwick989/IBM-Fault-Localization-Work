@@ -1,0 +1,27 @@
+looking:SimpleRpcServer.join
+SimpleRpcServer	join
+-----------------------
+/**
+ * Wait for the server to be stopped. Does not wait for all subthreads to finish.
+ * @see #stop()
+ */
+@Override
+public synchronized void join() throws InterruptedException {
+    while (running) {
+        wait();
+    }
+}
+-----------------------
+/**
+ * Wait for the server to be stopped. Does not wait for all subthreads to finish.
+ * @see #stop()
+ */
+@Override
+public synchronized void join() throws InterruptedException {
+    while (running) {
+        wait();
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

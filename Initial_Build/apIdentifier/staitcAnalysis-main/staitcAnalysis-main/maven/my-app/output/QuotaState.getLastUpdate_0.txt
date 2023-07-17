@@ -1,0 +1,11 @@
+looking:QuotaState.getLastUpdate
+QuotaState	getLastUpdate
+-----------------------
+public synchronized long getLastUpdate() {
+    return lastUpdate;
+}
+-----------------------
+public synchronized long getLastUpdate() {
+    return lastUpdate;
+}-----------------------
+possible Hot1

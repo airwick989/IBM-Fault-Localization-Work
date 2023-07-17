@@ -1,0 +1,13 @@
+looking:task
+ZKSplitLogManagerCoordination	deleteNodeSuccess
+-----------------------
+synchronized (task) {
+    task.status = DELETED;
+    task.notify();
+}
+-----------------------
+synchronized (task) {
+    task.status = DELETED;
+    task.notify();
+}-----------------------
+possible Hot2

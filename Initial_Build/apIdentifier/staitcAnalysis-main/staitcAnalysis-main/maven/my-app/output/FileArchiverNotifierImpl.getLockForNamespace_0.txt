@@ -1,0 +1,11 @@
+looking:FileArchiverNotifierImpl.getLockForNamespace
+FileArchiverNotifierImpl	getLockForNamespace
+-----------------------
+static synchronized Object getLockForNamespace(String namespace) {
+    return NAMESPACE_LOCKS.computeIfAbsent(namespace, (ns) -> new Object());
+}
+-----------------------
+static synchronized Object getLockForNamespace(String namespace) {
+    return NAMESPACE_LOCKS.computeIfAbsent(namespace, (ns) -> new Object());
+}-----------------------
+possible Hot1

@@ -1,0 +1,13 @@
+looking:ServerCall.setCallBack
+ServerCall	setCallBack
+-----------------------
+@Override
+public synchronized void setCallBack(RpcCallback callback) {
+    this.rpcCallback = callback;
+}
+-----------------------
+@Override
+public synchronized void setCallBack(RpcCallback callback) {
+    this.rpcCallback = callback;
+}-----------------------
+possible Hot1

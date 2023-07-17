@@ -1,0 +1,41 @@
+looking:SnapshotManager.cleanupSentinels
+SnapshotManager	cleanupSentinels
+-----------------------
+/**
+ * Remove the sentinels that are marked as finished and the completion time has exceeded the
+ * removal timeout.
+ * @param sentinels map of sentinels to clean
+ */
+private synchronized void cleanupSentinels(final Map<TableName, SnapshotSentinel> sentinels) {
+    long currentTime = EnvironmentEdgeManager.currentTime();
+    long sentinelsCleanupTimeoutMillis = master.getConfiguration().getLong(HBASE_SNAPSHOT_SENTINELS_CLEANUP_TIMEOUT_MILLIS, SNAPSHOT_SENTINELS_CLEANUP_TIMEOUT_MILLS_DEFAULT);
+    Iterator<Map.Entry<TableName, SnapshotSentinel>> it = sentinels.entrySet().iterator();
+    while (it.hasNext()) {
+        Map.Entry<TableName, SnapshotSentinel> entry = it.next();
+        SnapshotSentinel sentinel = entry.getValue();
+        if (sentinel.isFinished() && (currentTime - sentinel.getCompletionTimestamp()) > sentinelsCleanupTimeoutMillis) {
+            it.remove();
+        }
+    }
+}
+-----------------------
+/**
+ * Remove the sentinels that are marked as finished and the completion time has exceeded the
+ * removal timeout.
+ * @param sentinels map of sentinels to clean
+ */
+private synchronized void cleanupSentinels(final Map<TableName, SnapshotSentinel> sentinels) {
+    long currentTime = EnvironmentEdgeManager.currentTime();
+    long sentinelsCleanupTimeoutMillis = master.getConfiguration().getLong(HBASE_SNAPSHOT_SENTINELS_CLEANUP_TIMEOUT_MILLIS, SNAPSHOT_SENTINELS_CLEANUP_TIMEOUT_MILLS_DEFAULT);
+    Iterator<Map.Entry<TableName, SnapshotSentinel>> it = sentinels.entrySet().iterator();
+    while (it.hasNext()) {
+        Map.Entry<TableName, SnapshotSentinel> entry = it.next();
+        SnapshotSentinel sentinel = entry.getValue();
+        if (sentinel.isFinished() && (currentTime - sentinel.getCompletionTimestamp()) > sentinelsCleanupTimeoutMillis) {
+            it.remove();
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

@@ -1,0 +1,13 @@
+looking:ReadOnlyConfiguration.setQuietMode
+ReadOnlyConfiguration	setQuietMode
+-----------------------
+@Override
+public synchronized void setQuietMode(boolean quietmode) {
+    throw new UnsupportedOperationException("Read-only Configuration");
+}
+-----------------------
+@Override
+public synchronized void setQuietMode(boolean quietmode) {
+    throw new UnsupportedOperationException("Read-only Configuration");
+}-----------------------
+possible Hot1

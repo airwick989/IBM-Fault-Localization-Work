@@ -1,0 +1,11 @@
+looking:regionToBestLocalityRSMapping
+FSRegionScanner	run
+-----------------------
+synchronized (regionToBestLocalityRSMapping) {
+    regionToBestLocalityRSMapping.put(name, hostToRun);
+}
+-----------------------
+synchronized (regionToBestLocalityRSMapping) {
+    regionToBestLocalityRSMapping.put(name, hostToRun);
+}-----------------------
+possible Hot1

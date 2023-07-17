@@ -1,0 +1,15 @@
+looking:TestEndpoint.getNumSinks
+TestEndpoint	getNumSinks
+-----------------------
+@Override
+public synchronized int getNumSinks() {
+    // Return multiple server names for endpoint parallel replication.
+    return 10;
+}
+-----------------------
+@Override
+public synchronized int getNumSinks() {
+    // Return multiple server names for endpoint parallel replication.
+    return 10;
+}-----------------------
+possible Hot1

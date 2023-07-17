@@ -1,0 +1,13 @@
+looking:DoNothingReplicationEndpoint.getPeerUUID
+DoNothingReplicationEndpoint	getPeerUUID
+-----------------------
+@Override
+public synchronized UUID getPeerUUID() {
+    return this.uuid;
+}
+-----------------------
+@Override
+public synchronized UUID getPeerUUID() {
+    return this.uuid;
+}-----------------------
+possible Hot1

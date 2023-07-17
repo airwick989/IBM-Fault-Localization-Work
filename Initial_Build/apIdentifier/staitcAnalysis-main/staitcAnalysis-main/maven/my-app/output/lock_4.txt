@@ -1,0 +1,19 @@
+looking:lock
+RowLockContext	getRowLock
+-----------------------
+synchronized (lock) {
+    if (usable.get()) {
+        return new RowLockImpl(this, l);
+    } else {
+        return null;
+    }
+}
+-----------------------
+synchronized (lock) {
+    if (usable.get()) {
+        return new RowLockImpl(this, l);
+    } else {
+        return null;
+    }
+}-----------------------
+possible Hot2

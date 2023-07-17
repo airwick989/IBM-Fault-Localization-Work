@@ -1,0 +1,17 @@
+looking:FaultyOutputStream.write
+FaultyOutputStream	write
+-----------------------
+@Override
+public synchronized void write(byte[] buf, int offset, int length) throws IOException {
+    LOG.info("faulty stream write at pos " + getPos());
+    injectFault();
+    super.write(buf, offset, length);
+}
+-----------------------
+@Override
+public synchronized void write(byte[] buf, int offset, int length) throws IOException {
+    LOG.info("faulty stream write at pos " + getPos());
+    injectFault();
+    super.write(buf, offset, length);
+}-----------------------
+possible Hot1

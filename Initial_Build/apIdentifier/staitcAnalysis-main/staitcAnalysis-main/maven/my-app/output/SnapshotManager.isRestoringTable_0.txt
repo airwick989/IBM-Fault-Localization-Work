@@ -1,0 +1,41 @@
+looking:SnapshotManager.isRestoringTable
+SnapshotManager	isRestoringTable
+-----------------------
+/**
+ * Verify if the restore of the specified table is in progress.
+ * @param tableName table under restore
+ * @return <tt>true</tt> if there is a restore in progress of the specified table.
+ */
+private synchronized boolean isRestoringTable(final TableName tableName) {
+    Long procId = this.restoreTableToProcIdMap.get(tableName);
+    if (procId == null) {
+        return false;
+    }
+    ProcedureExecutor<MasterProcedureEnv> procExec = master.getMasterProcedureExecutor();
+    if (procExec.isRunning() && !procExec.isFinished(procId)) {
+        return true;
+    } else {
+        this.restoreTableToProcIdMap.remove(tableName);
+        return false;
+    }
+}
+-----------------------
+/**
+ * Verify if the restore of the specified table is in progress.
+ * @param tableName table under restore
+ * @return <tt>true</tt> if there is a restore in progress of the specified table.
+ */
+private synchronized boolean isRestoringTable(final TableName tableName) {
+    Long procId = this.restoreTableToProcIdMap.get(tableName);
+    if (procId == null) {
+        return false;
+    }
+    ProcedureExecutor<MasterProcedureEnv> procExec = master.getMasterProcedureExecutor();
+    if (procExec.isRunning() && !procExec.isFinished(procId)) {
+        return true;
+    } else {
+        this.restoreTableToProcIdMap.remove(tableName);
+        return false;
+    }
+}-----------------------
+possible Hot1

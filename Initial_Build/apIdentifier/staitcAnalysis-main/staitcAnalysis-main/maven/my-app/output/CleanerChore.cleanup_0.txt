@@ -1,0 +1,27 @@
+looking:CleanerChore.cleanup
+CleanerChore	cleanup
+-----------------------
+@Override
+public synchronized void cleanup() {
+    for (T lc : this.cleanersChain) {
+        try {
+            lc.stop("Exiting");
+        } catch (Throwable t) {
+            LOG.warn("Stopping", t);
+        }
+    }
+}
+-----------------------
+@Override
+public synchronized void cleanup() {
+    for (T lc : this.cleanersChain) {
+        try {
+            lc.stop("Exiting");
+        } catch (Throwable t) {
+            LOG.warn("Stopping", t);
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

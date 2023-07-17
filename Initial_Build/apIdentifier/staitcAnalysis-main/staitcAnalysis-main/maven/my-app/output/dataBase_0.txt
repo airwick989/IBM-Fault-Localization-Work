@@ -1,0 +1,21 @@
+looking:dataBase
+Hot	retriveData
+-----------------------
+synchronized (dataBase) {
+    if (sleepType == 0) {
+        Thread.sleep(sleepTime);
+    } else {
+        Thread.sleep(0, sleepTime);
+    }
+    System.out.println("Task done from thread : " + threadId);
+}
+-----------------------
+synchronized (dataBase) {
+    if (sleepType == 0) {
+        Thread.sleep(sleepTime);
+    } else {
+        Thread.sleep(0, sleepTime);
+    }
+    System.out.println("Task done from thread : " + threadId);
+}-----------------------
+possible Hot1

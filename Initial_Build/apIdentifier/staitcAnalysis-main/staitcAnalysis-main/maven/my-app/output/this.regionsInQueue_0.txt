@@ -1,0 +1,23 @@
+looking:this.regionsInQueue
+MemStoreFlusher	flushRegion
+-----------------------
+synchronized (this.regionsInQueue) {
+    FlushRegionEntry fqe = this.regionsInQueue.remove(region);
+    // Use the start time of the FlushRegionEntry if available
+    if (fqe != null && emergencyFlush) {
+        // Need to remove from region from delay queue. When NOT an
+        // emergencyFlush, then item was removed via a flushQueue.poll.
+        flushQueue.remove(fqe);
+    }
+}
+-----------------------
+synchronized (this.regionsInQueue) {
+    FlushRegionEntry fqe = this.regionsInQueue.remove(region);
+    // Use the start time of the FlushRegionEntry if available
+    if (fqe != null && emergencyFlush) {
+        // Need to remove from region from delay queue. When NOT an
+        // emergencyFlush, then item was removed via a flushQueue.poll.
+        flushQueue.remove(fqe);
+    }
+}-----------------------
+possible Hot1

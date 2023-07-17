@@ -1,0 +1,47 @@
+looking:LockProcedure.setTimeoutFailure
+LockProcedure	setTimeoutFailure
+-----------------------
+/**
+ * Re run the procedure after every timeout to write new WAL entries so we don't hold back old
+ * WALs.
+ * @return false, so procedure framework doesn't mark this procedure as failure.
+ */
+@Override
+protected synchronized boolean setTimeoutFailure(final MasterProcedureEnv env) {
+    synchronized (event) {
+        if (LOG.isDebugEnabled())
+            LOG.debug("Timeout failure " + this.event);
+        if (!event.isReady()) {
+            // Maybe unlock() awakened the event.
+            setState(ProcedureProtos.ProcedureState.RUNNABLE);
+            if (LOG.isDebugEnabled())
+                LOG.debug("Calling wake on " + this.event);
+            event.wake(env.getProcedureScheduler());
+        }
+    }
+    // false: do not mark the procedure as failed.
+    return false;
+}
+-----------------------
+/**
+ * Re run the procedure after every timeout to write new WAL entries so we don't hold back old
+ * WALs.
+ * @return false, so procedure framework doesn't mark this procedure as failure.
+ */
+@Override
+protected synchronized boolean setTimeoutFailure(final MasterProcedureEnv env) {
+    synchronized (event) {
+        if (LOG.isDebugEnabled())
+            LOG.debug("Timeout failure " + this.event);
+        if (!event.isReady()) {
+            // Maybe unlock() awakened the event.
+            setState(ProcedureProtos.ProcedureState.RUNNABLE);
+            if (LOG.isDebugEnabled())
+                LOG.debug("Calling wake on " + this.event);
+            event.wake(env.getProcedureScheduler());
+        }
+    }
+    // false: do not mark the procedure as failed.
+    return false;
+}-----------------------
+possible Hot1

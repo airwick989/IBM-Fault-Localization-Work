@@ -1,0 +1,19 @@
+looking:grabTaskLock
+ZkSplitLogWorkerCoordination	grabTask
+-----------------------
+synchronized (grabTaskLock) {
+    currentTask = path;
+    workerInGrabTask = true;
+    if (Thread.interrupted()) {
+        return false;
+    }
+}
+-----------------------
+synchronized (grabTaskLock) {
+    currentTask = path;
+    workerInGrabTask = true;
+    if (Thread.interrupted()) {
+        return false;
+    }
+}-----------------------
+possible Hot2

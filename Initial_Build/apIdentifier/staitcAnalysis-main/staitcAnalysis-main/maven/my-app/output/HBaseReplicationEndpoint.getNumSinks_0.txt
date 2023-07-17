@@ -1,0 +1,11 @@
+looking:HBaseReplicationEndpoint.getNumSinks
+HBaseReplicationEndpoint	getNumSinks
+-----------------------
+protected synchronized int getNumSinks() {
+    return sinkServers.size();
+}
+-----------------------
+protected synchronized int getNumSinks() {
+    return sinkServers.size();
+}-----------------------
+possible Hot1

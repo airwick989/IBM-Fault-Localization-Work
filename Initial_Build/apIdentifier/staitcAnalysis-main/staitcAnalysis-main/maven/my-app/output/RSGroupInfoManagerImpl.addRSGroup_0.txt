@@ -1,0 +1,29 @@
+looking:RSGroupInfoManagerImpl.addRSGroup
+RSGroupInfoManagerImpl	addRSGroup
+-----------------------
+@Override
+public synchronized void addRSGroup(RSGroupInfo rsGroupInfo) throws IOException {
+    checkGroupName(rsGroupInfo.getName());
+    Map<String, RSGroupInfo> rsGroupMap = holder.groupName2Group;
+    if (rsGroupMap.get(rsGroupInfo.getName()) != null || rsGroupInfo.getName().equals(RSGroupInfo.DEFAULT_GROUP)) {
+        throw new ConstraintException("Group already exists: " + rsGroupInfo.getName());
+    }
+    Map<String, RSGroupInfo> newGroupMap = Maps.newHashMap(rsGroupMap);
+    newGroupMap.put(rsGroupInfo.getName(), rsGroupInfo);
+    flushConfig(newGroupMap);
+    LOG.info("Add group {} done.", rsGroupInfo.getName());
+}
+-----------------------
+@Override
+public synchronized void addRSGroup(RSGroupInfo rsGroupInfo) throws IOException {
+    checkGroupName(rsGroupInfo.getName());
+    Map<String, RSGroupInfo> rsGroupMap = holder.groupName2Group;
+    if (rsGroupMap.get(rsGroupInfo.getName()) != null || rsGroupInfo.getName().equals(RSGroupInfo.DEFAULT_GROUP)) {
+        throw new ConstraintException("Group already exists: " + rsGroupInfo.getName());
+    }
+    Map<String, RSGroupInfo> newGroupMap = Maps.newHashMap(rsGroupMap);
+    newGroupMap.put(rsGroupInfo.getName(), rsGroupInfo);
+    flushConfig(newGroupMap);
+    LOG.info("Add group {} done.", rsGroupInfo.getName());
+}-----------------------
+possible Hot1

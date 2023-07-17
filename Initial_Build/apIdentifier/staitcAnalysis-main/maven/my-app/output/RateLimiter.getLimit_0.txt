@@ -1,9 +1,0 @@
-looking:RateLimiter.getLimit
-public synchronized long getLimit() {
-    return limit;
-}
-
-public synchronized long getLimit() {
-    return limit;
-}
-possible Hot1

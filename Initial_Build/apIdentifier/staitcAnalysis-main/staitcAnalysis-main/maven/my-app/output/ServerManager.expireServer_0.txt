@@ -1,0 +1,23 @@
+looking:ServerManager.expireServer
+ServerManager	expireServer
+-----------------------
+/**
+ * Expire the passed server. Add it to list of dead servers and queue a shutdown processing.
+ * @return pid if we queued a ServerCrashProcedure else {@link Procedure#NO_PROC_ID} if we did not
+ *         (could happen for many reasons including the fact that its this server that is going
+ *         down or we already have queued an SCP for this server or SCP processing is currently
+ *         disabled because we are in startup phase).
+ */
+// Redo test so we can make this protected.
+public synchronized long expireServer(final ServerName serverName) {
+    return expireServer(serverName, false);
+}
+-----------------------
+// Redo test so we can make this protected.
+public synchronized long expireServer(final ServerName serverName) {
+    return expireServer(serverName, false);
+    {
+        return expireServer(serverName, false);
+    }
+}-----------------------
+possible Hot2

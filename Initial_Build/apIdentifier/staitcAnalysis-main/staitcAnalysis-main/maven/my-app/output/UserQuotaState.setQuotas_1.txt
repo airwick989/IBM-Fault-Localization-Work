@@ -1,0 +1,19 @@
+looking:UserQuotaState.setQuotas
+UserQuotaState	setQuotas
+-----------------------
+/**
+ * Add the quota information of the specified table. (This operation is part of the QuotaState
+ * setup)
+ */
+public synchronized void setQuotas(final TableName table, Quotas quotas) {
+    tableLimiters = setLimiter(tableLimiters, table, quotas);
+}
+-----------------------
+/**
+ * Add the quota information of the specified table. (This operation is part of the QuotaState
+ * setup)
+ */
+public synchronized void setQuotas(final TableName table, Quotas quotas) {
+    tableLimiters = setLimiter(tableLimiters, table, quotas);
+}-----------------------
+possible Hot2

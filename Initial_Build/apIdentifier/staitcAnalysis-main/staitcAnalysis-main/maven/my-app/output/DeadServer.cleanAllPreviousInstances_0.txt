@@ -1,0 +1,29 @@
+looking:DeadServer.cleanAllPreviousInstances
+DeadServer	cleanAllPreviousInstances
+-----------------------
+synchronized void cleanAllPreviousInstances(final ServerName newServerName) {
+    Iterator<ServerName> it = deadServers.keySet().iterator();
+    while (it.hasNext()) {
+        cleanOldServerName(newServerName, it);
+    }
+}
+-----------------------
+synchronized void cleanAllPreviousInstances(final ServerName newServerName) {
+    Iterator<ServerName> it = deadServers.keySet().iterator();
+    while (it.hasNext()) {
+        cleanOldServerName(newServerName, it);
+        {
+            ServerName sn = deadServerIterator.next();
+            if (ServerName.isSameAddress(sn, newServerName)) {
+                // Remove from dead servers list. Don't remove from the processing list --
+                // let the SCP do it when it is done.
+                deadServerIterator.remove();
+                return true;
+            }
+            return false;
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

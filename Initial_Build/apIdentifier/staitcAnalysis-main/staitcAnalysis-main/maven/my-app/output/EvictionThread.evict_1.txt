@@ -1,0 +1,11 @@
+looking:EvictionThread.evict
+EvictionThread	evict
+-----------------------
+synchronized (this) {
+    this.notifyAll();
+}
+-----------------------
+synchronized (this) {
+    this.notifyAll();
+}-----------------------
+possible Hot2

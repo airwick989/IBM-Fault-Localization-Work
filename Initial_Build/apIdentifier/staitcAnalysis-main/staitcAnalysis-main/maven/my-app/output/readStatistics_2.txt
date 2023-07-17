@@ -1,0 +1,11 @@
+looking:readStatistics
+FSDataInputStreamWrapper	getShortCircuitBytesRead
+-----------------------
+synchronized (readStatistics) {
+    return readStatistics.totalShortCircuitBytesRead;
+}
+-----------------------
+synchronized (readStatistics) {
+    return readStatistics.totalShortCircuitBytesRead;
+}-----------------------
+possible Hot2

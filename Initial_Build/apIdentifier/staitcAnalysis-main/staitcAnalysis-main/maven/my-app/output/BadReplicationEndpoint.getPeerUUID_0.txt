@@ -1,0 +1,13 @@
+looking:BadReplicationEndpoint.getPeerUUID
+BadReplicationEndpoint	getPeerUUID
+-----------------------
+@Override
+public synchronized UUID getPeerUUID() {
+    return failing ? null : super.getPeerUUID();
+}
+-----------------------
+@Override
+public synchronized UUID getPeerUUID() {
+    return failing ? null : super.getPeerUUID();
+}-----------------------
+possible Hot1

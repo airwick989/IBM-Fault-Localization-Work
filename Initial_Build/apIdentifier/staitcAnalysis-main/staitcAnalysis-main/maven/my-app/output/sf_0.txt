@@ -1,0 +1,19 @@
+looking:sf
+TestCleanupCompactedFileOnRegionClose	testCleanupOnClose
+-----------------------
+synchronized (sf) {
+    if (count < refSFCount) {
+        assertTrue(sf.isReferencedInReads());
+    } else {
+        assertFalse(sf.isReferencedInReads());
+    }
+}
+-----------------------
+synchronized (sf) {
+    if (count < refSFCount) {
+        assertTrue(sf.isReferencedInReads());
+    } else {
+        assertFalse(sf.isReferencedInReads());
+    }
+}-----------------------
+possible Hot2

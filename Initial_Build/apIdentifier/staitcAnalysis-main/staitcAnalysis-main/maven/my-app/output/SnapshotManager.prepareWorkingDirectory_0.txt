@@ -1,0 +1,51 @@
+looking:SnapshotManager.prepareWorkingDirectory
+SnapshotManager	prepareWorkingDirectory
+-----------------------
+/**
+ * Check to make sure that we are OK to run the passed snapshot. Checks to make sure that we
+ * aren't already running a snapshot or restore on the requested table.
+ * @param snapshot description of the snapshot we want to start
+ * @throws HBaseSnapshotException if the filesystem could not be prepared to start the snapshot
+ */
+public synchronized void prepareWorkingDirectory(SnapshotDescription snapshot) throws HBaseSnapshotException {
+    Path workingDir = SnapshotDescriptionUtils.getWorkingSnapshotDir(snapshot, rootDir, master.getConfiguration());
+    try {
+        FileSystem workingDirFS = workingDir.getFileSystem(master.getConfiguration());
+        // delete the working directory, since we aren't running the snapshot. Likely leftovers
+        // from a failed attempt.
+        workingDirFS.delete(workingDir, true);
+        // recreate the working directory for the snapshot
+        if (!workingDirFS.mkdirs(workingDir)) {
+            throw new SnapshotCreationException("Couldn't create working directory (" + workingDir + ") for snapshot", ProtobufUtil.createSnapshotDesc(snapshot));
+        }
+    } catch (HBaseSnapshotException e) {
+        throw e;
+    } catch (IOException e) {
+        throw new SnapshotCreationException("Exception while checking to see if snapshot could be started.", e, ProtobufUtil.createSnapshotDesc(snapshot));
+    }
+}
+-----------------------
+/**
+ * Check to make sure that we are OK to run the passed snapshot. Checks to make sure that we
+ * aren't already running a snapshot or restore on the requested table.
+ * @param snapshot description of the snapshot we want to start
+ * @throws HBaseSnapshotException if the filesystem could not be prepared to start the snapshot
+ */
+public synchronized void prepareWorkingDirectory(SnapshotDescription snapshot) throws HBaseSnapshotException {
+    Path workingDir = SnapshotDescriptionUtils.getWorkingSnapshotDir(snapshot, rootDir, master.getConfiguration());
+    try {
+        FileSystem workingDirFS = workingDir.getFileSystem(master.getConfiguration());
+        // delete the working directory, since we aren't running the snapshot. Likely leftovers
+        // from a failed attempt.
+        workingDirFS.delete(workingDir, true);
+        // recreate the working directory for the snapshot
+        if (!workingDirFS.mkdirs(workingDir)) {
+            throw new SnapshotCreationException("Couldn't create working directory (" + workingDir + ") for snapshot", ProtobufUtil.createSnapshotDesc(snapshot));
+        }
+    } catch (HBaseSnapshotException e) {
+        throw e;
+    } catch (IOException e) {
+        throw new SnapshotCreationException("Exception while checking to see if snapshot could be started.", e, ProtobufUtil.createSnapshotDesc(snapshot));
+    }
+}-----------------------
+possible Hot1

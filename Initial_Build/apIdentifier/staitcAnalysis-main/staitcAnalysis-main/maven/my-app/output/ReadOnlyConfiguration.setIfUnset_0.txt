@@ -1,0 +1,13 @@
+looking:ReadOnlyConfiguration.setIfUnset
+ReadOnlyConfiguration	setIfUnset
+-----------------------
+@Override
+public synchronized void setIfUnset(String name, String value) {
+    throw new UnsupportedOperationException("Read-only Configuration");
+}
+-----------------------
+@Override
+public synchronized void setIfUnset(String name, String value) {
+    throw new UnsupportedOperationException("Read-only Configuration");
+}-----------------------
+possible Hot1

@@ -1,0 +1,11 @@
+looking:entries
+RegionReplicationSink	getFailedReplicas
+-----------------------
+synchronized (entries) {
+    return this.failedReplicas;
+}
+-----------------------
+synchronized (entries) {
+    return this.failedReplicas;
+}-----------------------
+possible Hot2

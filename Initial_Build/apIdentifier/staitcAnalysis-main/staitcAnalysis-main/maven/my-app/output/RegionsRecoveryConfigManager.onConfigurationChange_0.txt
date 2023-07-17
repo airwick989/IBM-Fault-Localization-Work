@@ -1,0 +1,34 @@
+looking:RegionsRecoveryConfigManager.onConfigurationChange
+RegionsRecoveryConfigManager	onConfigurationChange
+-----------------------
+// Regions Reopen based on very high storeFileRefCount is considered enabled
+// only if hbase.regions.recovery.store.file.ref.count has value > 0
+synchronized (this) {
+    if (chore != null) {
+        chore.shutdown();
+        chore = null;
+    }
+    if (newMaxStoreFileRefCount > 0) {
+        // schedule the new chore
+        choreService.scheduleChore(regionsRecoveryChore);
+        chore = regionsRecoveryChore;
+    }
+    this.prevMaxStoreFileRefCount = newMaxStoreFileRefCount;
+    this.prevRegionsRecoveryInterval = newRegionsRecoveryInterval;
+}
+-----------------------
+// only if hbase.regions.recovery.store.file.ref.count has value > 0
+synchronized (this) {
+    if (chore != null) {
+        chore.shutdown();
+        chore = null;
+    }
+    if (newMaxStoreFileRefCount > 0) {
+        // schedule the new chore
+        choreService.scheduleChore(regionsRecoveryChore);
+        chore = regionsRecoveryChore;
+    }
+    this.prevMaxStoreFileRefCount = newMaxStoreFileRefCount;
+    this.prevRegionsRecoveryInterval = newRegionsRecoveryInterval;
+}-----------------------
+possible Hot1

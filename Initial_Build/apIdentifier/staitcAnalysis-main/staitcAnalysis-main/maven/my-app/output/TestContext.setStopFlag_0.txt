@@ -1,0 +1,11 @@
+looking:TestContext.setStopFlag
+TestContext	setStopFlag
+-----------------------
+synchronized (this) {
+    stopped = s;
+}
+-----------------------
+synchronized (this) {
+    stopped = s;
+}-----------------------
+possible Hot1

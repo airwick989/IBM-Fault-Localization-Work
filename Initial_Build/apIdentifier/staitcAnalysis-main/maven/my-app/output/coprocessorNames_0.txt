@@ -1,9 +1,0 @@
-looking:coprocessorNames
-synchronized (coprocessorNames) {
-    return new HashSet(coprocessorNames);
-}
-
-synchronized (coprocessorNames) {
-    return new HashSet(coprocessorNames);
-}
-possible Hot1

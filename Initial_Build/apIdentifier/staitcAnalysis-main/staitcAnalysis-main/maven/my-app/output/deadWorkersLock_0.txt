@@ -1,0 +1,20 @@
+looking:deadWorkersLock
+SplitLogManager	handleDeadWorker
+-----------------------
+// resubmit the tasks on the TimeoutMonitor thread. Makes it easier
+// to reason about concurrency. Makes it easier to retry.
+synchronized (deadWorkersLock) {
+    if (deadWorkers == null) {
+        deadWorkers = new HashSet<>(100);
+    }
+    deadWorkers.add(workerName);
+}
+-----------------------
+// to reason about concurrency. Makes it easier to retry.
+synchronized (deadWorkersLock) {
+    if (deadWorkers == null) {
+        deadWorkers = new HashSet<>(100);
+    }
+    deadWorkers.add(workerName);
+}-----------------------
+possible Hot2

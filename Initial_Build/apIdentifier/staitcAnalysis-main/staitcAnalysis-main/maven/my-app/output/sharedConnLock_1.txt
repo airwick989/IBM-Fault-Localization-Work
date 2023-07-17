@@ -1,0 +1,17 @@
+looking:sharedConnLock
+ReplicationSink	stopReplicationSinkServices
+-----------------------
+synchronized (sharedConnLock) {
+    if (this.sharedConn != null) {
+        this.sharedConn.close();
+        this.sharedConn = null;
+    }
+}
+-----------------------
+synchronized (sharedConnLock) {
+    if (this.sharedConn != null) {
+        this.sharedConn.close();
+        this.sharedConn = null;
+    }
+}-----------------------
+possible Hot2

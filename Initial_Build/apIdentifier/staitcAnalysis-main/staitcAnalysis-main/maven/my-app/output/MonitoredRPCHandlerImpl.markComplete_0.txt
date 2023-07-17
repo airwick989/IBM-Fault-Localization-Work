@@ -1,0 +1,22 @@
+looking:MonitoredRPCHandlerImpl.markComplete
+MonitoredRPCHandlerImpl	markComplete
+-----------------------
+@Override
+public synchronized void markComplete(String status) {
+    super.markComplete(status);
+    this.params = null;
+    this.packet = null;
+}
+-----------------------
+@Override
+public synchronized void markComplete(String status) {
+    super.markComplete(status);
+    this.params = null;
+    this.packet = null;
+    {
+        super.markComplete(status);
+        this.params = null;
+        this.packet = null;
+    }
+}-----------------------
+possible Hot1

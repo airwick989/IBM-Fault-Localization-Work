@@ -1,0 +1,19 @@
+looking:PeerRegionServerListener.nodeChildrenChanged
+PeerRegionServerListener	nodeChildrenChanged
+-----------------------
+@Override
+public synchronized void nodeChildrenChanged(String path) {
+    if (path.equals(regionServerListNode)) {
+        LOG.info("Detected change to peer region servers, fetching updated list");
+        replicationEndpoint.chooseSinks();
+    }
+}
+-----------------------
+@Override
+public synchronized void nodeChildrenChanged(String path) {
+    if (path.equals(regionServerListNode)) {
+        LOG.info("Detected change to peer region servers, fetching updated list");
+        replicationEndpoint.chooseSinks();
+    }
+}-----------------------
+possible Hot1

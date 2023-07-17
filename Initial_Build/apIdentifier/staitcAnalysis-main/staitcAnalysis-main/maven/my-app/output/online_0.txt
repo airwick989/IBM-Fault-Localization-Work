@@ -1,0 +1,15 @@
+looking:online
+HRegionServer	handleReportForDutyResponse
+-----------------------
+// Wake up anyone waiting for this server to online
+synchronized (online) {
+    online.set(true);
+    online.notifyAll();
+}
+-----------------------
+// Wake up anyone waiting for this server to online
+synchronized (online) {
+    online.set(true);
+    online.notifyAll();
+}-----------------------
+possible Hot2

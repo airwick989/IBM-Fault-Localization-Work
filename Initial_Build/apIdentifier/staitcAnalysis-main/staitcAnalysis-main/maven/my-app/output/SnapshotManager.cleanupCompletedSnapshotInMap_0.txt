@@ -1,0 +1,35 @@
+looking:SnapshotManager.cleanupCompletedSnapshotInMap
+SnapshotManager	cleanupCompletedSnapshotInMap
+-----------------------
+/**
+ * Remove the procedures that are marked as finished
+ */
+private synchronized void cleanupCompletedSnapshotInMap() {
+    ProcedureExecutor<MasterProcedureEnv> procExec = master.getMasterProcedureExecutor();
+    Iterator<Map.Entry<SnapshotDescription, Long>> it = snapshotToProcIdMap.entrySet().iterator();
+    while (it.hasNext()) {
+        Map.Entry<SnapshotDescription, Long> entry = it.next();
+        Long procId = entry.getValue();
+        if (procExec.isRunning() && procExec.isFinished(procId)) {
+            it.remove();
+        }
+    }
+}
+-----------------------
+/**
+ * Remove the procedures that are marked as finished
+ */
+private synchronized void cleanupCompletedSnapshotInMap() {
+    ProcedureExecutor<MasterProcedureEnv> procExec = master.getMasterProcedureExecutor();
+    Iterator<Map.Entry<SnapshotDescription, Long>> it = snapshotToProcIdMap.entrySet().iterator();
+    while (it.hasNext()) {
+        Map.Entry<SnapshotDescription, Long> entry = it.next();
+        Long procId = entry.getValue();
+        if (procExec.isRunning() && procExec.isFinished(procId)) {
+            it.remove();
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

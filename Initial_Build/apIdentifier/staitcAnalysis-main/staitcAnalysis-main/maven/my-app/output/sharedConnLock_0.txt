@@ -1,0 +1,19 @@
+looking:sharedConnLock
+ReplicationSink	getConnection
+-----------------------
+synchronized (sharedConnLock) {
+    connection = sharedConn;
+    if (connection == null) {
+        connection = ClusterConnectionFactory.createAsyncClusterConnection(conf, null, UserProvider.instantiate(conf).getCurrent());
+        sharedConn = connection;
+    }
+}
+-----------------------
+synchronized (sharedConnLock) {
+    connection = sharedConn;
+    if (connection == null) {
+        connection = ClusterConnectionFactory.createAsyncClusterConnection(conf, null, UserProvider.instantiate(conf).getCurrent());
+        sharedConn = connection;
+    }
+}-----------------------
+possible Hot2

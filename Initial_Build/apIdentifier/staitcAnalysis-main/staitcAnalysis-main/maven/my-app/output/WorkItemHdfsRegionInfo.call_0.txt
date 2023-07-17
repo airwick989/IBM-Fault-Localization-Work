@@ -1,0 +1,49 @@
+looking:WorkItemHdfsRegionInfo.call
+WorkItemHdfsRegionInfo	call
+-----------------------
+@Override
+public synchronized Void call() throws IOException {
+    // only load entries that haven't been loaded yet.
+    if (hbi.getHdfsHRI() == null) {
+        try {
+            errors.progress();
+            hbi.loadHdfsRegioninfo(hbck.getConf());
+        } catch (IOException ioe) {
+            String msg = "Orphan region in HDFS: Unable to load .regioninfo from table " + hbi.getTableName() + " in hdfs dir " + hbi.getHdfsRegionDir() + "!  It may be an invalid format or version file.  Treating as " + "an orphaned regiondir.";
+            errors.reportError(ERROR_CODE.ORPHAN_HDFS_REGION, msg);
+            try {
+                hbck.debugLsr(hbi.getHdfsRegionDir());
+            } catch (IOException ioe2) {
+                LOG.error("Unable to read directory " + hbi.getHdfsRegionDir(), ioe2);
+                throw ioe2;
+            }
+            hbck.orphanHdfsDirs.add(hbi);
+            throw ioe;
+        }
+    }
+    return null;
+}
+-----------------------
+@Override
+public synchronized Void call() throws IOException {
+    // only load entries that haven't been loaded yet.
+    if (hbi.getHdfsHRI() == null) {
+        try {
+            errors.progress();
+            hbi.loadHdfsRegioninfo(hbck.getConf());
+        } catch (IOException ioe) {
+            String msg = "Orphan region in HDFS: Unable to load .regioninfo from table " + hbi.getTableName() + " in hdfs dir " + hbi.getHdfsRegionDir() + "!  It may be an invalid format or version file.  Treating as " + "an orphaned regiondir.";
+            errors.reportError(ERROR_CODE.ORPHAN_HDFS_REGION, msg);
+            try {
+                hbck.debugLsr(hbi.getHdfsRegionDir());
+            } catch (IOException ioe2) {
+                LOG.error("Unable to read directory " + hbi.getHdfsRegionDir(), ioe2);
+                throw ioe2;
+            }
+            hbck.orphanHdfsDirs.add(hbi);
+            throw ioe;
+        }
+    }
+    return null;
+}-----------------------
+possible Hot1

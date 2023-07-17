@@ -1,0 +1,47 @@
+looking:BucketSizeInfo.statistics
+BucketSizeInfo	statistics
+-----------------------
+public synchronized IndexStatistics statistics() {
+    long free = 0, used = 0;
+    int full = 0;
+    for (Object obj : bucketList.keySet()) {
+        Bucket b = (Bucket) obj;
+        free += b.freeCount();
+        used += b.usedCount();
+        if (!b.hasFreeSpace()) {
+            full++;
+        }
+    }
+    int bucketObjectSize = bucketSizes[sizeIndex];
+    // this is most likely to always be 1 or 0
+    int fillingBuckets = Math.max(0, freeBuckets.size() - completelyFreeBuckets.size());
+    // if bucket capacity is not perfectly divisible by a bucket's object size, there will
+    // be some left over per bucket. for some object sizes this may be large enough to be
+    // non-trivial and worth tuning by choosing a more divisible object size.
+    long wastedBytes = (bucketCapacity % bucketObjectSize) * (full + fillingBuckets);
+    return new IndexStatistics(free, used, bucketObjectSize, full, completelyFreeBuckets.size(), wastedBytes, fragmentationBytes);
+}
+-----------------------
+public synchronized IndexStatistics statistics() {
+    long free = 0, used = 0;
+    int full = 0;
+    for (Object obj : bucketList.keySet()) {
+        Bucket b = (Bucket) obj;
+        free += b.freeCount();
+        used += b.usedCount();
+        if (!b.hasFreeSpace()) {
+            full++;
+        }
+    }
+    int bucketObjectSize = bucketSizes[sizeIndex];
+    // this is most likely to always be 1 or 0
+    int fillingBuckets = Math.max(0, freeBuckets.size() - completelyFreeBuckets.size());
+    // if bucket capacity is not perfectly divisible by a bucket's object size, there will
+    // be some left over per bucket. for some object sizes this may be large enough to be
+    // non-trivial and worth tuning by choosing a more divisible object size.
+    long wastedBytes = (bucketCapacity % bucketObjectSize) * (full + fillingBuckets);
+    return new IndexStatistics(free, used, bucketObjectSize, full, completelyFreeBuckets.size(), wastedBytes, fragmentationBytes);
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

@@ -1,0 +1,39 @@
+looking:readWaiters
+MultiVersionConcurrencyControl	waitForRead
+-----------------------
+synchronized (readWaiters) {
+    while (readPoint.get() < e.getWriteNumber()) {
+        if (count % 100 == 0 && count > 0) {
+            long totalWaitTillNow = READPOINT_ADVANCE_WAIT_TIME * count;
+            LOG.warn("STUCK for : " + totalWaitTillNow + " millis. " + this);
+        }
+        count++;
+        try {
+            readWaiters.wait(READPOINT_ADVANCE_WAIT_TIME);
+        } catch (InterruptedException ie) {
+            // We were interrupted... finish the loop -- i.e. cleanup --and then
+            // on our way out, reset the interrupt flag.
+            interrupted = true;
+        }
+    }
+}
+-----------------------
+synchronized (readWaiters) {
+    while (readPoint.get() < e.getWriteNumber()) {
+        if (count % 100 == 0 && count > 0) {
+            long totalWaitTillNow = READPOINT_ADVANCE_WAIT_TIME * count;
+            LOG.warn("STUCK for : " + totalWaitTillNow + " millis. " + this);
+        }
+        count++;
+        try {
+            readWaiters.wait(READPOINT_ADVANCE_WAIT_TIME);
+        } catch (InterruptedException ie) {
+            // We were interrupted... finish the loop -- i.e. cleanup --and then
+            // on our way out, reset the interrupt flag.
+            interrupted = true;
+        }
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

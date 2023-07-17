@@ -1,9 +1,0 @@
-looking:FlushThread.flush
-synchronized (this) {
-    notify();
-}
-
-synchronized (this) {
-    notify();
-}
-possible Hot1

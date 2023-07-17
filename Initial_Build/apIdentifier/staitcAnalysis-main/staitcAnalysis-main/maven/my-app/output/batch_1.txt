@@ -1,0 +1,17 @@
+looking:batch
+TestSplitLogManager	testTaskErr
+-----------------------
+synchronized (batch) {
+    while (batch.installed != batch.error) {
+        batch.wait();
+    }
+}
+-----------------------
+synchronized (batch) {
+    while (batch.installed != batch.error) {
+        batch.wait();
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

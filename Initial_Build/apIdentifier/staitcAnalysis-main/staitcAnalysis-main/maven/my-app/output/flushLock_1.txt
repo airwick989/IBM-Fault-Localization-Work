@@ -1,0 +1,15 @@
+looking:flushLock
+StripeStoreFlusher	flushSnapshot
+-----------------------
+synchronized (flushLock) {
+    performFlush(scanner, mw, throughputController);
+    result = mw.commitWriters(cacheFlushSeqNum, false);
+    success = true;
+}
+-----------------------
+synchronized (flushLock) {
+    performFlush(scanner, mw, throughputController);
+    result = mw.commitWriters(cacheFlushSeqNum, false);
+    success = true;
+}-----------------------
+possible Hot2

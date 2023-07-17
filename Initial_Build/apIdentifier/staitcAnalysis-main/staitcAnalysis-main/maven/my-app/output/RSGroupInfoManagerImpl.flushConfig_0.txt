@@ -1,0 +1,11 @@
+looking:RSGroupInfoManagerImpl.flushConfig
+RSGroupInfoManagerImpl	flushConfig
+-----------------------
+private synchronized void flushConfig() throws IOException {
+    flushConfig(holder.groupName2Group);
+}
+-----------------------
+private synchronized void flushConfig() throws IOException {
+    flushConfig(holder.groupName2Group);
+}-----------------------
+possible Hot2

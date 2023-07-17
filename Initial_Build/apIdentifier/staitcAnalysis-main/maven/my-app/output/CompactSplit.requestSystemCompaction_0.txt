@@ -1,9 +1,0 @@
-looking:CompactSplit.requestSystemCompaction
-public synchronized void requestSystemCompaction(HRegion region, String why) throws IOException {
-    requestCompactionInternal(region, why, NO_PRIORITY, false, CompactionLifeCycleTracker.DUMMY, DUMMY_COMPLETE_TRACKER, null);
-}
-
-public synchronized void requestSystemCompaction(HRegion region, String why) throws IOException {
-    requestCompactionInternal(region, why, NO_PRIORITY, false, CompactionLifeCycleTracker.DUMMY, DUMMY_COMPLETE_TRACKER, null);
-}
-possible Hot2

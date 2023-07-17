@@ -1,0 +1,17 @@
+looking:archived
+TestCompactionArchiveConcurrentClose	testStoreCloseAndDischargeRunningInParallel
+-----------------------
+// wait for cleaner to pause
+synchronized (archived) {
+    if (!archived.get()) {
+        archived.wait();
+    }
+}
+-----------------------
+// wait for cleaner to pause
+synchronized (archived) {
+    if (!archived.get()) {
+        archived.wait();
+    }
+}-----------------------
+possible Hot2

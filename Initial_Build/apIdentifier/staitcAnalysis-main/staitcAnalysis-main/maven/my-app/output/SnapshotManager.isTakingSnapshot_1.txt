@@ -1,0 +1,59 @@
+looking:SnapshotManager.isTakingSnapshot
+SnapshotManager	isTakingSnapshot
+-----------------------
+/**
+ * Check to see if the specified table has a snapshot in progress. Since we introduce the
+ * SnapshotProcedure, it is a little bit different from before. For zk-coordinated snapshot, we
+ * can just consider tables in snapshotHandlers only, but for
+ * {@link org.apache.hadoop.hbase.master.assignment.MergeTableRegionsProcedure} and
+ * {@link org.apache.hadoop.hbase.master.assignment.SplitTableRegionProcedure}, we need to
+ * consider tables in snapshotToProcIdMap also, for the snapshot procedure, we don't need to check
+ * if table in snapshot.
+ * @param tableName      name of the table being snapshotted.
+ * @param checkProcedure true if we should check tables in snapshotToProcIdMap
+ * @return <tt>true</tt> if there is a snapshot in progress on the specified table.
+ */
+private synchronized boolean isTakingSnapshot(TableName tableName, boolean checkProcedure) {
+    SnapshotSentinel handler = this.snapshotHandlers.get(tableName);
+    if (handler != null && !handler.isFinished()) {
+        return true;
+    }
+    if (checkProcedure) {
+        for (Map.Entry<SnapshotDescription, Long> entry : snapshotToProcIdMap.entrySet()) {
+            if (TableName.valueOf(entry.getKey().getTable()).equals(tableName) && !master.getMasterProcedureExecutor().isFinished(entry.getValue())) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+-----------------------
+/**
+ * Check to see if the specified table has a snapshot in progress. Since we introduce the
+ * SnapshotProcedure, it is a little bit different from before. For zk-coordinated snapshot, we
+ * can just consider tables in snapshotHandlers only, but for
+ * {@link org.apache.hadoop.hbase.master.assignment.MergeTableRegionsProcedure} and
+ * {@link org.apache.hadoop.hbase.master.assignment.SplitTableRegionProcedure}, we need to
+ * consider tables in snapshotToProcIdMap also, for the snapshot procedure, we don't need to check
+ * if table in snapshot.
+ * @param tableName      name of the table being snapshotted.
+ * @param checkProcedure true if we should check tables in snapshotToProcIdMap
+ * @return <tt>true</tt> if there is a snapshot in progress on the specified table.
+ */
+private synchronized boolean isTakingSnapshot(TableName tableName, boolean checkProcedure) {
+    SnapshotSentinel handler = this.snapshotHandlers.get(tableName);
+    if (handler != null && !handler.isFinished()) {
+        return true;
+    }
+    if (checkProcedure) {
+        for (Map.Entry<SnapshotDescription, Long> entry : snapshotToProcIdMap.entrySet()) {
+            if (TableName.valueOf(entry.getKey().getTable()).equals(tableName) && !master.getMasterProcedureExecutor().isFinished(entry.getValue())) {
+                return true;
+            }
+        }
+    }
+    return false;
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

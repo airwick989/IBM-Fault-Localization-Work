@@ -1,0 +1,23 @@
+looking:PrintingErrorReporter.progress
+PrintingErrorReporter	progress
+-----------------------
+@Override
+public synchronized void progress() {
+    if (showProgress++ == progressThreshold) {
+        if (!summary) {
+            System.out.print(".");
+        }
+        showProgress = 0;
+    }
+}
+-----------------------
+@Override
+public synchronized void progress() {
+    if (showProgress++ == progressThreshold) {
+        if (!summary) {
+            System.out.print(".");
+        }
+        showProgress = 0;
+    }
+}-----------------------
+possible Hot1

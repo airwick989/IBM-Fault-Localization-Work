@@ -1,0 +1,31 @@
+looking:this.latestPaths
+ReplicationSourceManager	refreshSources
+-----------------------
+// synchronized on latestPaths to avoid missing the new log
+synchronized (this.latestPaths) {
+    ReplicationSourceInterface toRemove = this.sources.put(peerId, src);
+    if (toRemove != null) {
+        LOG.info("Terminate replication source for " + toRemove.getPeerId());
+        // Do not clear metrics
+        toRemove.terminate(terminateMessage, null, false);
+    }
+    for (NavigableSet<String> walsByGroup : walsById.get(peerId).values()) {
+        walsByGroup.forEach(wal -> src.enqueueLog(new Path(this.logDir, wal)));
+    }
+}
+-----------------------
+// synchronized on latestPaths to avoid missing the new log
+synchronized (this.latestPaths) {
+    ReplicationSourceInterface toRemove = this.sources.put(peerId, src);
+    if (toRemove != null) {
+        LOG.info("Terminate replication source for " + toRemove.getPeerId());
+        // Do not clear metrics
+        toRemove.terminate(terminateMessage, null, false);
+    }
+    for (NavigableSet<String> walsByGroup : walsById.get(peerId).values()) {
+        walsByGroup.forEach(wal -> src.enqueueLog(new Path(this.logDir, wal)));
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

@@ -1,0 +1,39 @@
+looking:VisibilityLabelsCache.createAndGet
+VisibilityLabelsCache	createAndGet
+-----------------------
+/**
+ * Creates the singleton instance, if not yet present, and returns the same.
+ * @return Singleton instance of VisibilityLabelsCache
+ */
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "MS_EXPOSE_REP", justification = "singleton pattern")
+public synchronized static VisibilityLabelsCache createAndGet(ZKWatcher watcher, Configuration conf) throws IOException {
+    // VisibilityLabelService#init() for different regions (in same RS) passes same instance of
+    // watcher as all get the instance from RS.
+    // watcher != instance.zkVisibilityWatcher.getWatcher() - This check is needed only in UTs with
+    // RS restart. It will be same JVM in which RS restarts and instance will be not null. But the
+    // watcher associated with existing instance will be stale as the restarted RS will have new
+    // watcher with it.
+    if (instance == null || watcher != instance.zkVisibilityWatcher.getWatcher()) {
+        instance = new VisibilityLabelsCache(watcher, conf);
+    }
+    return instance;
+}
+-----------------------
+/**
+ * Creates the singleton instance, if not yet present, and returns the same.
+ * @return Singleton instance of VisibilityLabelsCache
+ */
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "MS_EXPOSE_REP", justification = "singleton pattern")
+public synchronized static VisibilityLabelsCache createAndGet(ZKWatcher watcher, Configuration conf) throws IOException {
+    // VisibilityLabelService#init() for different regions (in same RS) passes same instance of
+    // watcher as all get the instance from RS.
+    // watcher != instance.zkVisibilityWatcher.getWatcher() - This check is needed only in UTs with
+    // RS restart. It will be same JVM in which RS restarts and instance will be not null. But the
+    // watcher associated with existing instance will be stale as the restarted RS will have new
+    // watcher with it.
+    if (instance == null || watcher != instance.zkVisibilityWatcher.getWatcher()) {
+        instance = new VisibilityLabelsCache(watcher, conf);
+    }
+    return instance;
+}-----------------------
+possible Hot1

@@ -1,9 +1,0 @@
-looking:splitProc
-synchronized (splitProc) {
-    splitProc.wait(waitTime);
-}
-
-synchronized (splitProc) {
-    splitProc.wait(waitTime);
-}
-possible Hot1

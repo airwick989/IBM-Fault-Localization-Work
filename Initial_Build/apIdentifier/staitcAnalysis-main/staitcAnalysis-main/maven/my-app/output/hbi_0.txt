@@ -1,0 +1,53 @@
+looking:hbi
+WorkItemHdfsDir	run
+-----------------------
+synchronized (hbi) {
+    if (hbi.getHdfsRegionDir() != null) {
+        errors.print("Directory " + encodedName + " duplicate??" + hbi.getHdfsRegionDir());
+    }
+    he.regionDir = regionDir.getPath();
+    he.regionDirModTime = regionDir.getModificationTime();
+    he.hdfsRegioninfoFilePresent = regioninfoFileExists;
+    // we add to orphan list when we attempt to read .regioninfo
+    // Set a flag if this region contains only edits
+    // This is special case if a region is left after split
+    he.hdfsOnlyEdits = true;
+    FileStatus[] subDirs = fs.listStatus(regionDir.getPath());
+    Path ePath = WALSplitUtil.getRegionDirRecoveredEditsDir(regionDir.getPath());
+    for (FileStatus subDir : subDirs) {
+        errors.progress();
+        String sdName = subDir.getPath().getName();
+        if (!sdName.startsWith(".") && !sdName.equals(ePath.getName())) {
+            he.hdfsOnlyEdits = false;
+            break;
+        }
+    }
+    hbi.setHdfsEntry(he);
+}
+-----------------------
+synchronized (hbi) {
+    if (hbi.getHdfsRegionDir() != null) {
+        errors.print("Directory " + encodedName + " duplicate??" + hbi.getHdfsRegionDir());
+    }
+    he.regionDir = regionDir.getPath();
+    he.regionDirModTime = regionDir.getModificationTime();
+    he.hdfsRegioninfoFilePresent = regioninfoFileExists;
+    // we add to orphan list when we attempt to read .regioninfo
+    // Set a flag if this region contains only edits
+    // This is special case if a region is left after split
+    he.hdfsOnlyEdits = true;
+    FileStatus[] subDirs = fs.listStatus(regionDir.getPath());
+    Path ePath = WALSplitUtil.getRegionDirRecoveredEditsDir(regionDir.getPath());
+    for (FileStatus subDir : subDirs) {
+        errors.progress();
+        String sdName = subDir.getPath().getName();
+        if (!sdName.startsWith(".") && !sdName.equals(ePath.getName())) {
+            he.hdfsOnlyEdits = false;
+            break;
+        }
+    }
+    hbi.setHdfsEntry(he);
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

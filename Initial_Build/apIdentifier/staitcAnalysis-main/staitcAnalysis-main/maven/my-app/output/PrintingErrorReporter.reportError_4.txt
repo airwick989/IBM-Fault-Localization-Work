@@ -1,0 +1,13 @@
+looking:PrintingErrorReporter.reportError
+PrintingErrorReporter	reportError
+-----------------------
+@Override
+public synchronized void reportError(String message) {
+    reportError(ERROR_CODE.UNKNOWN, message);
+}
+-----------------------
+@Override
+public synchronized void reportError(String message) {
+    reportError(ERROR_CODE.UNKNOWN, message);
+}-----------------------
+possible Hot2

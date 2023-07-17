@@ -1,0 +1,23 @@
+looking:TaskMonitor.get
+TaskMonitor	get
+-----------------------
+/**
+ * Get singleton instance. TODO this would be better off scoped to a single daemon
+ */
+public static synchronized TaskMonitor get() {
+    if (instance == null) {
+        instance = new TaskMonitor(HBaseConfiguration.create());
+    }
+    return instance;
+}
+-----------------------
+/**
+ * Get singleton instance. TODO this would be better off scoped to a single daemon
+ */
+public static synchronized TaskMonitor get() {
+    if (instance == null) {
+        instance = new TaskMonitor(HBaseConfiguration.create());
+    }
+    return instance;
+}-----------------------
+possible Hot1

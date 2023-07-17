@@ -1,0 +1,11 @@
+looking:writestate
+HRegion	doClose
+-----------------------
+synchronized (writestate) {
+    writestate.writesEnabled = true;
+}
+-----------------------
+synchronized (writestate) {
+    writestate.writesEnabled = true;
+}-----------------------
+possible Hot2

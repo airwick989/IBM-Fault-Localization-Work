@@ -1,0 +1,19 @@
+looking:writeQueue
+MultiVersionConcurrencyControl	begin
+-----------------------
+synchronized (writeQueue) {
+    long nextWriteNumber = writePoint.incrementAndGet();
+    WriteEntry e = new WriteEntry(nextWriteNumber);
+    writeQueue.add(e);
+    action.run();
+    return e;
+}
+-----------------------
+synchronized (writeQueue) {
+    long nextWriteNumber = writePoint.incrementAndGet();
+    WriteEntry e = new WriteEntry(nextWriteNumber);
+    writeQueue.add(e);
+    action.run();
+    return e;
+}-----------------------
+possible Hot2

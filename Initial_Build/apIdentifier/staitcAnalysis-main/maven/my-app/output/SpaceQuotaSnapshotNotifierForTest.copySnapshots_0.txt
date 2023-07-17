@@ -1,9 +1,0 @@
-looking:SpaceQuotaSnapshotNotifierForTest.copySnapshots
-public synchronized Map<TableName, SpaceQuotaSnapshot> copySnapshots() {
-    return new HashMap<>(this.tableQuotaSnapshots);
-}
-
-public synchronized Map<TableName, SpaceQuotaSnapshot> copySnapshots() {
-    return new HashMap<>(this.tableQuotaSnapshots);
-}
-possible Hot1

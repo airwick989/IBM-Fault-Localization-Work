@@ -1,0 +1,47 @@
+looking:server.online
+RSRpcServices	openRegion
+-----------------------
+synchronized (server.online) {
+    try {
+        while (EnvironmentEdgeManager.currentTime() <= endTime && !server.isStopped() && !server.isOnline()) {
+            server.online.wait(server.getMsgInterval());
+        }
+        checkOpen();
+    } catch (InterruptedException t) {
+        Thread.currentThread().interrupt();
+        throw new ServiceException(t);
+    } catch (IOException e) {
+        throw new ServiceException(e);
+    }
+}
+-----------------------
+synchronized (server.online) {
+    try {
+        while (EnvironmentEdgeManager.currentTime() <= endTime && !server.isStopped() && !server.isOnline()) {
+            server.online.wait(server.getMsgInterval());
+        }
+        checkOpen();
+        {
+            if (server.isAborted()) {
+                throw new RegionServerAbortedException("Server " + server.getServerName() + " aborting");
+            }
+            if (server.isStopped()) {
+                throw new RegionServerStoppedException("Server " + server.getServerName() + " stopping");
+            }
+            if (!server.isDataFileSystemOk()) {
+                throw new RegionServerStoppedException("File system not available");
+            }
+            if (!server.isOnline()) {
+                throw new ServerNotRunningYetException("Server " + server.getServerName() + " is not running yet");
+            }
+        }
+    } catch (InterruptedException t) {
+        Thread.currentThread().interrupt();
+        throw new ServiceException(t);
+    } catch (IOException e) {
+        throw new ServiceException(e);
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

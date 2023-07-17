@@ -1,0 +1,11 @@
+looking:FileLinkInputStream.mark
+FileLinkInputStream	mark
+-----------------------
+@Override
+public synchronized void mark(int readlimit) {
+}
+-----------------------
+@Override
+public synchronized void mark(int readlimit) {
+}-----------------------
+possible Hot1

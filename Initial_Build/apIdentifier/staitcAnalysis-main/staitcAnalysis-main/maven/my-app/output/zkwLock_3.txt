@@ -1,0 +1,11 @@
+looking:zkwLock
+HBaseReplicationEndpoint	fetchSlavesAddresses
+-----------------------
+synchronized (zkwLock) {
+    children = ZKUtil.listChildrenAndWatchForNewChildren(zkw, zkw.getZNodePaths().rsZNode);
+}
+-----------------------
+synchronized (zkwLock) {
+    children = ZKUtil.listChildrenAndWatchForNewChildren(zkw, zkw.getZNodePaths().rsZNode);
+}-----------------------
+possible Hot2

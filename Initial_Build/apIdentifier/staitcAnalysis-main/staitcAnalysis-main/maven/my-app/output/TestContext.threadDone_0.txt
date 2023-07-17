@@ -1,0 +1,11 @@
+looking:TestContext.threadDone
+TestContext	threadDone
+-----------------------
+public synchronized void threadDone() {
+    threadDoneCount++;
+}
+-----------------------
+public synchronized void threadDone() {
+    threadDoneCount++;
+}-----------------------
+possible Hot1

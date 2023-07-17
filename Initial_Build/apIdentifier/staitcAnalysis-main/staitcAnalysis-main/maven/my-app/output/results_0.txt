@@ -1,0 +1,11 @@
+looking:results
+TestSimpleRpcScheduler	answer
+-----------------------
+synchronized (results) {
+    results.add(value);
+}
+-----------------------
+synchronized (results) {
+    results.add(value);
+}-----------------------
+possible Hot2

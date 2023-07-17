@@ -1,0 +1,11 @@
+looking:filesCompacting
+HStore	finishCompactionRequest
+-----------------------
+synchronized (filesCompacting) {
+    filesCompacting.removeAll(cr.getFiles());
+}
+-----------------------
+synchronized (filesCompacting) {
+    filesCompacting.removeAll(cr.getFiles());
+}-----------------------
+possible Hot2

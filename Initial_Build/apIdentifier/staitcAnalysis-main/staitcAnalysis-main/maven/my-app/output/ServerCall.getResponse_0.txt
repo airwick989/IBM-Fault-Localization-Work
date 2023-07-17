@@ -1,0 +1,13 @@
+looking:ServerCall.getResponse
+ServerCall	getResponse
+-----------------------
+@Override
+public synchronized BufferChain getResponse() {
+    return response;
+}
+-----------------------
+@Override
+public synchronized BufferChain getResponse() {
+    return response;
+}-----------------------
+possible Hot1

@@ -1,0 +1,17 @@
+looking:event
+LockProcedure	execute
+-----------------------
+synchronized (event) {
+    event.suspend();
+    event.suspendIfNotReady(this);
+    setState(ProcedureProtos.ProcedureState.WAITING_TIMEOUT);
+    suspended = true;
+}
+-----------------------
+synchronized (event) {
+    event.suspend();
+    event.suspendIfNotReady(this);
+    setState(ProcedureProtos.ProcedureState.WAITING_TIMEOUT);
+    suspended = true;
+}-----------------------
+possible Hot2

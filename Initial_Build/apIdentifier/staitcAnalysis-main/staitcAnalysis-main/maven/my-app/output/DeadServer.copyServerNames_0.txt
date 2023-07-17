@@ -1,0 +1,15 @@
+looking:DeadServer.copyServerNames
+DeadServer	copyServerNames
+-----------------------
+public synchronized Set<ServerName> copyServerNames() {
+    Set<ServerName> clone = new HashSet<>(deadServers.size());
+    clone.addAll(deadServers.keySet());
+    return clone;
+}
+-----------------------
+public synchronized Set<ServerName> copyServerNames() {
+    Set<ServerName> clone = new HashSet<>(deadServers.size());
+    clone.addAll(deadServers.keySet());
+    return clone;
+}-----------------------
+possible Hot1

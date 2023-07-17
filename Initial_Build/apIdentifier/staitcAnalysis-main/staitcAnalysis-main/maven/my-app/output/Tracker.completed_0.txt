@@ -1,0 +1,15 @@
+looking:Tracker.completed
+Tracker	completed
+-----------------------
+@Override
+public synchronized void completed() {
+    completed = true;
+    notifyAll();
+}
+-----------------------
+@Override
+public synchronized void completed() {
+    completed = true;
+    notifyAll();
+}-----------------------
+possible Hot1

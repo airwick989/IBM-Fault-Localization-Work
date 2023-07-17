@@ -1,0 +1,44 @@
+looking:ConnectionManager.closeIdle
+ConnectionManager	closeIdle
+-----------------------
+// synch'ed to avoid explicit invocation upon OOM from colliding with
+// timer task firing
+synchronized void closeIdle(boolean scanAll) {
+    long minLastContact = EnvironmentEdgeManager.currentTime() - maxIdleTime;
+    // concurrent iterator might miss new connections added
+    // during the iteration, but that's ok because they won't
+    // be idle yet anyway and will be caught on next scan
+    int closed = 0;
+    for (SimpleServerRpcConnection connection : connections) {
+        // stop if connections dropped below threshold unless scanning all
+        if (!scanAll && size() < idleScanThreshold) {
+            break;
+        }
+        // stop if not scanning all and max connections are closed
+        if (connection.isIdle() && connection.getLastContact() < minLastContact && close(connection) && !scanAll && (++closed == maxIdleToClose)) {
+            break;
+        }
+    }
+}
+-----------------------
+// timer task firing
+synchronized void closeIdle(boolean scanAll) {
+    long minLastContact = EnvironmentEdgeManager.currentTime() - maxIdleTime;
+    // concurrent iterator might miss new connections added
+    // during the iteration, but that's ok because they won't
+    // be idle yet anyway and will be caught on next scan
+    int closed = 0;
+    for (SimpleServerRpcConnection connection : connections) {
+        // stop if connections dropped below threshold unless scanning all
+        if (!scanAll && size() < idleScanThreshold) {
+            break;
+        }
+        // stop if not scanning all and max connections are closed
+        if (connection.isIdle() && connection.getLastContact() < minLastContact && close(connection) && !scanAll && (++closed == maxIdleToClose)) {
+            break;
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

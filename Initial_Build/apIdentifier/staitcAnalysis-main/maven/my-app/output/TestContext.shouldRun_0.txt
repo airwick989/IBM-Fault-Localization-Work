@@ -1,9 +1,0 @@
-looking:TestContext.shouldRun
-public synchronized boolean shouldRun() {
-    return !stopped && err == null;
-}
-
-public synchronized boolean shouldRun() {
-    return !stopped && err == null;
-}
-possible Hot1

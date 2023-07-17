@@ -1,0 +1,23 @@
+looking:ClusterSchemaServiceImpl.doStart
+ClusterSchemaServiceImpl	doStart
+-----------------------
+@Override
+protected synchronized void doStart() {
+    try {
+        notifyStarted();
+        this.tableNamespaceManager.start();
+    } catch (IOException ioe) {
+        notifyFailed(ioe);
+    }
+}
+-----------------------
+@Override
+protected synchronized void doStart() {
+    try {
+        notifyStarted();
+        this.tableNamespaceManager.start();
+    } catch (IOException ioe) {
+        notifyFailed(ioe);
+    }
+}-----------------------
+possible Hot1

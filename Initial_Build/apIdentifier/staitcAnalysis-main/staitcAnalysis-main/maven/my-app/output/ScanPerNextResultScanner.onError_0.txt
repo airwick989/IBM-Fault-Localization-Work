@@ -1,0 +1,15 @@
+looking:ScanPerNextResultScanner.onError
+ScanPerNextResultScanner	onError
+-----------------------
+@Override
+public synchronized void onError(Throwable error) {
+    this.error = error;
+    notifyAll();
+}
+-----------------------
+@Override
+public synchronized void onError(Throwable error) {
+    this.error = error;
+    notifyAll();
+}-----------------------
+possible Hot1

@@ -1,0 +1,69 @@
+looking:batch
+SplitLogManager	waitForSplittingCompletion
+-----------------------
+synchronized (batch) {
+    while ((batch.done + batch.error) != batch.installed) {
+        try {
+            status.setStatus("Waiting for distributed tasks to finish. " + " scheduled=" + batch.installed + " done=" + batch.done + " error=" + batch.error);
+            int remaining = batch.installed - (batch.done + batch.error);
+            int actual = activeTasks(batch);
+            if (remaining != actual) {
+                LOG.warn("Expected " + remaining + " active tasks, but actually there are " + actual);
+            }
+            int remainingTasks = getSplitLogManagerCoordination().remainingTasksInCoordination();
+            if (remainingTasks >= 0 && actual > remainingTasks) {
+                LOG.warn("Expected at least" + actual + " tasks remaining, but actually there are " + remainingTasks);
+            }
+            if (remainingTasks == 0 || actual == 0) {
+                LOG.warn("No more task remaining, splitting " + "should have completed. Remaining tasks is " + remainingTasks + ", active tasks in map " + actual);
+                if (remainingTasks == 0 && actual == 0) {
+                    return;
+                }
+            }
+            batch.wait(getBatchWaitTimeMillis(remainingTasks));
+            if (server.isStopped()) {
+                LOG.warn("Stopped while waiting for log splits to be completed");
+                return;
+            }
+        } catch (InterruptedException e) {
+            LOG.warn("Interrupted while waiting for log splits to be completed");
+            Thread.currentThread().interrupt();
+            return;
+        }
+    }
+}
+-----------------------
+synchronized (batch) {
+    while ((batch.done + batch.error) != batch.installed) {
+        try {
+            status.setStatus("Waiting for distributed tasks to finish. " + " scheduled=" + batch.installed + " done=" + batch.done + " error=" + batch.error);
+            int remaining = batch.installed - (batch.done + batch.error);
+            int actual = activeTasks(batch);
+            if (remaining != actual) {
+                LOG.warn("Expected " + remaining + " active tasks, but actually there are " + actual);
+            }
+            int remainingTasks = getSplitLogManagerCoordination().remainingTasksInCoordination();
+            if (remainingTasks >= 0 && actual > remainingTasks) {
+                LOG.warn("Expected at least" + actual + " tasks remaining, but actually there are " + remainingTasks);
+            }
+            if (remainingTasks == 0 || actual == 0) {
+                LOG.warn("No more task remaining, splitting " + "should have completed. Remaining tasks is " + remainingTasks + ", active tasks in map " + actual);
+                if (remainingTasks == 0 && actual == 0) {
+                    return;
+                }
+            }
+            batch.wait(getBatchWaitTimeMillis(remainingTasks));
+            if (server.isStopped()) {
+                LOG.warn("Stopped while waiting for log splits to be completed");
+                return;
+            }
+        } catch (InterruptedException e) {
+            LOG.warn("Interrupted while waiting for log splits to be completed");
+            Thread.currentThread().interrupt();
+            return;
+        }
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

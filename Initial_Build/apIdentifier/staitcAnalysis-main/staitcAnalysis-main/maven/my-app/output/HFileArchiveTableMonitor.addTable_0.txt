@@ -1,0 +1,30 @@
+looking:HFileArchiveTableMonitor.addTable
+HFileArchiveTableMonitor	addTable
+-----------------------
+/**
+ * Add the named table to be those being archived. Attempts to register the table
+ * @param table name of the table to be registered
+ */
+public synchronized void addTable(String table) {
+    if (this.shouldArchiveTable(table)) {
+        LOG.debug("Already archiving table: " + table + ", ignoring it");
+        return;
+    }
+    archivedTables.add(table);
+}
+-----------------------
+/**
+ * Add the named table to be those being archived. Attempts to register the table
+ * @param table name of the table to be registered
+ */
+public synchronized void addTable(String table) {
+    if (this.shouldArchiveTable(table)) {
+        LOG.debug("Already archiving table: " + table + ", ignoring it");
+        return;
+    }
+    archivedTables.add(table);
+    {
+        return archivedTables.contains(tableName);
+    }
+}-----------------------
+possible Hot1

@@ -1,0 +1,16 @@
+looking:ClusterSchemaServiceImpl.checkIsRunning
+ClusterSchemaServiceImpl	checkIsRunning
+-----------------------
+// All below are synchronized so consistent view on whether running or not.
+private synchronized void checkIsRunning() throws ServiceNotRunningException {
+    if (!isRunning()) {
+        throw new ServiceNotRunningException();
+    }
+}
+-----------------------
+private synchronized void checkIsRunning() throws ServiceNotRunningException {
+    if (!isRunning()) {
+        throw new ServiceNotRunningException();
+    }
+}-----------------------
+possible Hot1

@@ -1,0 +1,17 @@
+looking:streamNoFsChecksumFirstCreateLock
+FSDataInputStreamWrapper	fallbackToFsChecksum
+-----------------------
+synchronized (streamNoFsChecksumFirstCreateLock) {
+    partOfConvoy = (this.stream != null);
+    if (!partOfConvoy) {
+        this.stream = (link != null) ? link.open(hfs) : hfs.open(path);
+    }
+}
+-----------------------
+synchronized (streamNoFsChecksumFirstCreateLock) {
+    partOfConvoy = (this.stream != null);
+    if (!partOfConvoy) {
+        this.stream = (link != null) ? link.open(hfs) : hfs.open(path);
+    }
+}-----------------------
+possible Hot1

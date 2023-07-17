@@ -1,0 +1,25 @@
+looking:usedWorkers
+SyncReplicationReplayWALManager	acquirePeerWorker
+-----------------------
+synchronized (usedWorkers) {
+    Optional<ServerName> worker = usedWorkers.acquire(serverManager);
+    if (worker.isPresent()) {
+        return worker.get();
+    }
+    // no worker available right now, suspend the procedure
+    usedWorkers.suspend(proc);
+}
+-----------------------
+synchronized (usedWorkers) {
+    Optional<ServerName> worker = usedWorkers.acquire(serverManager);
+    if (worker.isPresent()) {
+        return worker.get();
+    }
+    // no worker available right now, suspend the procedure
+    usedWorkers.suspend(proc);
+    {
+        event.suspend();
+        event.suspendIfNotReady(proc);
+    }
+}-----------------------
+possible Hot2

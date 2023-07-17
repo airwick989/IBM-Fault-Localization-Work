@@ -1,0 +1,37 @@
+looking:RpcServer.authorize
+RpcServer	authorize
+-----------------------
+/**
+ * Authorize the incoming client connection.
+ * @param user       client user
+ * @param connection incoming connection
+ * @param addr       InetAddress of incoming connection
+ * @throws AuthorizationException when the client isn't authorized to talk the protocol
+ */
+public synchronized void authorize(UserGroupInformation user, ConnectionHeader connection, InetAddress addr) throws AuthorizationException {
+    if (authorize) {
+        Class<?> c = getServiceInterface(services, connection.getServiceName());
+        authManager.authorize(user, c, getConf(), addr);
+    }
+}
+-----------------------
+/**
+ * Authorize the incoming client connection.
+ * @param user       client user
+ * @param connection incoming connection
+ * @param addr       InetAddress of incoming connection
+ * @throws AuthorizationException when the client isn't authorized to talk the protocol
+ */
+public synchronized void authorize(UserGroupInformation user, ConnectionHeader connection, InetAddress addr) throws AuthorizationException {
+    if (authorize) {
+        Class<?> c = getServiceInterface(services, connection.getServiceName());
+        authManager.authorize(user, c, getConf(), addr);
+        {
+            if (authorize) {
+                Class<?> c = getServiceInterface(services, connection.getServiceName());
+                authManager.authorize(user, c, getConf(), addr);
+            }
+        }
+    }
+}-----------------------
+possible Hot1

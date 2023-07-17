@@ -1,0 +1,27 @@
+looking:scannerReadPoints
+HRegion	getSmallestReadPoint
+-----------------------
+// We need to ensure that while we are calculating the smallestReadPoint
+// no new RegionScanners can grab a readPoint that we are unaware of.
+// We achieve this by synchronizing on the scannerReadPoints object.
+synchronized (scannerReadPoints) {
+    minimumReadPoint = mvcc.getReadPoint();
+    for (Long readPoint : this.scannerReadPoints.values()) {
+        if (readPoint < minimumReadPoint) {
+            minimumReadPoint = readPoint;
+        }
+    }
+}
+-----------------------
+// We achieve this by synchronizing on the scannerReadPoints object.
+synchronized (scannerReadPoints) {
+    minimumReadPoint = mvcc.getReadPoint();
+    for (Long readPoint : this.scannerReadPoints.values()) {
+        if (readPoint < minimumReadPoint) {
+            minimumReadPoint = readPoint;
+        }
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

@@ -1,0 +1,27 @@
+looking:parentsMap
+RestoreSnapshotHelper	restoreReferenceFile
+-----------------------
+synchronized (parentsMap) {
+    Pair<String, String> daughters = parentsMap.get(clonedRegionName);
+    if (daughters == null) {
+        // In case one side of the split is already compacted, regionName is put as both first and
+        // second of Pair
+        daughters = new Pair<>(regionName, regionName);
+        parentsMap.put(clonedRegionName, daughters);
+    } else if (!regionName.equals(daughters.getFirst())) {
+        daughters.setSecond(regionName);
+    }
+}
+-----------------------
+synchronized (parentsMap) {
+    Pair<String, String> daughters = parentsMap.get(clonedRegionName);
+    if (daughters == null) {
+        // In case one side of the split is already compacted, regionName is put as both first and
+        // second of Pair
+        daughters = new Pair<>(regionName, regionName);
+        parentsMap.put(clonedRegionName, daughters);
+    } else if (!regionName.equals(daughters.getFirst())) {
+        daughters.setSecond(regionName);
+    }
+}-----------------------
+possible Hot1

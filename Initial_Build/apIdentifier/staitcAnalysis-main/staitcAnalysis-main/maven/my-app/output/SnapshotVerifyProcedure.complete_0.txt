@@ -1,0 +1,77 @@
+looking:SnapshotVerifyProcedure.complete
+SnapshotVerifyProcedure	complete
+-----------------------
+@Override
+protected synchronized void complete(MasterProcedureEnv env, Throwable error) {
+    try {
+        if (error != null) {
+            if (error instanceof RemoteProcedureException) {
+                // remote operation failed
+                Throwable remoteEx = unwrapRemoteProcedureException((RemoteProcedureException) error);
+                if (remoteEx instanceof CorruptedSnapshotException) {
+                    // snapshot is corrupted, will touch a flag file and finish the procedure
+                    succ = true;
+                    SnapshotProcedure parent = env.getMasterServices().getMasterProcedureExecutor().getProcedure(SnapshotProcedure.class, getParentProcId());
+                    if (parent != null) {
+                        parent.markSnapshotCorrupted();
+                    }
+                } else {
+                    // unexpected exception in remote server, will retry on other servers
+                    succ = false;
+                }
+            } else {
+                // the mostly like thing is that remote call failed, will retry on other servers
+                succ = false;
+            }
+        } else {
+            // remote operation finished without error
+            succ = true;
+        }
+    } catch (IOException e) {
+        // if we can't create the flag file, then mark the current procedure as FAILED
+        // and rollback the whole snapshot procedure stack.
+        LOG.warn("Failed create corrupted snapshot flag file for snapshot={}, region={}", snapshot.getName(), region, e);
+        setFailure("verify-snapshot", e);
+    } finally {
+        // release the worker
+        env.getMasterServices().getSnapshotManager().releaseSnapshotVerifyWorker(this, targetServer, env.getProcedureScheduler());
+    }
+}
+-----------------------
+@Override
+protected synchronized void complete(MasterProcedureEnv env, Throwable error) {
+    try {
+        if (error != null) {
+            if (error instanceof RemoteProcedureException) {
+                // remote operation failed
+                Throwable remoteEx = unwrapRemoteProcedureException((RemoteProcedureException) error);
+                if (remoteEx instanceof CorruptedSnapshotException) {
+                    // snapshot is corrupted, will touch a flag file and finish the procedure
+                    succ = true;
+                    SnapshotProcedure parent = env.getMasterServices().getMasterProcedureExecutor().getProcedure(SnapshotProcedure.class, getParentProcId());
+                    if (parent != null) {
+                        parent.markSnapshotCorrupted();
+                    }
+                } else {
+                    // unexpected exception in remote server, will retry on other servers
+                    succ = false;
+                }
+            } else {
+                // the mostly like thing is that remote call failed, will retry on other servers
+                succ = false;
+            }
+        } else {
+            // remote operation finished without error
+            succ = true;
+        }
+    } catch (IOException e) {
+        // if we can't create the flag file, then mark the current procedure as FAILED
+        // and rollback the whole snapshot procedure stack.
+        LOG.warn("Failed create corrupted snapshot flag file for snapshot={}, region={}", snapshot.getName(), region, e);
+        setFailure("verify-snapshot", e);
+    } finally {
+        // release the worker
+        env.getMasterServices().getSnapshotManager().releaseSnapshotVerifyWorker(this, targetServer, env.getProcedureScheduler());
+    }
+}-----------------------
+possible Hot1

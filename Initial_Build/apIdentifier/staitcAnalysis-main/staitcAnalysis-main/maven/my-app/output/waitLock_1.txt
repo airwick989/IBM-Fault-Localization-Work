@@ -1,0 +1,11 @@
+looking:waitLock
+TestFromClientSide5	testClientPoolThreadLocal
+-----------------------
+synchronized (waitLock) {
+    waitLock.wait();
+}
+-----------------------
+synchronized (waitLock) {
+    waitLock.wait();
+}-----------------------
+possible Hot2

@@ -1,0 +1,11 @@
+looking:RateLimiter.getTimeUnitInMillis
+RateLimiter	getTimeUnitInMillis
+-----------------------
+protected synchronized long getTimeUnitInMillis() {
+    return tunit;
+}
+-----------------------
+protected synchronized long getTimeUnitInMillis() {
+    return tunit;
+}-----------------------
+possible Hot1

@@ -1,0 +1,17 @@
+looking:Tracker.notExecuted
+Tracker	notExecuted
+-----------------------
+@Override
+public synchronized void notExecuted(String reason) {
+    this.reason = reason;
+    completed = true;
+    notifyAll();
+}
+-----------------------
+@Override
+public synchronized void notExecuted(String reason) {
+    this.reason = reason;
+    completed = true;
+    notifyAll();
+}-----------------------
+possible Hot1

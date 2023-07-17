@@ -1,9 +1,0 @@
-looking:readStatistics
-synchronized (readStatistics) {
-    return readStatistics.totalLocalBytesRead;
-}
-
-synchronized (readStatistics) {
-    return readStatistics.totalLocalBytesRead;
-}
-possible Hot2

@@ -1,0 +1,11 @@
+looking:this.writestate
+HRegion	areWritesEnabled
+-----------------------
+synchronized (this.writestate) {
+    return this.writestate.writesEnabled;
+}
+-----------------------
+synchronized (this.writestate) {
+    return this.writestate.writesEnabled;
+}-----------------------
+possible Hot1

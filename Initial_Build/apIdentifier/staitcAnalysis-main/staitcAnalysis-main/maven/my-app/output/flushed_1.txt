@@ -1,0 +1,13 @@
+looking:flushed
+TestSplitWalDataLoss	answer
+-----------------------
+synchronized (flushed) {
+    flushed.setValue(true);
+    flushed.notifyAll();
+}
+-----------------------
+synchronized (flushed) {
+    flushed.setValue(true);
+    flushed.notifyAll();
+}-----------------------
+possible Hot2

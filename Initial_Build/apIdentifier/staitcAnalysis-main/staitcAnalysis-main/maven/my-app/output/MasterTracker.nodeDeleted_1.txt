@@ -1,0 +1,17 @@
+looking:MasterTracker.nodeDeleted
+MasterTracker	nodeDeleted
+-----------------------
+@Override
+public synchronized void nodeDeleted(String path) {
+    if (path.equals("/hbase/master")) {
+        masterZKNodeWasDeleted = true;
+    }
+}
+-----------------------
+@Override
+public synchronized void nodeDeleted(String path) {
+    if (path.equals("/hbase/master")) {
+        masterZKNodeWasDeleted = true;
+    }
+}-----------------------
+possible Hot2

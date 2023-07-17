@@ -1,0 +1,11 @@
+looking:mutex
+PermissionCache	get
+-----------------------
+synchronized (mutex) {
+    return cache.get(name);
+}
+-----------------------
+synchronized (mutex) {
+    return cache.get(name);
+}-----------------------
+possible Hot2

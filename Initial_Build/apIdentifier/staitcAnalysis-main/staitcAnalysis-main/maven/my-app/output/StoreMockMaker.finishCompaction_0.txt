@@ -1,0 +1,21 @@
+looking:StoreMockMaker.finishCompaction
+StoreMockMaker	finishCompaction
+-----------------------
+public synchronized void finishCompaction(List<HStoreFile> sfs) {
+    if (sfs.isEmpty())
+        return;
+    synchronized (results) {
+        results.add(sfs.size());
+    }
+    compacting.removeAll(sfs);
+}
+-----------------------
+public synchronized void finishCompaction(List<HStoreFile> sfs) {
+    if (sfs.isEmpty())
+        return;
+    synchronized (results) {
+        results.add(sfs.size());
+    }
+    compacting.removeAll(sfs);
+}-----------------------
+possible Hot1

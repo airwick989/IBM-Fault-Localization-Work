@@ -1,9 +1,0 @@
-looking:server.getLoadBalancer()
-synchronized (server.getLoadBalancer()) {
-    server.loadBalancerTracker.setBalancerOn(newValue);
-}
-
-synchronized (server.getLoadBalancer()) {
-    server.loadBalancerTracker.setBalancerOn(newValue);
-}
-possible Hot1

@@ -1,0 +1,11 @@
+looking:WorkerAssigner.release
+WorkerAssigner	release
+-----------------------
+public synchronized void release(ServerName serverName) {
+    currentWorkers.compute(serverName, (k, v) -> v == null ? null : v + 1);
+}
+-----------------------
+public synchronized void release(ServerName serverName) {
+    currentWorkers.compute(serverName, (k, v) -> v == null ? null : v + 1);
+}-----------------------
+possible Hot1

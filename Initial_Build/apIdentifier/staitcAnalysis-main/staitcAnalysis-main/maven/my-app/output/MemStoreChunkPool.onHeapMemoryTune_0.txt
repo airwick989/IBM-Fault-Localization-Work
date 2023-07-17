@@ -1,0 +1,17 @@
+looking:MemStoreChunkPool.onHeapMemoryTune
+MemStoreChunkPool	onHeapMemoryTune
+-----------------------
+synchronized (this) {
+    while (this.reclaimedChunks.size() > newMaxCount) {
+        this.reclaimedChunks.poll();
+    }
+}
+-----------------------
+synchronized (this) {
+    while (this.reclaimedChunks.size() > newMaxCount) {
+        this.reclaimedChunks.poll();
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

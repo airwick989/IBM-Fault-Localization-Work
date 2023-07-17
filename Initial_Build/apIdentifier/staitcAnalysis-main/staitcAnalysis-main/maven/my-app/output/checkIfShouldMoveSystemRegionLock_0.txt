@@ -1,0 +1,110 @@
+looking:checkIfShouldMoveSystemRegionLock
+AssignmentManager	checkIfShouldMoveSystemRegionAsync
+-----------------------
+synchronized (checkIfShouldMoveSystemRegionLock) {
+    List<RegionPlan> plans = new ArrayList<>();
+    // TODO: I don't think this code does a good job if all servers in cluster have same
+    // version. It looks like it will schedule unnecessary moves.
+    for (ServerName server : getExcludedServersForSystemTable()) {
+        if (master.getServerManager().isServerDead(server)) {
+            // TODO: See HBASE-18494 and HBASE-18495. Though getExcludedServersForSystemTable()
+            // considers only online servers, the server could be queued for dead server
+            // processing. As region assignments for crashed server is handled by
+            // ServerCrashProcedure, do NOT handle them here. The goal is to handle this through
+            // regular flow of LoadBalancer as a favored node and not to have this special
+            // handling.
+            continue;
+        }
+        List<RegionInfo> regionsShouldMove = getSystemTables(server);
+        if (!regionsShouldMove.isEmpty()) {
+            for (RegionInfo regionInfo : regionsShouldMove) {
+                // null value for dest forces destination server to be selected by balancer
+                RegionPlan plan = new RegionPlan(regionInfo, server, null);
+                if (regionInfo.isMetaRegion()) {
+                    // Must move meta region first.
+                    LOG.info("Async MOVE of {} to newer Server={}", regionInfo.getEncodedName(), server);
+                    moveAsync(plan);
+                } else {
+                    plans.add(plan);
+                }
+            }
+        }
+        for (RegionPlan plan : plans) {
+            LOG.info("Async MOVE of {} to newer Server={}", plan.getRegionInfo().getEncodedName(), server);
+            moveAsync(plan);
+        }
+    }
+}
+-----------------------
+synchronized (checkIfShouldMoveSystemRegionLock) {
+    List<RegionPlan> plans = new ArrayList<>();
+    // TODO: I don't think this code does a good job if all servers in cluster have same
+    // version. It looks like it will schedule unnecessary moves.
+    for (ServerName server : getExcludedServersForSystemTable()) {
+        if (master.getServerManager().isServerDead(server)) {
+            // TODO: See HBASE-18494 and HBASE-18495. Though getExcludedServersForSystemTable()
+            // considers only online servers, the server could be queued for dead server
+            // processing. As region assignments for crashed server is handled by
+            // ServerCrashProcedure, do NOT handle them here. The goal is to handle this through
+            // regular flow of LoadBalancer as a favored node and not to have this special
+            // handling.
+            continue;
+        }
+        List<RegionInfo> regionsShouldMove = getSystemTables(server);
+        if (!regionsShouldMove.isEmpty()) {
+            for (RegionInfo regionInfo : regionsShouldMove) {
+                // null value for dest forces destination server to be selected by balancer
+                RegionPlan plan = new RegionPlan(regionInfo, server, null);
+                if (regionInfo.isMetaRegion()) {
+                    // Must move meta region first.
+                    LOG.info("Async MOVE of {} to newer Server={}", regionInfo.getEncodedName(), server);
+                    moveAsync(plan);
+                } else {
+                    plans.add(plan);
+                }
+                {
+                    return regionInfo.isMetaRegion();
+                }
+                {
+                    return regionInfo.isMetaRegion();
+                }
+            }
+        }
+        for (RegionPlan plan : plans) {
+            LOG.info("Async MOVE of {} to newer Server={}", plan.getRegionInfo().getEncodedName(), server);
+            moveAsync(plan);
+            {
+                TransitRegionStateProcedure proc = createMoveRegionProcedure(regionPlan.getRegionInfo(), regionPlan.getDestination());
+                return ProcedureSyncWait.submitProcedure(master.getMasterProcedureExecutor(), proc);
+            }
+            {
+                TransitRegionStateProcedure proc = createMoveRegionProcedure(regionPlan.getRegionInfo(), regionPlan.getDestination());
+                return ProcedureSyncWait.submitProcedure(master.getMasterProcedureExecutor(), proc);
+            }
+            {
+                TransitRegionStateProcedure proc = createMoveRegionProcedure(regionPlan.getRegionInfo(), regionPlan.getDestination());
+                return ProcedureSyncWait.submitProcedure(master.getMasterProcedureExecutor(), proc);
+            }
+        }
+    }
+    {
+        // TODO: This should be a cached list kept by the ServerManager rather than calculated on each
+        // move or system region assign. The RegionServerTracker keeps list of online Servers with
+        // RegionServerInfo that includes Version.
+        List<Pair<ServerName, String>> serverList = master.getServerManager().getOnlineServersList().stream().map(s -> new Pair<>(s, master.getRegionServerVersion(s))).collect(Collectors.toList());
+        if (serverList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        String highestVersion = Collections.max(serverList, (o1, o2) -> VersionInfo.compareVersion(o1.getSecond(), o2.getSecond())).getSecond();
+        if (!DEFAULT_MIN_VERSION_MOVE_SYS_TABLES_CONFIG.equals(minVersionToMoveSysTables)) {
+            int comparedValue = VersionInfo.compareVersion(minVersionToMoveSysTables, highestVersion);
+            if (comparedValue > 0) {
+                return new ArrayList<>();
+            }
+        }
+        return serverList.stream().filter(pair -> !pair.getSecond().equals(highestVersion)).map(Pair::getFirst).collect(Collectors.toList());
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+2

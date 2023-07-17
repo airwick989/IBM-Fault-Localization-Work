@@ -1,0 +1,17 @@
+looking:taskReadySeq
+ZkSplitLogWorkerCoordination	taskLoop
+-----------------------
+synchronized (taskReadySeq) {
+    while (seq_start == taskReadySeq.get()) {
+        taskReadySeq.wait(checkInterval);
+    }
+}
+-----------------------
+synchronized (taskReadySeq) {
+    while (seq_start == taskReadySeq.get()) {
+        taskReadySeq.wait(checkInterval);
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

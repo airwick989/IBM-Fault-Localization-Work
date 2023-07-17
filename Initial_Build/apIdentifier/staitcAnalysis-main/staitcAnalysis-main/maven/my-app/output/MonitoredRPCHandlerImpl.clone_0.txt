@@ -1,0 +1,19 @@
+looking:MonitoredRPCHandlerImpl.clone
+MonitoredRPCHandlerImpl	clone
+-----------------------
+@Override
+public synchronized MonitoredRPCHandlerImpl clone() {
+    MonitoredRPCHandlerImpl clone = (MonitoredRPCHandlerImpl) super.clone();
+    clone.callInfoMap = generateCallInfoMap();
+    clone.snapshot = true;
+    return clone;
+}
+-----------------------
+@Override
+public synchronized MonitoredRPCHandlerImpl clone() {
+    MonitoredRPCHandlerImpl clone = (MonitoredRPCHandlerImpl) super.clone();
+    clone.callInfoMap = generateCallInfoMap();
+    clone.snapshot = true;
+    return clone;
+}-----------------------
+possible Hot1

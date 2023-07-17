@@ -1,0 +1,53 @@
+looking:InputStreamBlockDistribution.getHDFSBlockDistribution
+InputStreamBlockDistribution	getHDFSBlockDistribution
+-----------------------
+/**
+ * Get the HDFSBlocksDistribution derived from the StoreFile input stream, re-computing if cache
+ * is expired.
+ */
+public synchronized HDFSBlocksDistribution getHDFSBlockDistribution() {
+    if (EnvironmentEdgeManager.currentTime() - lastCachedAt > cachePeriodMs) {
+        try {
+            LOG.debug("Refreshing HDFSBlockDistribution for {}", fileInfo);
+            computeBlockDistribution();
+        } catch (IOException e) {
+            LOG.warn("Failed to recompute block distribution for {}. Falling back on cached value.", fileInfo, e);
+        }
+    }
+    return hdfsBlocksDistribution;
+}
+-----------------------
+/**
+ * Get the HDFSBlocksDistribution derived from the StoreFile input stream, re-computing if cache
+ * is expired.
+ */
+public synchronized HDFSBlocksDistribution getHDFSBlockDistribution() {
+    if (EnvironmentEdgeManager.currentTime() - lastCachedAt > cachePeriodMs) {
+        try {
+            LOG.debug("Refreshing HDFSBlockDistribution for {}", fileInfo);
+            computeBlockDistribution();
+            {
+                lastCachedAt = EnvironmentEdgeManager.currentTime();
+                FSDataInputStream stream;
+                if (fileInfo.isLink()) {
+                    stream = FileLink.getUnderlyingFileLinkInputStream(this.stream);
+                } else {
+                    stream = this.stream;
+                }
+                if (!(stream instanceof HdfsDataInputStream)) {
+                    if (!streamUnsupported) {
+                        LOG.warn("{} for storeFileInfo={}, isLink={}, is not an HdfsDataInputStream so cannot be " + "used to derive locality. Falling back on cached value.", stream, fileInfo, fileInfo.isLink());
+                        streamUnsupported = true;
+                    }
+                    return;
+                }
+                streamUnsupported = false;
+                hdfsBlocksDistribution = FSUtils.computeHDFSBlocksDistribution((HdfsDataInputStream) stream);
+            }
+        } catch (IOException e) {
+            LOG.warn("Failed to recompute block distribution for {}. Falling back on cached value.", fileInfo, e);
+        }
+    }
+    return hdfsBlocksDistribution;
+}-----------------------
+possible Hot1

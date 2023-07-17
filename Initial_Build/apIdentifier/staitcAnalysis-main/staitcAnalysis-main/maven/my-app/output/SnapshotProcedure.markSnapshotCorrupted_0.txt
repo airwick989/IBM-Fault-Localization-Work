@@ -1,0 +1,19 @@
+looking:SnapshotProcedure.markSnapshotCorrupted
+SnapshotProcedure	markSnapshotCorrupted
+-----------------------
+public synchronized void markSnapshotCorrupted() throws IOException {
+    Path flagFile = SnapshotDescriptionUtils.getCorruptedFlagFileForSnapshot(workingDir);
+    if (!workingDirFS.exists(flagFile)) {
+        workingDirFS.create(flagFile).close();
+        LOG.info("touch corrupted snapshot flag file {} for {}", flagFile, snapshot.getName());
+    }
+}
+-----------------------
+public synchronized void markSnapshotCorrupted() throws IOException {
+    Path flagFile = SnapshotDescriptionUtils.getCorruptedFlagFileForSnapshot(workingDir);
+    if (!workingDirFS.exists(flagFile)) {
+        workingDirFS.create(flagFile).close();
+        LOG.info("touch corrupted snapshot flag file {} for {}", flagFile, snapshot.getName());
+    }
+}-----------------------
+possible Hot1

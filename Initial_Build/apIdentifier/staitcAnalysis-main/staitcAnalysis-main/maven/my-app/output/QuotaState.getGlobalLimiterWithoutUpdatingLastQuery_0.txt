@@ -1,0 +1,19 @@
+looking:QuotaState.getGlobalLimiterWithoutUpdatingLastQuery
+QuotaState	getGlobalLimiterWithoutUpdatingLastQuery
+-----------------------
+/**
+ * Return the limiter associated with this quota without updating internal last query stats
+ * @return the quota limiter
+ */
+synchronized QuotaLimiter getGlobalLimiterWithoutUpdatingLastQuery() {
+    return globalLimiter;
+}
+-----------------------
+/**
+ * Return the limiter associated with this quota without updating internal last query stats
+ * @return the quota limiter
+ */
+synchronized QuotaLimiter getGlobalLimiterWithoutUpdatingLastQuery() {
+    return globalLimiter;
+}-----------------------
+possible Hot1

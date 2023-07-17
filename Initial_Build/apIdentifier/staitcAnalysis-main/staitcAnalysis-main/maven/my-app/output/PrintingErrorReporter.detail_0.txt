@@ -1,0 +1,19 @@
+looking:PrintingErrorReporter.detail
+PrintingErrorReporter	detail
+-----------------------
+@Override
+public synchronized void detail(String message) {
+    if (details) {
+        System.out.println(message);
+    }
+    showProgress = 0;
+}
+-----------------------
+@Override
+public synchronized void detail(String message) {
+    if (details) {
+        System.out.println(message);
+    }
+    showProgress = 0;
+}-----------------------
+possible Hot1

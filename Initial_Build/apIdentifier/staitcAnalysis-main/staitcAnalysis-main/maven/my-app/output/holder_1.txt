@@ -1,0 +1,23 @@
+looking:holder
+SaslServerAuthenticationProviders	getInstance
+-----------------------
+synchronized (holder) {
+    // Someone else beat us here
+    providers = holder.get();
+    if (null != providers) {
+        return providers;
+    }
+    providers = createProviders(conf);
+    holder.set(providers);
+}
+-----------------------
+synchronized (holder) {
+    // Someone else beat us here
+    providers = holder.get();
+    if (null != providers) {
+        return providers;
+    }
+    providers = createProviders(conf);
+    holder.set(providers);
+}-----------------------
+possible Hot2

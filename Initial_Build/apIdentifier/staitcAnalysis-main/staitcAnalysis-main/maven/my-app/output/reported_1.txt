@@ -1,0 +1,17 @@
+looking:reported
+TestSplitWalDataLoss	answer
+-----------------------
+synchronized (reported) {
+    while (!reported.booleanValue()) {
+        reported.wait();
+    }
+}
+-----------------------
+synchronized (reported) {
+    while (!reported.booleanValue()) {
+        reported.wait();
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

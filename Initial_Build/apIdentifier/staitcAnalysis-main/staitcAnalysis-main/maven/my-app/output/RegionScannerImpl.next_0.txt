@@ -1,0 +1,33 @@
+looking:RegionScannerImpl.next
+RegionScannerImpl	next
+-----------------------
+@Override
+public synchronized boolean next(List<Cell> outResults, ScannerContext scannerContext) throws IOException {
+    if (this.filterClosed) {
+        throw new UnknownScannerException("Scanner was closed (timed out?) " + "after we renewed it. Could be caused by a very slow scanner " + "or a lengthy garbage collection");
+    }
+    region.startRegionOperation(Operation.SCAN);
+    try {
+        return nextRaw(outResults, scannerContext);
+    } finally {
+        region.closeRegionOperation(Operation.SCAN);
+    }
+}
+-----------------------
+@Override
+public synchronized boolean next(List<Cell> outResults, ScannerContext scannerContext) throws IOException {
+    if (this.filterClosed) {
+        throw new UnknownScannerException("Scanner was closed (timed out?) " + "after we renewed it. Could be caused by a very slow scanner " + "or a lengthy garbage collection");
+    }
+    region.startRegionOperation(Operation.SCAN);
+    try {
+        return nextRaw(outResults, scannerContext);
+        {
+            // Use the RegionScanner's context by default
+            return nextRaw(outResults, defaultScannerContext);
+        }
+    } finally {
+        region.closeRegionOperation(Operation.SCAN);
+    }
+}-----------------------
+possible Hot1

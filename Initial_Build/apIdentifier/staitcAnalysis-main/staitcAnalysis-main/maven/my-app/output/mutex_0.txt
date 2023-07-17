@@ -1,0 +1,15 @@
+looking:mutex
+PermissionCache	put
+-----------------------
+synchronized (mutex) {
+    Set<T> perms = cache.getOrDefault(name, ConcurrentHashMap.newKeySet());
+    perms.add(perm);
+    cache.put(name, perms);
+}
+-----------------------
+synchronized (mutex) {
+    Set<T> perms = cache.getOrDefault(name, ConcurrentHashMap.newKeySet());
+    perms.add(perm);
+    cache.put(name, perms);
+}-----------------------
+possible Hot2

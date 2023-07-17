@@ -1,0 +1,27 @@
+looking:HFileCleaner.cancel
+HFileCleaner	cancel
+-----------------------
+@Override
+public synchronized void cancel(boolean mayInterruptIfRunning) {
+    super.cancel(mayInterruptIfRunning);
+    for (Thread t : this.threads) {
+        t.interrupt();
+    }
+}
+-----------------------
+@Override
+public synchronized void cancel(boolean mayInterruptIfRunning) {
+    super.cancel(mayInterruptIfRunning);
+    for (Thread t : this.threads) {
+        t.interrupt();
+    }
+    {
+        super.cancel(mayInterruptIfRunning);
+        for (Thread t : this.threads) {
+            t.interrupt();
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

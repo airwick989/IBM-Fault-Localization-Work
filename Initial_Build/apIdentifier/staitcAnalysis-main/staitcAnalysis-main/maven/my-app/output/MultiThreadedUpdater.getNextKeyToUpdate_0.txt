@@ -1,0 +1,57 @@
+looking:MultiThreadedUpdater.getNextKeyToUpdate
+MultiThreadedUpdater	getNextKeyToUpdate
+-----------------------
+synchronized (this) {
+    if (nextKeyToWrite.get() >= endKey) {
+        // Finished the whole key range
+        return endKey;
+    }
+    while (nextKeyToWrite.get() > writer.wroteUpToKey()) {
+        Threads.sleepWithoutInterrupt(100);
+    }
+    long k = nextKeyToWrite.getAndIncrement();
+    if (writer.failedToWriteKey(k)) {
+        failedKeySet.add(k);
+        return getNextKeyToUpdate();
+    }
+    return k;
+}
+-----------------------
+synchronized (this) {
+    if (nextKeyToWrite.get() >= endKey) {
+        // Finished the whole key range
+        return endKey;
+    }
+    while (nextKeyToWrite.get() > writer.wroteUpToKey()) {
+        Threads.sleepWithoutInterrupt(100);
+    }
+    long k = nextKeyToWrite.getAndIncrement();
+    if (writer.failedToWriteKey(k)) {
+        failedKeySet.add(k);
+        return getNextKeyToUpdate();
+        {
+            if (writer == null) {
+                return nextKeyToWrite.getAndIncrement();
+            }
+            synchronized (this) {
+                if (nextKeyToWrite.get() >= endKey) {
+                    // Finished the whole key range
+                    return endKey;
+                }
+                while (nextKeyToWrite.get() > writer.wroteUpToKey()) {
+                    Threads.sleepWithoutInterrupt(100);
+                }
+                long k = nextKeyToWrite.getAndIncrement();
+                if (writer.failedToWriteKey(k)) {
+                    failedKeySet.add(k);
+                    return getNextKeyToUpdate();
+                }
+                return k;
+            }
+        }
+    }
+    return k;
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

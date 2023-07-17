@@ -1,0 +1,15 @@
+looking:ClusterStatusPublisher.cleanup
+ClusterStatusPublisher	cleanup
+-----------------------
+@Override
+protected synchronized void cleanup() {
+    connected = false;
+    publisher.close();
+}
+-----------------------
+@Override
+protected synchronized void cleanup() {
+    connected = false;
+    publisher.close();
+}-----------------------
+possible Hot1

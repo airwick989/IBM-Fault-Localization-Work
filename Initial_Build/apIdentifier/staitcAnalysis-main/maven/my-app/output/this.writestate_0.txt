@@ -1,9 +1,0 @@
-looking:this.writestate
-synchronized (this.writestate) {
-    return this.writestate.writesEnabled;
-}
-
-synchronized (this.writestate) {
-    return this.writestate.writesEnabled;
-}
-possible Hot1

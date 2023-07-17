@@ -1,0 +1,13 @@
+looking:regionsInQueue
+FlushHandler	run
+-----------------------
+synchronized (regionsInQueue) {
+    regionsInQueue.clear();
+    flushQueue.clear();
+}
+-----------------------
+synchronized (regionsInQueue) {
+    regionsInQueue.clear();
+    flushQueue.clear();
+}-----------------------
+possible Hot2

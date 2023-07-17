@@ -1,0 +1,21 @@
+looking:RegionReplicationFlushRequester.flush
+RegionReplicationFlushRequester	flush
+-----------------------
+private synchronized void flush(Timeout timeout) {
+    pendingFlushRequest = null;
+    if (pendingFlushRequestSequenceId >= lastFlushedSequenceId) {
+        request();
+    }
+}
+-----------------------
+private synchronized void flush(Timeout timeout) {
+    pendingFlushRequest = null;
+    if (pendingFlushRequestSequenceId >= lastFlushedSequenceId) {
+        request();
+        {
+            flushRequester.run();
+            lastRequestNanos = System.nanoTime();
+        }
+    }
+}-----------------------
+possible Hot1

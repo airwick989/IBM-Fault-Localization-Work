@@ -1,9 +1,0 @@
-looking:RegionTransitionProcedure.remoteCallFailed
-@Override
-public synchronized void remoteCallFailed(final MasterProcedureEnv env, final ServerName serverName, final IOException exception) {
-}
-
-@Override
-public synchronized void remoteCallFailed(final MasterProcedureEnv env, final ServerName serverName, final IOException exception) {
-}
-possible Hot1

@@ -1,9 +1,0 @@
-looking:waitLock
-synchronized (waitLock) {
-    waitLock.notifyAll();
-}
-
-synchronized (waitLock) {
-    waitLock.notifyAll();
-}
-possible Hot2

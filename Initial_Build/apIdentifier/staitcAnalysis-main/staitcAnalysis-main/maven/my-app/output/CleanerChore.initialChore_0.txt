@@ -1,0 +1,21 @@
+looking:CleanerChore.initialChore
+CleanerChore	initialChore
+-----------------------
+synchronized (this) {
+    if (forceRun) {
+        // wake up the threads waiting in triggerCleanerNow, as a triggerNow may triggers the first
+        // loop where we will only call initialChore. We need to trigger another run immediately.
+        forceRun = false;
+        notifyAll();
+    }
+}
+-----------------------
+synchronized (this) {
+    if (forceRun) {
+        // wake up the threads waiting in triggerCleanerNow, as a triggerNow may triggers the first
+        // loop where we will only call initialChore. We need to trigger another run immediately.
+        forceRun = false;
+        notifyAll();
+    }
+}-----------------------
+possible Hot1

@@ -1,0 +1,38 @@
+looking:oldResult
+ServerNonceManager	startOperation
+-----------------------
+// Collision with some operation - should be extremely rare.
+synchronized (oldResult) {
+    int oldState = oldResult.getState();
+    LOG.debug("Conflict detected by nonce: " + nk + ", " + oldResult);
+    if (oldState != OperationContext.WAIT) {
+        // operation ended
+        return oldState == OperationContext.PROCEED;
+    }
+    oldResult.setHasWait();
+    // operation is still active... wait and loop
+    oldResult.wait(this.conflictWaitIterationMs);
+    if (stoppable.isStopped()) {
+        throw new InterruptedException("Server stopped");
+    }
+}
+-----------------------
+// Collision with some operation - should be extremely rare.
+synchronized (oldResult) {
+    int oldState = oldResult.getState();
+    LOG.debug("Conflict detected by nonce: " + nk + ", " + oldResult);
+    if (oldState != OperationContext.WAIT) {
+        // operation ended
+        return oldState == OperationContext.PROCEED;
+    }
+    oldResult.setHasWait();
+    // operation is still active... wait and loop
+    oldResult.wait(this.conflictWaitIterationMs);
+    if (stoppable.isStopped()) {
+        throw new InterruptedException("Server stopped");
+    }
+    {
+        this.data = this.data | WAITING_BIT;
+    }
+}-----------------------
+possible Hot1

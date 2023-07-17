@@ -1,0 +1,11 @@
+looking:VisibilityController.postOpen
+VisibilityController	postOpen
+-----------------------
+synchronized (this) {
+    this.accessControllerAvailable = CoprocessorHost.getLoadedCoprocessors().contains(AccessController.class.getName());
+}
+-----------------------
+synchronized (this) {
+    this.accessControllerAvailable = CoprocessorHost.getLoadedCoprocessors().contains(AccessController.class.getName());
+}-----------------------
+possible Hot1

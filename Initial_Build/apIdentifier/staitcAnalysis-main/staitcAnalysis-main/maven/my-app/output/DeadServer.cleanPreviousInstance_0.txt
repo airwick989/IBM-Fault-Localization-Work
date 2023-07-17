@@ -1,0 +1,51 @@
+looking:DeadServer.cleanPreviousInstance
+DeadServer	cleanPreviousInstance
+-----------------------
+/**
+ * Handles restart of a server. The new server instance has a different start code. The new start
+ * code should be greater than the old one. We don't check that here. Removes the old server from
+ * deadserver list.
+ * @param newServerName Servername as either <code>host:port</code> or
+ *                      <code>host,port,startcode</code>.
+ * @return true if this server was dead before and coming back alive again
+ */
+synchronized boolean cleanPreviousInstance(final ServerName newServerName) {
+    Iterator<ServerName> it = deadServers.keySet().iterator();
+    while (it.hasNext()) {
+        if (cleanOldServerName(newServerName, it)) {
+            return true;
+        }
+    }
+    return false;
+}
+-----------------------
+/**
+ * Handles restart of a server. The new server instance has a different start code. The new start
+ * code should be greater than the old one. We don't check that here. Removes the old server from
+ * deadserver list.
+ * @param newServerName Servername as either <code>host:port</code> or
+ *                      <code>host,port,startcode</code>.
+ * @return true if this server was dead before and coming back alive again
+ */
+synchronized boolean cleanPreviousInstance(final ServerName newServerName) {
+    Iterator<ServerName> it = deadServers.keySet().iterator();
+    while (it.hasNext()) {
+        if (cleanOldServerName(newServerName, it)) {
+            return true;
+        }
+        {
+            ServerName sn = deadServerIterator.next();
+            if (ServerName.isSameAddress(sn, newServerName)) {
+                // Remove from dead servers list. Don't remove from the processing list --
+                // let the SCP do it when it is done.
+                deadServerIterator.remove();
+                return true;
+            }
+            return false;
+        }
+    }
+    return false;
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

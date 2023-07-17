@@ -1,0 +1,114 @@
+looking:VisibilityController.clearAuths
+VisibilityController	clearAuths
+-----------------------
+@Override
+public synchronized void clearAuths(RpcController controller, SetAuthsRequest request, RpcCallback<VisibilityLabelsResponse> done) {
+    VisibilityLabelsResponse.Builder response = VisibilityLabelsResponse.newBuilder();
+    List<ByteString> auths = request.getAuthList();
+    if (!initialized) {
+        setExceptionResults(auths.size(), new CoprocessorException("VisibilityController not yet initialized"), response);
+    } else {
+        byte[] requestUser = request.getUser().toByteArray();
+        List<byte[]> labelAuths = new ArrayList<>(auths.size());
+        try {
+            // When AC is ON, do AC based user auth check
+            if (authorizationEnabled && accessControllerAvailable && !isSystemOrSuperUser()) {
+                User user = VisibilityUtils.getActiveUser();
+                throw new AccessDeniedException("User '" + (user != null ? user.getShortName() : "null") + " is not authorized to perform this action.");
+            }
+            if (authorizationEnabled) {
+                // When AC is not in place the calling user should have
+                checkCallingUserAuth();
+                // SYSTEM_LABEL auth to do this action.
+            }
+            for (ByteString authBS : auths) {
+                labelAuths.add(authBS.toByteArray());
+            }
+            OperationStatus[] opStatus = this.visibilityLabelService.clearAuths(requestUser, labelAuths);
+            logResult(true, "clearAuths", "Removing authorization for labels allowed", requestUser, labelAuths, null);
+            RegionActionResult successResult = RegionActionResult.newBuilder().build();
+            for (OperationStatus status : opStatus) {
+                if (status.getOperationStatusCode() == SUCCESS) {
+                    response.addResult(successResult);
+                } else {
+                    RegionActionResult.Builder failureResultBuilder = RegionActionResult.newBuilder();
+                    failureResultBuilder.setException(buildException(new DoNotRetryIOException(status.getExceptionMsg())));
+                    response.addResult(failureResultBuilder.build());
+                }
+            }
+        } catch (AccessDeniedException e) {
+            logResult(false, "clearAuths", e.getMessage(), requestUser, labelAuths, null);
+            LOG.error("User is not having required permissions to clear authorization", e);
+            setExceptionResults(auths.size(), e, response);
+        } catch (IOException e) {
+            LOG.error(e.toString(), e);
+            setExceptionResults(auths.size(), e, response);
+        }
+    }
+    done.run(response.build());
+}
+-----------------------
+@Override
+public synchronized void clearAuths(RpcController controller, SetAuthsRequest request, RpcCallback<VisibilityLabelsResponse> done) {
+    VisibilityLabelsResponse.Builder response = VisibilityLabelsResponse.newBuilder();
+    List<ByteString> auths = request.getAuthList();
+    if (!initialized) {
+        setExceptionResults(auths.size(), new CoprocessorException("VisibilityController not yet initialized"), response);
+    } else {
+        byte[] requestUser = request.getUser().toByteArray();
+        List<byte[]> labelAuths = new ArrayList<>(auths.size());
+        try {
+            // When AC is ON, do AC based user auth check
+            if (authorizationEnabled && accessControllerAvailable && !isSystemOrSuperUser()) {
+                User user = VisibilityUtils.getActiveUser();
+                throw new AccessDeniedException("User '" + (user != null ? user.getShortName() : "null") + " is not authorized to perform this action.");
+            }
+            if (authorizationEnabled) {
+                // When AC is not in place the calling user should have
+                checkCallingUserAuth();
+                // SYSTEM_LABEL auth to do this action.
+                {
+                    if (!authorizationEnabled) {
+                        // Redundant, but just in case
+                        return;
+                    }
+                    if (!accessControllerAvailable) {
+                        User user = VisibilityUtils.getActiveUser();
+                        if (user == null) {
+                            throw new IOException("Unable to retrieve calling user");
+                        }
+                        if (!(this.visibilityLabelService.havingSystemAuth(user))) {
+                            throw new AccessDeniedException("User '" + user.getShortName() + "' is not authorized to perform this action.");
+                        }
+                    }
+                }
+            }
+            for (ByteString authBS : auths) {
+                labelAuths.add(authBS.toByteArray());
+            }
+            OperationStatus[] opStatus = this.visibilityLabelService.clearAuths(requestUser, labelAuths);
+            logResult(true, "clearAuths", "Removing authorization for labels allowed", requestUser, labelAuths, null);
+            RegionActionResult successResult = RegionActionResult.newBuilder().build();
+            for (OperationStatus status : opStatus) {
+                if (status.getOperationStatusCode() == SUCCESS) {
+                    response.addResult(successResult);
+                } else {
+                    RegionActionResult.Builder failureResultBuilder = RegionActionResult.newBuilder();
+                    failureResultBuilder.setException(buildException(new DoNotRetryIOException(status.getExceptionMsg())));
+                    response.addResult(failureResultBuilder.build());
+                }
+            }
+        } catch (AccessDeniedException e) {
+            logResult(false, "clearAuths", e.getMessage(), requestUser, labelAuths, null);
+            LOG.error("User is not having required permissions to clear authorization", e);
+            setExceptionResults(auths.size(), e, response);
+        } catch (IOException e) {
+            LOG.error(e.toString(), e);
+            setExceptionResults(auths.size(), e, response);
+        }
+    }
+    done.run(response.build());
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

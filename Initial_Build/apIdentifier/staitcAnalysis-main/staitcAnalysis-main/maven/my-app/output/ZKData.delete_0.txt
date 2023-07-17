@@ -1,0 +1,13 @@
+looking:ZKData.delete
+ZKData	delete
+-----------------------
+synchronized void delete() {
+    this.delete = true;
+    notifyAll();
+}
+-----------------------
+synchronized void delete() {
+    this.delete = true;
+    notifyAll();
+}-----------------------
+possible Hot1

@@ -1,0 +1,22 @@
+looking:AbstractWALRoller.requestRollAll
+AbstractWALRoller	requestRollAll
+-----------------------
+synchronized (this) {
+    for (RollController controller : wals.values()) {
+        controller.requestRoll();
+    }
+    notifyAll();
+}
+-----------------------
+synchronized (this) {
+    for (RollController controller : wals.values()) {
+        controller.requestRoll();
+        {
+            this.rollRequest.set(true);
+        }
+    }
+    notifyAll();
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

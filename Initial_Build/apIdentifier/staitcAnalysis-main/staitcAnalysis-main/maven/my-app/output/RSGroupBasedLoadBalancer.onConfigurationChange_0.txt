@@ -1,0 +1,34 @@
+looking:RSGroupBasedLoadBalancer.onConfigurationChange
+RSGroupBasedLoadBalancer	onConfigurationChange
+-----------------------
+@Override
+public synchronized void onConfigurationChange(Configuration conf) {
+    boolean newFallbackEnabled = conf.getBoolean(FALLBACK_GROUP_ENABLE_KEY, false);
+    if (fallbackEnabled != newFallbackEnabled) {
+        LOG.info("Changing the value of {} from {} to {}", FALLBACK_GROUP_ENABLE_KEY, fallbackEnabled, newFallbackEnabled);
+        fallbackEnabled = newFallbackEnabled;
+    }
+    provider.onConfigurationChange(conf);
+    internalBalancer.onConfigurationChange(conf);
+}
+-----------------------
+@Override
+public synchronized void onConfigurationChange(Configuration conf) {
+    boolean newFallbackEnabled = conf.getBoolean(FALLBACK_GROUP_ENABLE_KEY, false);
+    if (fallbackEnabled != newFallbackEnabled) {
+        LOG.info("Changing the value of {} from {} to {}", FALLBACK_GROUP_ENABLE_KEY, fallbackEnabled, newFallbackEnabled);
+        fallbackEnabled = newFallbackEnabled;
+    }
+    provider.onConfigurationChange(conf);
+    internalBalancer.onConfigurationChange(conf);
+    {
+        boolean newFallbackEnabled = conf.getBoolean(FALLBACK_GROUP_ENABLE_KEY, false);
+        if (fallbackEnabled != newFallbackEnabled) {
+            LOG.info("Changing the value of {} from {} to {}", FALLBACK_GROUP_ENABLE_KEY, fallbackEnabled, newFallbackEnabled);
+            fallbackEnabled = newFallbackEnabled;
+        }
+        provider.onConfigurationChange(conf);
+        internalBalancer.onConfigurationChange(conf);
+    }
+}-----------------------
+possible Hot1

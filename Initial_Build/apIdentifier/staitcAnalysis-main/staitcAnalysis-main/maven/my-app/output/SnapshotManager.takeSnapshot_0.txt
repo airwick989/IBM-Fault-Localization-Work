@@ -1,0 +1,342 @@
+looking:SnapshotManager.takeSnapshot
+SnapshotManager	takeSnapshot
+-----------------------
+public synchronized long takeSnapshot(SnapshotDescription snapshot, long nonceGroup, long nonce) throws IOException {
+    this.takingSnapshotLock.readLock().lock();
+    try {
+        return submitSnapshotProcedure(snapshot, nonceGroup, nonce);
+    } finally {
+        this.takingSnapshotLock.readLock().unlock();
+    }
+}
+-----------------------
+public synchronized long takeSnapshot(SnapshotDescription snapshot, long nonceGroup, long nonce) throws IOException {
+    this.takingSnapshotLock.readLock().lock();
+    try {
+        return submitSnapshotProcedure(snapshot, nonceGroup, nonce);
+        {
+            return MasterProcedureUtil.submitProcedure(new MasterProcedureUtil.NonceProcedureRunnable(master, nonceGroup, nonce) {
+
+                @Override
+                protected void run() throws IOException {
+                    sanityCheckBeforeSnapshot(snapshot, false);
+                    long procId = submitProcedure(new SnapshotProcedure(getMaster().getMasterProcedureExecutor().getEnvironment(), snapshot));
+                    getMaster().getSnapshotManager().registerSnapshotProcedure(snapshot, procId);
+                    {
+                        // check to see if we already completed the snapshot
+                        if (isSnapshotCompleted(snapshot)) {
+                            throw new SnapshotExistsException("Snapshot '" + snapshot.getName() + "' already stored on the filesystem.", ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        LOG.debug("No existing snapshot, attempting snapshot...");
+                        // stop tracking "abandoned" handlers
+                        cleanupSentinels();
+                        TableName snapshotTable = TableName.valueOf(snapshot.getTable());
+                        // make sure we aren't already running a snapshot
+                        if (isTakingSnapshot(snapshot, checkTable)) {
+                            throw new SnapshotCreationException("Rejected taking " + ClientSnapshotDescriptionUtils.toString(snapshot) + " because we are already running another snapshot" + " on the same table or with the same name");
+                        }
+                        // make sure we aren't running a restore on the same table
+                        if (isRestoringTable(snapshotTable)) {
+                            throw new SnapshotCreationException("Rejected taking " + ClientSnapshotDescriptionUtils.toString(snapshot) + " because we are already have a restore in progress on the same snapshot.");
+                        }
+                        // check to see if the table exists
+                        TableDescriptor desc = null;
+                        try {
+                            desc = master.getTableDescriptors().get(TableName.valueOf(snapshot.getTable()));
+                        } catch (FileNotFoundException e) {
+                            String msg = "Table:" + snapshot.getTable() + " info doesn't exist!";
+                            LOG.error(msg);
+                            throw new SnapshotCreationException(msg, e, ProtobufUtil.createSnapshotDesc(snapshot));
+                        } catch (IOException e) {
+                            throw new SnapshotCreationException("Error while geting table description for table " + snapshot.getTable(), e, ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        if (desc == null) {
+                            throw new SnapshotCreationException("Table '" + snapshot.getTable() + "' doesn't exist, can't take snapshot.", ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        return desc;
+                        {
+                            try {
+                                final Path snapshotDir = SnapshotDescriptionUtils.getCompletedSnapshotDir(snapshot, rootDir);
+                                FileSystem fs = master.getMasterFileSystem().getFileSystem();
+                                // check to see if the snapshot already exists
+                                return fs.exists(snapshotDir);
+                            } catch (IllegalArgumentException iae) {
+                                throw new UnknownSnapshotException("Unexpected exception thrown", iae);
+                            }
+                        }
+                        {
+                            try {
+                                final Path snapshotDir = SnapshotDescriptionUtils.getCompletedSnapshotDir(snapshot, rootDir);
+                                FileSystem fs = master.getMasterFileSystem().getFileSystem();
+                                // check to see if the snapshot already exists
+                                return fs.exists(snapshotDir);
+                            } catch (IllegalArgumentException iae) {
+                                throw new UnknownSnapshotException("Unexpected exception thrown", iae);
+                            }
+                        }
+                        {
+                            if (checkTable) {
+                                TableName snapshotTable = TableName.valueOf(snapshot.getTable());
+                                if (isTakingSnapshot(snapshotTable)) {
+                                    return true;
+                                }
+                            }
+                            Iterator<Map.Entry<TableName, SnapshotSentinel>> it = snapshotHandlers.entrySet().iterator();
+                            while (it.hasNext()) {
+                                Map.Entry<TableName, SnapshotSentinel> entry = it.next();
+                                SnapshotSentinel sentinel = entry.getValue();
+                                if (snapshot.getName().equals(sentinel.getSnapshot().getName()) && !sentinel.isFinished()) {
+                                    return true;
+                                }
+                            }
+                            Iterator<Map.Entry<SnapshotDescription, Long>> spIt = snapshotToProcIdMap.entrySet().iterator();
+                            while (spIt.hasNext()) {
+                                Map.Entry<SnapshotDescription, Long> entry = spIt.next();
+                                if (snapshot.getName().equals(entry.getKey().getName()) && !master.getMasterProcedureExecutor().isFinished(entry.getValue())) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                        {
+                            try {
+                                final Path snapshotDir = SnapshotDescriptionUtils.getCompletedSnapshotDir(snapshot, rootDir);
+                                FileSystem fs = master.getMasterFileSystem().getFileSystem();
+                                // check to see if the snapshot already exists
+                                return fs.exists(snapshotDir);
+                            } catch (IllegalArgumentException iae) {
+                                throw new UnknownSnapshotException("Unexpected exception thrown", iae);
+                            }
+                        }
+                        {
+                            if (checkTable) {
+                                TableName snapshotTable = TableName.valueOf(snapshot.getTable());
+                                if (isTakingSnapshot(snapshotTable)) {
+                                    return true;
+                                }
+                            }
+                            Iterator<Map.Entry<TableName, SnapshotSentinel>> it = snapshotHandlers.entrySet().iterator();
+                            while (it.hasNext()) {
+                                Map.Entry<TableName, SnapshotSentinel> entry = it.next();
+                                SnapshotSentinel sentinel = entry.getValue();
+                                if (snapshot.getName().equals(sentinel.getSnapshot().getName()) && !sentinel.isFinished()) {
+                                    return true;
+                                }
+                            }
+                            Iterator<Map.Entry<SnapshotDescription, Long>> spIt = snapshotToProcIdMap.entrySet().iterator();
+                            while (spIt.hasNext()) {
+                                Map.Entry<SnapshotDescription, Long> entry = spIt.next();
+                                if (snapshot.getName().equals(entry.getKey().getName()) && !master.getMasterProcedureExecutor().isFinished(entry.getValue())) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                        {
+                            Long procId = this.restoreTableToProcIdMap.get(tableName);
+                            if (procId == null) {
+                                return false;
+                            }
+                            ProcedureExecutor<MasterProcedureEnv> procExec = master.getMasterProcedureExecutor();
+                            if (procExec.isRunning() && !procExec.isFinished(procId)) {
+                                return true;
+                            } else {
+                                this.restoreTableToProcIdMap.remove(tableName);
+                                return false;
+                            }
+                        }
+                        {
+                            try {
+                                final Path snapshotDir = SnapshotDescriptionUtils.getCompletedSnapshotDir(snapshot, rootDir);
+                                FileSystem fs = master.getMasterFileSystem().getFileSystem();
+                                // check to see if the snapshot already exists
+                                return fs.exists(snapshotDir);
+                            } catch (IllegalArgumentException iae) {
+                                throw new UnknownSnapshotException("Unexpected exception thrown", iae);
+                            }
+                        }
+                        {
+                            if (checkTable) {
+                                TableName snapshotTable = TableName.valueOf(snapshot.getTable());
+                                if (isTakingSnapshot(snapshotTable)) {
+                                    return true;
+                                }
+                            }
+                            Iterator<Map.Entry<TableName, SnapshotSentinel>> it = snapshotHandlers.entrySet().iterator();
+                            while (it.hasNext()) {
+                                Map.Entry<TableName, SnapshotSentinel> entry = it.next();
+                                SnapshotSentinel sentinel = entry.getValue();
+                                if (snapshot.getName().equals(sentinel.getSnapshot().getName()) && !sentinel.isFinished()) {
+                                    return true;
+                                }
+                            }
+                            Iterator<Map.Entry<SnapshotDescription, Long>> spIt = snapshotToProcIdMap.entrySet().iterator();
+                            while (spIt.hasNext()) {
+                                Map.Entry<SnapshotDescription, Long> entry = spIt.next();
+                                if (snapshot.getName().equals(entry.getKey().getName()) && !master.getMasterProcedureExecutor().isFinished(entry.getValue())) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                        {
+                            Long procId = this.restoreTableToProcIdMap.get(tableName);
+                            if (procId == null) {
+                                return false;
+                            }
+                            ProcedureExecutor<MasterProcedureEnv> procExec = master.getMasterProcedureExecutor();
+                            if (procExec.isRunning() && !procExec.isFinished(procId)) {
+                                return true;
+                            } else {
+                                this.restoreTableToProcIdMap.remove(tableName);
+                                return false;
+                            }
+                        }
+                    }
+                    {
+                        // check to see if we already completed the snapshot
+                        if (isSnapshotCompleted(snapshot)) {
+                            throw new SnapshotExistsException("Snapshot '" + snapshot.getName() + "' already stored on the filesystem.", ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        LOG.debug("No existing snapshot, attempting snapshot...");
+                        // stop tracking "abandoned" handlers
+                        cleanupSentinels();
+                        TableName snapshotTable = TableName.valueOf(snapshot.getTable());
+                        // make sure we aren't already running a snapshot
+                        if (isTakingSnapshot(snapshot, checkTable)) {
+                            throw new SnapshotCreationException("Rejected taking " + ClientSnapshotDescriptionUtils.toString(snapshot) + " because we are already running another snapshot" + " on the same table or with the same name");
+                        }
+                        // make sure we aren't running a restore on the same table
+                        if (isRestoringTable(snapshotTable)) {
+                            throw new SnapshotCreationException("Rejected taking " + ClientSnapshotDescriptionUtils.toString(snapshot) + " because we are already have a restore in progress on the same snapshot.");
+                        }
+                        // check to see if the table exists
+                        TableDescriptor desc = null;
+                        try {
+                            desc = master.getTableDescriptors().get(TableName.valueOf(snapshot.getTable()));
+                        } catch (FileNotFoundException e) {
+                            String msg = "Table:" + snapshot.getTable() + " info doesn't exist!";
+                            LOG.error(msg);
+                            throw new SnapshotCreationException(msg, e, ProtobufUtil.createSnapshotDesc(snapshot));
+                        } catch (IOException e) {
+                            throw new SnapshotCreationException("Error while geting table description for table " + snapshot.getTable(), e, ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        if (desc == null) {
+                            throw new SnapshotCreationException("Table '" + snapshot.getTable() + "' doesn't exist, can't take snapshot.", ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        return desc;
+                    }
+                    {
+                        // check to see if we already completed the snapshot
+                        if (isSnapshotCompleted(snapshot)) {
+                            throw new SnapshotExistsException("Snapshot '" + snapshot.getName() + "' already stored on the filesystem.", ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        LOG.debug("No existing snapshot, attempting snapshot...");
+                        // stop tracking "abandoned" handlers
+                        cleanupSentinels();
+                        TableName snapshotTable = TableName.valueOf(snapshot.getTable());
+                        // make sure we aren't already running a snapshot
+                        if (isTakingSnapshot(snapshot, checkTable)) {
+                            throw new SnapshotCreationException("Rejected taking " + ClientSnapshotDescriptionUtils.toString(snapshot) + " because we are already running another snapshot" + " on the same table or with the same name");
+                        }
+                        // make sure we aren't running a restore on the same table
+                        if (isRestoringTable(snapshotTable)) {
+                            throw new SnapshotCreationException("Rejected taking " + ClientSnapshotDescriptionUtils.toString(snapshot) + " because we are already have a restore in progress on the same snapshot.");
+                        }
+                        // check to see if the table exists
+                        TableDescriptor desc = null;
+                        try {
+                            desc = master.getTableDescriptors().get(TableName.valueOf(snapshot.getTable()));
+                        } catch (FileNotFoundException e) {
+                            String msg = "Table:" + snapshot.getTable() + " info doesn't exist!";
+                            LOG.error(msg);
+                            throw new SnapshotCreationException(msg, e, ProtobufUtil.createSnapshotDesc(snapshot));
+                        } catch (IOException e) {
+                            throw new SnapshotCreationException("Error while geting table description for table " + snapshot.getTable(), e, ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        if (desc == null) {
+                            throw new SnapshotCreationException("Table '" + snapshot.getTable() + "' doesn't exist, can't take snapshot.", ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        return desc;
+                    }
+                    {
+                        // check to see if we already completed the snapshot
+                        if (isSnapshotCompleted(snapshot)) {
+                            throw new SnapshotExistsException("Snapshot '" + snapshot.getName() + "' already stored on the filesystem.", ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        LOG.debug("No existing snapshot, attempting snapshot...");
+                        // stop tracking "abandoned" handlers
+                        cleanupSentinels();
+                        TableName snapshotTable = TableName.valueOf(snapshot.getTable());
+                        // make sure we aren't already running a snapshot
+                        if (isTakingSnapshot(snapshot, checkTable)) {
+                            throw new SnapshotCreationException("Rejected taking " + ClientSnapshotDescriptionUtils.toString(snapshot) + " because we are already running another snapshot" + " on the same table or with the same name");
+                        }
+                        // make sure we aren't running a restore on the same table
+                        if (isRestoringTable(snapshotTable)) {
+                            throw new SnapshotCreationException("Rejected taking " + ClientSnapshotDescriptionUtils.toString(snapshot) + " because we are already have a restore in progress on the same snapshot.");
+                        }
+                        // check to see if the table exists
+                        TableDescriptor desc = null;
+                        try {
+                            desc = master.getTableDescriptors().get(TableName.valueOf(snapshot.getTable()));
+                        } catch (FileNotFoundException e) {
+                            String msg = "Table:" + snapshot.getTable() + " info doesn't exist!";
+                            LOG.error(msg);
+                            throw new SnapshotCreationException(msg, e, ProtobufUtil.createSnapshotDesc(snapshot));
+                        } catch (IOException e) {
+                            throw new SnapshotCreationException("Error while geting table description for table " + snapshot.getTable(), e, ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        if (desc == null) {
+                            throw new SnapshotCreationException("Table '" + snapshot.getTable() + "' doesn't exist, can't take snapshot.", ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        return desc;
+                    }
+                    {
+                        // check to see if we already completed the snapshot
+                        if (isSnapshotCompleted(snapshot)) {
+                            throw new SnapshotExistsException("Snapshot '" + snapshot.getName() + "' already stored on the filesystem.", ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        LOG.debug("No existing snapshot, attempting snapshot...");
+                        // stop tracking "abandoned" handlers
+                        cleanupSentinels();
+                        TableName snapshotTable = TableName.valueOf(snapshot.getTable());
+                        // make sure we aren't already running a snapshot
+                        if (isTakingSnapshot(snapshot, checkTable)) {
+                            throw new SnapshotCreationException("Rejected taking " + ClientSnapshotDescriptionUtils.toString(snapshot) + " because we are already running another snapshot" + " on the same table or with the same name");
+                        }
+                        // make sure we aren't running a restore on the same table
+                        if (isRestoringTable(snapshotTable)) {
+                            throw new SnapshotCreationException("Rejected taking " + ClientSnapshotDescriptionUtils.toString(snapshot) + " because we are already have a restore in progress on the same snapshot.");
+                        }
+                        // check to see if the table exists
+                        TableDescriptor desc = null;
+                        try {
+                            desc = master.getTableDescriptors().get(TableName.valueOf(snapshot.getTable()));
+                        } catch (FileNotFoundException e) {
+                            String msg = "Table:" + snapshot.getTable() + " info doesn't exist!";
+                            LOG.error(msg);
+                            throw new SnapshotCreationException(msg, e, ProtobufUtil.createSnapshotDesc(snapshot));
+                        } catch (IOException e) {
+                            throw new SnapshotCreationException("Error while geting table description for table " + snapshot.getTable(), e, ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        if (desc == null) {
+                            throw new SnapshotCreationException("Table '" + snapshot.getTable() + "' doesn't exist, can't take snapshot.", ProtobufUtil.createSnapshotDesc(snapshot));
+                        }
+                        return desc;
+                    }
+                }
+
+                @Override
+                protected String getDescription() {
+                    return "SnapshotProcedure";
+                }
+            });
+        }
+    } finally {
+        this.takingSnapshotLock.readLock().unlock();
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

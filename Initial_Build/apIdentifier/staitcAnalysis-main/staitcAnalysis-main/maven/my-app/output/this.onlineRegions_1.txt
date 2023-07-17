@@ -1,0 +1,13 @@
+looking:this.onlineRegions
+HRegionServer	getRegions
+-----------------------
+synchronized (this.onlineRegions) {
+    // Return a clone copy of the onlineRegions
+    allRegions = new ArrayList<>(onlineRegions.values());
+}
+-----------------------
+synchronized (this.onlineRegions) {
+    // Return a clone copy of the onlineRegions
+    allRegions = new ArrayList<>(onlineRegions.values());
+}-----------------------
+possible Hot2

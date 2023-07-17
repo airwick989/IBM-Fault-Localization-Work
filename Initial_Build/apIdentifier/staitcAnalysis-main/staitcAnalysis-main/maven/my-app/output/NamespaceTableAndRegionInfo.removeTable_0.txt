@@ -1,0 +1,11 @@
+looking:NamespaceTableAndRegionInfo.removeTable
+NamespaceTableAndRegionInfo	removeTable
+-----------------------
+synchronized void removeTable(TableName tableName) {
+    tableAndRegionInfo.remove(tableName);
+}
+-----------------------
+synchronized void removeTable(TableName tableName) {
+    tableAndRegionInfo.remove(tableName);
+}-----------------------
+possible Hot1

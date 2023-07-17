@@ -1,0 +1,13 @@
+looking:MemoryBoundedLogMessageBuffer.getMessages
+MemoryBoundedLogMessageBuffer	getMessages
+-----------------------
+synchronized List<LogMessage> getMessages() {
+    // defensive copy
+    return Lists.newArrayList(messages);
+}
+-----------------------
+synchronized List<LogMessage> getMessages() {
+    // defensive copy
+    return Lists.newArrayList(messages);
+}-----------------------
+possible Hot1

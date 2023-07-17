@@ -1,0 +1,21 @@
+looking:EvictionThread.run
+EvictionThread	run
+-----------------------
+synchronized (this) {
+    try {
+        this.wait(1000 * 10);
+    } catch (InterruptedException e) {
+        LOG.warn("Interrupted eviction thread ", e);
+        Thread.currentThread().interrupt();
+    }
+}
+-----------------------
+synchronized (this) {
+    try {
+        this.wait(1000 * 10);
+    } catch (InterruptedException e) {
+        LOG.warn("Interrupted eviction thread ", e);
+        Thread.currentThread().interrupt();
+    }
+}-----------------------
+possible Hot2

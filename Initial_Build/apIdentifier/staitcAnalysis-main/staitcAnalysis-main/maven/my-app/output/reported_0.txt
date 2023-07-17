@@ -1,0 +1,13 @@
+looking:reported
+TestSplitWalDataLoss	test
+-----------------------
+synchronized (reported) {
+    reported.setValue(true);
+    reported.notifyAll();
+}
+-----------------------
+synchronized (reported) {
+    reported.setValue(true);
+    reported.notifyAll();
+}-----------------------
+possible Hot2

@@ -1,0 +1,14 @@
+looking:DirScanPool.execute
+DirScanPool	execute
+-----------------------
+synchronized void execute(Runnable runnable) {
+    pool.execute(runnable);
+}
+-----------------------
+synchronized void execute(Runnable runnable) {
+    pool.execute(runnable);
+    {
+        pool.execute(runnable);
+    }
+}-----------------------
+possible Hot1

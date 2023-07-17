@@ -1,0 +1,13 @@
+looking:MonitoredRPCHandlerImpl.toMap
+MonitoredRPCHandlerImpl	toMap
+-----------------------
+@Override
+public synchronized Map<String, Object> toMap() {
+    return this.snapshot ? this.callInfoMap : generateCallInfoMap();
+}
+-----------------------
+@Override
+public synchronized Map<String, Object> toMap() {
+    return this.snapshot ? this.callInfoMap : generateCallInfoMap();
+}-----------------------
+possible Hot1

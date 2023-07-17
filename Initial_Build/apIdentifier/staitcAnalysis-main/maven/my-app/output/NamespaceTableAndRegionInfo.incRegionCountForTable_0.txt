@@ -1,9 +1,0 @@
-looking:NamespaceTableAndRegionInfo.incRegionCountForTable
-synchronized int incRegionCountForTable(TableName tableName, int count) {
-    return tableAndRegionInfo.get(tableName).addAndGet(count);
-}
-
-synchronized int incRegionCountForTable(TableName tableName, int count) {
-    return tableAndRegionInfo.get(tableName).addAndGet(count);
-}
-possible Hot1

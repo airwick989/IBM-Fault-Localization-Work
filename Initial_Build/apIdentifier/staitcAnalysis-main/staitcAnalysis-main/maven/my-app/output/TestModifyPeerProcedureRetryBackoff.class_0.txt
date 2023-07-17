@@ -1,0 +1,11 @@
+looking:TestModifyPeerProcedureRetryBackoff.class
+TestModifyPeerProcedureRetryBackoff	assertBackoffIncrease
+-----------------------
+synchronized (TestModifyPeerProcedureRetryBackoff.class) {
+    FAIL = false;
+}
+-----------------------
+synchronized (TestModifyPeerProcedureRetryBackoff.class) {
+    FAIL = false;
+}-----------------------
+possible Hot2

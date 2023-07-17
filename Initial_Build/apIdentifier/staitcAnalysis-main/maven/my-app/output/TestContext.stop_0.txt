@@ -1,9 +1,0 @@
-looking:TestContext.stop
-synchronized (this) {
-    stopped = true;
-}
-
-synchronized (this) {
-    stopped = true;
-}
-possible Hot1

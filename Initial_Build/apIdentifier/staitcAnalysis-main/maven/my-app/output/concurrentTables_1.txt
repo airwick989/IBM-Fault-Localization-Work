@@ -1,9 +1,0 @@
-looking:concurrentTables
-synchronized (concurrentTables) {
-    assertTrue(concurrentTables.remove(tableId));
-}
-
-synchronized (concurrentTables) {
-    assertTrue(concurrentTables.remove(tableId));
-}
-possible Hot2

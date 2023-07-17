@@ -1,0 +1,11 @@
+looking:zkwLock
+HBaseReplicationEndpoint	getPeerUUID
+-----------------------
+synchronized (zkwLock) {
+    peerUUID = ZKClusterId.getUUIDForCluster(zkw);
+}
+-----------------------
+synchronized (zkwLock) {
+    peerUUID = ZKClusterId.getUUIDForCluster(zkw);
+}-----------------------
+possible Hot2

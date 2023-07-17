@@ -1,0 +1,13 @@
+looking:locks
+NamedLock	unlock
+-----------------------
+synchronized (locks) {
+    locks.remove(name);
+    locks.notifyAll();
+}
+-----------------------
+synchronized (locks) {
+    locks.remove(name);
+    locks.notifyAll();
+}-----------------------
+possible Hot2

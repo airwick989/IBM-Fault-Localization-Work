@@ -1,9 +1,0 @@
-looking:pipeline
-synchronized (pipeline) {
-    return new VersionedSegmentsList(readOnlyCopy, version);
-}
-
-synchronized (pipeline) {
-    return new VersionedSegmentsList(readOnlyCopy, version);
-}
-possible Hot2

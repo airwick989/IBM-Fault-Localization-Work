@@ -1,9 +1,0 @@
-looking:ZKData.isDeleted
-synchronized boolean isDeleted() {
-    return delete;
-}
-
-synchronized boolean isDeleted() {
-    return delete;
-}
-possible Hot1

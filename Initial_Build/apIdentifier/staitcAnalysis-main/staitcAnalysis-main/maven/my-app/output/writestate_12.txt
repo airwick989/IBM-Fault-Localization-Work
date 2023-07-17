@@ -1,0 +1,27 @@
+looking:writestate
+HRegion	compact
+-----------------------
+synchronized (writestate) {
+    if (writestate.writesEnabled) {
+        wasStateSet = true;
+        writestate.compacting.incrementAndGet();
+    } else {
+        String msg = "NOT compacting region " + this + ". Writes disabled.";
+        LOG.info(msg);
+        status.abort(msg);
+        return false;
+    }
+}
+-----------------------
+synchronized (writestate) {
+    if (writestate.writesEnabled) {
+        wasStateSet = true;
+        writestate.compacting.incrementAndGet();
+    } else {
+        String msg = "NOT compacting region " + this + ". Writes disabled.";
+        LOG.info(msg);
+        status.abort(msg);
+        return false;
+    }
+}-----------------------
+possible Hot2

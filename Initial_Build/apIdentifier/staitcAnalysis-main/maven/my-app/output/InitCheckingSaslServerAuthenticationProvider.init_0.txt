@@ -1,9 +1,0 @@
-looking:InitCheckingSaslServerAuthenticationProvider.init
-public synchronized void init(Configuration conf) {
-    this.initialized = true;
-}
-
-public synchronized void init(Configuration conf) {
-    this.initialized = true;
-}
-possible Hot1

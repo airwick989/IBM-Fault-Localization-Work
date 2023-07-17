@@ -1,0 +1,15 @@
+looking:PrintingErrorReporter.reportError
+PrintingErrorReporter	reportError
+-----------------------
+@Override
+public synchronized void reportError(ERROR_CODE errorCode, String message, HbckTableInfo table) {
+    errorTables.add(table);
+    reportError(errorCode, message);
+}
+-----------------------
+@Override
+public synchronized void reportError(ERROR_CODE errorCode, String message, HbckTableInfo table) {
+    errorTables.add(table);
+    reportError(errorCode, message);
+}-----------------------
+possible Hot2

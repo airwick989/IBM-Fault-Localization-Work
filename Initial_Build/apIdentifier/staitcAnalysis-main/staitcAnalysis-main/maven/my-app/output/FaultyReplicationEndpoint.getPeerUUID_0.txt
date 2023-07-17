@@ -1,0 +1,13 @@
+looking:FaultyReplicationEndpoint.getPeerUUID
+FaultyReplicationEndpoint	getPeerUUID
+-----------------------
+@Override
+public synchronized UUID getPeerUUID() {
+    throw new RuntimeException();
+}
+-----------------------
+@Override
+public synchronized UUID getPeerUUID() {
+    throw new RuntimeException();
+}-----------------------
+possible Hot1

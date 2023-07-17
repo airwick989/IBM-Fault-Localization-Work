@@ -1,0 +1,28 @@
+looking:HFileCleaner.cleanup
+HFileCleaner	cleanup
+-----------------------
+@Override
+public synchronized void cleanup() {
+    super.cleanup();
+    stopHFileDeleteThreads();
+}
+-----------------------
+@Override
+public synchronized void cleanup() {
+    super.cleanup();
+    stopHFileDeleteThreads();
+    {
+        super.cleanup();
+        stopHFileDeleteThreads();
+    }
+    {
+        running = false;
+        LOG.debug("Stopping file delete threads");
+        for (Thread thread : threads) {
+            thread.interrupt();
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

@@ -1,0 +1,14 @@
+looking:result
+ServerNonceManager	addMvccToOperationContext
+-----------------------
+synchronized (result) {
+    result.setMvcc(mvcc);
+}
+-----------------------
+synchronized (result) {
+    result.setMvcc(mvcc);
+    {
+        this.mvcc = mvcc;
+    }
+}-----------------------
+possible Hot1

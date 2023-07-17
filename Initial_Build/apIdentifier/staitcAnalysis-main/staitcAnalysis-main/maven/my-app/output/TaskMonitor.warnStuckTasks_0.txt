@@ -1,0 +1,33 @@
+looking:TaskMonitor.warnStuckTasks
+TaskMonitor	warnStuckTasks
+-----------------------
+private synchronized void warnStuckTasks() {
+    if (rpcWarnTime > 0) {
+        final long now = EnvironmentEdgeManager.currentTime();
+        for (Iterator<TaskAndWeakRefPair> it = rpcTasks.iterator(); it.hasNext(); ) {
+            TaskAndWeakRefPair pair = it.next();
+            MonitoredTask stat = pair.get();
+            if ((stat.getState() == MonitoredTaskImpl.State.RUNNING) && (now >= stat.getWarnTime() + rpcWarnTime)) {
+                LOG.warn("Task may be stuck: " + stat);
+                stat.setWarnTime(now);
+            }
+        }
+    }
+}
+-----------------------
+private synchronized void warnStuckTasks() {
+    if (rpcWarnTime > 0) {
+        final long now = EnvironmentEdgeManager.currentTime();
+        for (Iterator<TaskAndWeakRefPair> it = rpcTasks.iterator(); it.hasNext(); ) {
+            TaskAndWeakRefPair pair = it.next();
+            MonitoredTask stat = pair.get();
+            if ((stat.getState() == MonitoredTaskImpl.State.RUNNING) && (now >= stat.getWarnTime() + rpcWarnTime)) {
+                LOG.warn("Task may be stuck: " + stat);
+                stat.setWarnTime(now);
+            }
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

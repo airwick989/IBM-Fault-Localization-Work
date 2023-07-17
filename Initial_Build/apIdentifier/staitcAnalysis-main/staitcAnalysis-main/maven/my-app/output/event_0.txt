@@ -1,0 +1,27 @@
+looking:event
+LockProcedure	setTimeoutFailure
+-----------------------
+synchronized (event) {
+    if (LOG.isDebugEnabled())
+        LOG.debug("Timeout failure " + this.event);
+    if (!event.isReady()) {
+        // Maybe unlock() awakened the event.
+        setState(ProcedureProtos.ProcedureState.RUNNABLE);
+        if (LOG.isDebugEnabled())
+            LOG.debug("Calling wake on " + this.event);
+        event.wake(env.getProcedureScheduler());
+    }
+}
+-----------------------
+synchronized (event) {
+    if (LOG.isDebugEnabled())
+        LOG.debug("Timeout failure " + this.event);
+    if (!event.isReady()) {
+        // Maybe unlock() awakened the event.
+        setState(ProcedureProtos.ProcedureState.RUNNABLE);
+        if (LOG.isDebugEnabled())
+            LOG.debug("Calling wake on " + this.event);
+        event.wake(env.getProcedureScheduler());
+    }
+}-----------------------
+possible Hot2

@@ -1,0 +1,19 @@
+looking:IOTestProvider.getWAL
+IOTestProvider	getWAL
+-----------------------
+synchronized (this) {
+    log = this.log;
+    if (log == null) {
+        log = createWAL();
+        this.log = log;
+    }
+}
+-----------------------
+synchronized (this) {
+    log = this.log;
+    if (log == null) {
+        log = createWAL();
+        this.log = log;
+    }
+}-----------------------
+possible Hot1

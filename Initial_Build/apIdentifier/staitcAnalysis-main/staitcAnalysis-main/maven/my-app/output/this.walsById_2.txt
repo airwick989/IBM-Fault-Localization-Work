@@ -1,0 +1,63 @@
+looking:this.walsById
+ReplicationSourceManager	preLogRoll
+-----------------------
+// synchronized on walsById to avoid race with cleanOldLogs
+synchronized (this.walsById) {
+    // Update walsById map
+    for (Map.Entry<String, Map<String, NavigableSet<String>>> entry : this.walsById.entrySet()) {
+        String peerId = entry.getKey();
+        Map<String, NavigableSet<String>> walsByPrefix = entry.getValue();
+        boolean existingPrefix = false;
+        for (Map.Entry<String, NavigableSet<String>> walsEntry : walsByPrefix.entrySet()) {
+            SortedSet<String> wals = walsEntry.getValue();
+            if (this.sources.isEmpty()) {
+                // If there's no slaves, don't need to keep the old wals since
+                // we only consider the last one when a new slave comes in
+                wals.clear();
+            }
+            if (logPrefix.equals(walsEntry.getKey())) {
+                wals.add(logName);
+                existingPrefix = true;
+            }
+        }
+        if (!existingPrefix) {
+            // The new log belongs to a new group, add it into this peer
+            LOG.debug("Start tracking logs for wal group {} for peer {}", logPrefix, peerId);
+            NavigableSet<String> wals = new TreeSet<>();
+            wals.add(logName);
+            walsByPrefix.put(logPrefix, wals);
+        }
+    }
+}
+-----------------------
+// synchronized on walsById to avoid race with cleanOldLogs
+synchronized (this.walsById) {
+    // Update walsById map
+    for (Map.Entry<String, Map<String, NavigableSet<String>>> entry : this.walsById.entrySet()) {
+        String peerId = entry.getKey();
+        Map<String, NavigableSet<String>> walsByPrefix = entry.getValue();
+        boolean existingPrefix = false;
+        for (Map.Entry<String, NavigableSet<String>> walsEntry : walsByPrefix.entrySet()) {
+            SortedSet<String> wals = walsEntry.getValue();
+            if (this.sources.isEmpty()) {
+                // If there's no slaves, don't need to keep the old wals since
+                // we only consider the last one when a new slave comes in
+                wals.clear();
+            }
+            if (logPrefix.equals(walsEntry.getKey())) {
+                wals.add(logName);
+                existingPrefix = true;
+            }
+        }
+        if (!existingPrefix) {
+            // The new log belongs to a new group, add it into this peer
+            LOG.debug("Start tracking logs for wal group {} for peer {}", logPrefix, peerId);
+            NavigableSet<String> wals = new TreeSet<>();
+            wals.add(logName);
+            walsByPrefix.put(logPrefix, wals);
+        }
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+2

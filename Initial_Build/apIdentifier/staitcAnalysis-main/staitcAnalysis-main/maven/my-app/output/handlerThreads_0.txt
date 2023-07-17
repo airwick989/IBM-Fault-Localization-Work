@@ -1,0 +1,11 @@
+looking:handlerThreads
+TestSimpleRpcScheduler	answer
+-----------------------
+synchronized (handlerThreads) {
+    handlerThreads.put((CallRunner) invocationOnMock.getMock(), Thread.currentThread());
+}
+-----------------------
+synchronized (handlerThreads) {
+    handlerThreads.put((CallRunner) invocationOnMock.getMock(), Thread.currentThread());
+}-----------------------
+possible Hot1

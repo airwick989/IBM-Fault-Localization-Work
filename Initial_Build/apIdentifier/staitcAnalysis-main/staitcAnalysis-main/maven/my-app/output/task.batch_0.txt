@@ -1,0 +1,21 @@
+looking:task.batch
+ZKSplitLogManagerCoordination	setDone
+-----------------------
+synchronized (task.batch) {
+    if (status == SUCCESS) {
+        task.batch.done++;
+    } else {
+        task.batch.error++;
+    }
+    task.batch.notify();
+}
+-----------------------
+synchronized (task.batch) {
+    if (status == SUCCESS) {
+        task.batch.done++;
+    } else {
+        task.batch.error++;
+    }
+    task.batch.notify();
+}-----------------------
+possible Hot1

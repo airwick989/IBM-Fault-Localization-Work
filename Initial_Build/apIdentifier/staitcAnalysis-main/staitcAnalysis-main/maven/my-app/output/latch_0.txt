@@ -1,0 +1,11 @@
+looking:latch
+ReplicationEndpointForTest	resume
+-----------------------
+synchronized (latch) {
+    latch.notifyAll();
+}
+-----------------------
+synchronized (latch) {
+    latch.notifyAll();
+}-----------------------
+possible Hot2

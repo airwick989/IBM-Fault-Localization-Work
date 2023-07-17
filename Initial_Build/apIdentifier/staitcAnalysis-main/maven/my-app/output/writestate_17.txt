@@ -1,9 +1,0 @@
-looking:writestate
-synchronized (writestate) {
-    writestate.flushing = false;
-}
-
-synchronized (writestate) {
-    writestate.flushing = false;
-}
-possible Hot2

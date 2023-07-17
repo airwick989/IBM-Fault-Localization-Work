@@ -1,0 +1,25 @@
+looking:QuotaState.setQuotas
+QuotaState	setQuotas
+-----------------------
+/**
+ * Setup the global quota information. (This operation is part of the QuotaState setup)
+ */
+public synchronized void setQuotas(final Quotas quotas) {
+    if (quotas.hasThrottle()) {
+        globalLimiter = QuotaLimiterFactory.fromThrottle(quotas.getThrottle());
+    } else {
+        globalLimiter = NoopQuotaLimiter.get();
+    }
+}
+-----------------------
+/**
+ * Setup the global quota information. (This operation is part of the QuotaState setup)
+ */
+public synchronized void setQuotas(final Quotas quotas) {
+    if (quotas.hasThrottle()) {
+        globalLimiter = QuotaLimiterFactory.fromThrottle(quotas.getThrottle());
+    } else {
+        globalLimiter = NoopQuotaLimiter.get();
+    }
+}-----------------------
+possible Hot1

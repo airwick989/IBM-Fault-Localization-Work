@@ -1,9 +1,0 @@
-looking:InitCheckingSaslServerAuthenticationProvider.isInitialized
-public synchronized boolean isInitialized() {
-    return initialized;
-}
-
-public synchronized boolean isInitialized() {
-    return initialized;
-}
-possible Hot1

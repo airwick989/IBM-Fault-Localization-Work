@@ -1,0 +1,23 @@
+looking:DirScanPool.shutdownNow
+DirScanPool	shutdownNow
+-----------------------
+public synchronized void shutdownNow() {
+    if (pool == null || pool.isShutdown()) {
+        return;
+    }
+    pool.shutdownNow();
+}
+-----------------------
+public synchronized void shutdownNow() {
+    if (pool == null || pool.isShutdown()) {
+        return;
+    }
+    pool.shutdownNow();
+    {
+        if (pool == null || pool.isShutdown()) {
+            return;
+        }
+        pool.shutdownNow();
+    }
+}-----------------------
+possible Hot1

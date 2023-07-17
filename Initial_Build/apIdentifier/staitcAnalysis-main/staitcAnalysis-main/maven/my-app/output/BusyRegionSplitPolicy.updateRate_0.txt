@@ -1,0 +1,59 @@
+looking:BusyRegionSplitPolicy.updateRate
+BusyRegionSplitPolicy	updateRate
+-----------------------
+/**
+ * Update the blocked request rate based on number of blocked and total write requests in the last
+ * aggregation window, or since last call to this method, whichever is farthest in time. Uses
+ * weighted rate calculation based on the previous rate and new data.
+ * @return Updated blocked request rate.
+ */
+private synchronized float updateRate() {
+    float aggBlockedRate;
+    long curTime = EnvironmentEdgeManager.currentTime();
+    long newBlockedReqs = region.getBlockedRequestsCount();
+    long newWriteReqs = region.getWriteRequestsCount();
+    aggBlockedRate = (newBlockedReqs - blockedRequestCount) / (newWriteReqs - writeRequestCount + 0.00001f);
+    if (curTime - prevTime >= aggregationWindow) {
+        blockedRate = aggBlockedRate;
+        prevTime = curTime;
+        blockedRequestCount = newBlockedReqs;
+        writeRequestCount = newWriteReqs;
+    } else if (curTime - startTime >= aggregationWindow) {
+        // Calculate the aggregate blocked rate as the weighted sum of
+        // previous window's average blocked rate and blocked rate in this window so far.
+        float timeSlice = (curTime - prevTime) / (aggregationWindow + 0.0f);
+        aggBlockedRate = (1 - timeSlice) * blockedRate + timeSlice * aggBlockedRate;
+    } else {
+        aggBlockedRate = 0.0f;
+    }
+    return aggBlockedRate;
+}
+-----------------------
+/**
+ * Update the blocked request rate based on number of blocked and total write requests in the last
+ * aggregation window, or since last call to this method, whichever is farthest in time. Uses
+ * weighted rate calculation based on the previous rate and new data.
+ * @return Updated blocked request rate.
+ */
+private synchronized float updateRate() {
+    float aggBlockedRate;
+    long curTime = EnvironmentEdgeManager.currentTime();
+    long newBlockedReqs = region.getBlockedRequestsCount();
+    long newWriteReqs = region.getWriteRequestsCount();
+    aggBlockedRate = (newBlockedReqs - blockedRequestCount) / (newWriteReqs - writeRequestCount + 0.00001f);
+    if (curTime - prevTime >= aggregationWindow) {
+        blockedRate = aggBlockedRate;
+        prevTime = curTime;
+        blockedRequestCount = newBlockedReqs;
+        writeRequestCount = newWriteReqs;
+    } else if (curTime - startTime >= aggregationWindow) {
+        // Calculate the aggregate blocked rate as the weighted sum of
+        // previous window's average blocked rate and blocked rate in this window so far.
+        float timeSlice = (curTime - prevTime) / (aggregationWindow + 0.0f);
+        aggBlockedRate = (1 - timeSlice) * blockedRate + timeSlice * aggBlockedRate;
+    } else {
+        aggBlockedRate = 0.0f;
+    }
+    return aggBlockedRate;
+}-----------------------
+possible Hot1

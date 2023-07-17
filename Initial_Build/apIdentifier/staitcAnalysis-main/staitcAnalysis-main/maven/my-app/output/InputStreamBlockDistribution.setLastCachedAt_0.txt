@@ -1,0 +1,19 @@
+looking:InputStreamBlockDistribution.setLastCachedAt
+InputStreamBlockDistribution	setLastCachedAt
+-----------------------
+/**
+ * For tests only, sets lastCachedAt so we can force a refresh
+ */
+@RestrictedApi(explanation = "Should only be called in tests", link = "", allowedOnPath = ".*/src/test/.*")
+synchronized void setLastCachedAt(long timestamp) {
+    lastCachedAt = timestamp;
+}
+-----------------------
+/**
+ * For tests only, sets lastCachedAt so we can force a refresh
+ */
+@RestrictedApi(explanation = "Should only be called in tests", link = "", allowedOnPath = ".*/src/test/.*")
+synchronized void setLastCachedAt(long timestamp) {
+    lastCachedAt = timestamp;
+}-----------------------
+possible Hot1

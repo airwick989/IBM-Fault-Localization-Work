@@ -1,0 +1,21 @@
+looking:printLock
+LocalDaemonLogTailer	run
+-----------------------
+synchronized (printLock) {
+    if (line.endsWith("\n")) {
+        dest.print(line);
+    } else {
+        dest.println(line);
+    }
+    dest.flush();
+}
+-----------------------
+synchronized (printLock) {
+    if (line.endsWith("\n")) {
+        dest.print(line);
+    } else {
+        dest.println(line);
+    }
+    dest.flush();
+}-----------------------
+possible Hot1

@@ -1,0 +1,15 @@
+looking:clusterHasActiveMaster
+ActiveMasterManager	stop
+-----------------------
+synchronized (clusterHasActiveMaster) {
+    // Master is already stopped, wake up the manager
+    // thread so that it can shutdown soon.
+    clusterHasActiveMaster.notifyAll();
+}
+-----------------------
+synchronized (clusterHasActiveMaster) {
+    // Master is already stopped, wake up the manager
+    // thread so that it can shutdown soon.
+    clusterHasActiveMaster.notifyAll();
+}-----------------------
+possible Hot2

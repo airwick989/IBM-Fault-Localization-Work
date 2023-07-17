@@ -1,0 +1,22 @@
+looking:RegionScannerImpl.isFilterDone
+RegionScannerImpl	isFilterDone
+-----------------------
+/**
+ * Returns True if a filter rules the scanner is over, done.
+ */
+@Override
+public synchronized boolean isFilterDone() throws IOException {
+    return isFilterDoneInternal();
+}
+-----------------------
+/**
+ * Returns True if a filter rules the scanner is over, done.
+ */
+@Override
+public synchronized boolean isFilterDone() throws IOException {
+    return isFilterDoneInternal();
+    {
+        return this.filter != null && this.filter.filterAllRemaining();
+    }
+}-----------------------
+possible Hot1

@@ -1,0 +1,11 @@
+looking:HFileArchiveTableMonitor.clearArchive
+HFileArchiveTableMonitor	clearArchive
+-----------------------
+public synchronized void clearArchive() {
+    archivedTables.clear();
+}
+-----------------------
+public synchronized void clearArchive() {
+    archivedTables.clear();
+}-----------------------
+possible Hot1

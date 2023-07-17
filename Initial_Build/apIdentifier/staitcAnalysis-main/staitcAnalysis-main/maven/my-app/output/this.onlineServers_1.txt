@@ -1,0 +1,13 @@
+looking:this.onlineServers
+ServerManager	getOnlineServers
+-----------------------
+// Presumption is that iterating the returned Map is OK.
+synchronized (this.onlineServers) {
+    return Collections.unmodifiableMap(this.onlineServers);
+}
+-----------------------
+// Presumption is that iterating the returned Map is OK.
+synchronized (this.onlineServers) {
+    return Collections.unmodifiableMap(this.onlineServers);
+}-----------------------
+possible Hot2

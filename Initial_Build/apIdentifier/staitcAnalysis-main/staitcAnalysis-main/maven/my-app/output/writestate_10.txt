@@ -1,0 +1,71 @@
+looking:writestate
+HRegion	replayWALBulkLoadEventMarker
+-----------------------
+// we will use writestate as a coarse-grain lock for all the replay events
+synchronized (writestate) {
+    // Replication can deliver events out of order when primary region moves or the region
+    // server crashes, since there is no coordination between replication of different wal files
+    // belonging to different region servers. We have to safe guard against this case by using
+    // region open event's seqid. Since this is the first event that the region puts (after
+    // possibly flushing recovered.edits), after seeing this event, we can ignore every edit
+    // smaller than this seqId
+    if (bulkLoadEvent.getBulkloadSeqNum() >= 0 && this.lastReplayedOpenRegionSeqId >= bulkLoadEvent.getBulkloadSeqNum()) {
+        LOG.warn(getRegionInfo().getEncodedName() + " : " + "Skipping replaying bulkload event :" + TextFormat.shortDebugString(bulkLoadEvent) + " because its sequence id is smaller than this region's lastReplayedOpenRegionSeqId" + " =" + lastReplayedOpenRegionSeqId);
+        return;
+    }
+    for (StoreDescriptor storeDescriptor : bulkLoadEvent.getStoresList()) {
+        // stores of primary may be different now
+        family = storeDescriptor.getFamilyName().toByteArray();
+        HStore store = getStore(family);
+        if (store == null) {
+            LOG.warn(getRegionInfo().getEncodedName() + " : " + "Received a bulk load marker from primary, but the family is not found. " + "Ignoring. StoreDescriptor:" + storeDescriptor);
+            continue;
+        }
+        List<String> storeFiles = storeDescriptor.getStoreFileList();
+        for (String storeFile : storeFiles) {
+            StoreFileInfo storeFileInfo = null;
+            try {
+                storeFileInfo = fs.getStoreFileInfo(Bytes.toString(family), storeFile);
+                store.bulkLoadHFile(storeFileInfo);
+            } catch (FileNotFoundException ex) {
+                LOG.warn(getRegionInfo().getEncodedName() + " : " + ((storeFileInfo != null) ? storeFileInfo.toString() : (new Path(Bytes.toString(family), storeFile)).toString()) + " doesn't exist any more. Skip loading the file");
+            }
+        }
+    }
+}
+-----------------------
+// we will use writestate as a coarse-grain lock for all the replay events
+synchronized (writestate) {
+    // Replication can deliver events out of order when primary region moves or the region
+    // server crashes, since there is no coordination between replication of different wal files
+    // belonging to different region servers. We have to safe guard against this case by using
+    // region open event's seqid. Since this is the first event that the region puts (after
+    // possibly flushing recovered.edits), after seeing this event, we can ignore every edit
+    // smaller than this seqId
+    if (bulkLoadEvent.getBulkloadSeqNum() >= 0 && this.lastReplayedOpenRegionSeqId >= bulkLoadEvent.getBulkloadSeqNum()) {
+        LOG.warn(getRegionInfo().getEncodedName() + " : " + "Skipping replaying bulkload event :" + TextFormat.shortDebugString(bulkLoadEvent) + " because its sequence id is smaller than this region's lastReplayedOpenRegionSeqId" + " =" + lastReplayedOpenRegionSeqId);
+        return;
+    }
+    for (StoreDescriptor storeDescriptor : bulkLoadEvent.getStoresList()) {
+        // stores of primary may be different now
+        family = storeDescriptor.getFamilyName().toByteArray();
+        HStore store = getStore(family);
+        if (store == null) {
+            LOG.warn(getRegionInfo().getEncodedName() + " : " + "Received a bulk load marker from primary, but the family is not found. " + "Ignoring. StoreDescriptor:" + storeDescriptor);
+            continue;
+        }
+        List<String> storeFiles = storeDescriptor.getStoreFileList();
+        for (String storeFile : storeFiles) {
+            StoreFileInfo storeFileInfo = null;
+            try {
+                storeFileInfo = fs.getStoreFileInfo(Bytes.toString(family), storeFile);
+                store.bulkLoadHFile(storeFileInfo);
+            } catch (FileNotFoundException ex) {
+                LOG.warn(getRegionInfo().getEncodedName() + " : " + ((storeFileInfo != null) ? storeFileInfo.toString() : (new Path(Bytes.toString(family), storeFile)).toString()) + " doesn't exist any more. Skip loading the file");
+            }
+        }
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+2

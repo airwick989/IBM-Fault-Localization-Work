@@ -1,0 +1,21 @@
+looking:QuotaState.getGlobalLimiter
+QuotaState	getGlobalLimiter
+-----------------------
+/**
+ * Return the limiter associated with this quota.
+ * @return the quota limiter
+ */
+public synchronized QuotaLimiter getGlobalLimiter() {
+    lastQuery = EnvironmentEdgeManager.currentTime();
+    return globalLimiter;
+}
+-----------------------
+/**
+ * Return the limiter associated with this quota.
+ * @return the quota limiter
+ */
+public synchronized QuotaLimiter getGlobalLimiter() {
+    lastQuery = EnvironmentEdgeManager.currentTime();
+    return globalLimiter;
+}-----------------------
+possible Hot1

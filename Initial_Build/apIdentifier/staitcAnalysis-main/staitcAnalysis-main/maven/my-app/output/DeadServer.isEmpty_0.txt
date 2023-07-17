@@ -1,0 +1,14 @@
+looking:DeadServer.isEmpty
+DeadServer	isEmpty
+-----------------------
+synchronized boolean isEmpty() {
+    return deadServers.isEmpty();
+}
+-----------------------
+synchronized boolean isEmpty() {
+    return deadServers.isEmpty();
+    {
+        return deadServers.isEmpty();
+    }
+}-----------------------
+possible Hot1

@@ -1,0 +1,21 @@
+looking:onlineServers
+ServerManager	letRegionServersShutdown
+-----------------------
+synchronized (onlineServers) {
+    try {
+        if (onlineServersCt == onlineServers.size())
+            onlineServers.wait(100);
+    } catch (InterruptedException ignored) {
+        // continue
+    }
+}
+-----------------------
+synchronized (onlineServers) {
+    try {
+        if (onlineServersCt == onlineServers.size())
+            onlineServers.wait(100);
+    } catch (InterruptedException ignored) {
+        // continue
+    }
+}-----------------------
+possible Hot2

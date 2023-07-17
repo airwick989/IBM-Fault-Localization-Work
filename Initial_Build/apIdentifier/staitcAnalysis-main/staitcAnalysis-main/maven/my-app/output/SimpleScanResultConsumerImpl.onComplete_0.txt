@@ -1,0 +1,15 @@
+looking:SimpleScanResultConsumerImpl.onComplete
+SimpleScanResultConsumerImpl	onComplete
+-----------------------
+@Override
+public synchronized void onComplete() {
+    finished = true;
+    notifyAll();
+}
+-----------------------
+@Override
+public synchronized void onComplete() {
+    finished = true;
+    notifyAll();
+}-----------------------
+possible Hot1

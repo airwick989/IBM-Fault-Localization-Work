@@ -1,0 +1,17 @@
+looking:batch
+TestSplitLogManager	testTaskDone
+-----------------------
+synchronized (batch) {
+    while (batch.installed != batch.done) {
+        batch.wait();
+    }
+}
+-----------------------
+synchronized (batch) {
+    while (batch.installed != batch.done) {
+        batch.wait();
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

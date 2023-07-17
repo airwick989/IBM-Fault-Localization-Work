@@ -1,0 +1,11 @@
+looking:FlushThread.flush
+FlushThread	flush
+-----------------------
+synchronized (this) {
+    notify();
+}
+-----------------------
+synchronized (this) {
+    notify();
+}-----------------------
+possible Hot1

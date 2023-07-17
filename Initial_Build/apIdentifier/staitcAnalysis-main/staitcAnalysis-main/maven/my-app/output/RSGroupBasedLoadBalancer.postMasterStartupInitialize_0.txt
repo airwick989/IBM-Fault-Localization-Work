@@ -1,0 +1,13 @@
+looking:RSGroupBasedLoadBalancer.postMasterStartupInitialize
+RSGroupBasedLoadBalancer	postMasterStartupInitialize
+-----------------------
+@Override
+public synchronized void postMasterStartupInitialize() {
+    this.internalBalancer.postMasterStartupInitialize();
+}
+-----------------------
+@Override
+public synchronized void postMasterStartupInitialize() {
+    this.internalBalancer.postMasterStartupInitialize();
+}-----------------------
+possible Hot1

@@ -1,0 +1,17 @@
+looking:Tracker.await
+Tracker	await
+-----------------------
+public synchronized void await() throws InterruptedException {
+    while (!completed) {
+        wait();
+    }
+}
+-----------------------
+public synchronized void await() throws InterruptedException {
+    while (!completed) {
+        wait();
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

@@ -1,0 +1,40 @@
+looking:this.oldsources
+ReplicationSourceManager	drainSources
+-----------------------
+// synchronized on oldsources to avoid race with NodeFailoverWorker. Since NodeFailoverWorker is
+// a background task, we will delete the file from replication queue storage under the lock to
+// simplify the logic.
+synchronized (this.oldsources) {
+    for (Iterator<ReplicationSourceInterface> iter = oldsources.iterator(); iter.hasNext(); ) {
+        ReplicationSourceInterface oldSource = iter.next();
+        if (oldSource.getPeerId().equals(peerId)) {
+            String queueId = oldSource.getQueueId();
+            oldSource.terminate(terminateMessage);
+            oldSource.getSourceMetrics().clear();
+            queueStorage.removeQueue(server.getServerName(), queueId);
+            walsByIdRecoveredQueues.remove(queueId);
+            iter.remove();
+        }
+    }
+}
+-----------------------
+// simplify the logic.
+synchronized (this.oldsources) {
+    for (Iterator<ReplicationSourceInterface> iter = oldsources.iterator(); iter.hasNext(); ) {
+        ReplicationSourceInterface oldSource = iter.next();
+        if (oldSource.getPeerId().equals(peerId)) {
+            String queueId = oldSource.getQueueId();
+            oldSource.terminate(terminateMessage);
+            oldSource.getSourceMetrics().clear();
+            queueStorage.removeQueue(server.getServerName(), queueId);
+            walsByIdRecoveredQueues.remove(queueId);
+            iter.remove();
+        }
+        {
+            return getPeer().getId();
+        }
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

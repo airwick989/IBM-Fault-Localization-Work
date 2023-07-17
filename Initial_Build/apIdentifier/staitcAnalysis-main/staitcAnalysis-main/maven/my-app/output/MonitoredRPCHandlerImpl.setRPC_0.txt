@@ -1,0 +1,35 @@
+looking:MonitoredRPCHandlerImpl.setRPC
+MonitoredRPCHandlerImpl	setRPC
+-----------------------
+/**
+ * Tells this instance that it is monitoring a new RPC call.
+ * @param methodName The name of the method that will be called by the RPC.
+ * @param params     The parameters that will be passed to the indicated method.
+ */
+@Override
+public synchronized void setRPC(String methodName, Object[] params, long queueTime) {
+    this.methodName = methodName;
+    this.params = params;
+    long now = EnvironmentEdgeManager.currentTime();
+    this.rpcStartTime = now;
+    setWarnTime(now);
+    this.rpcQueueTime = queueTime;
+    this.state = State.RUNNING;
+}
+-----------------------
+/**
+ * Tells this instance that it is monitoring a new RPC call.
+ * @param methodName The name of the method that will be called by the RPC.
+ * @param params     The parameters that will be passed to the indicated method.
+ */
+@Override
+public synchronized void setRPC(String methodName, Object[] params, long queueTime) {
+    this.methodName = methodName;
+    this.params = params;
+    long now = EnvironmentEdgeManager.currentTime();
+    this.rpcStartTime = now;
+    setWarnTime(now);
+    this.rpcQueueTime = queueTime;
+    this.state = State.RUNNING;
+}-----------------------
+possible Hot1

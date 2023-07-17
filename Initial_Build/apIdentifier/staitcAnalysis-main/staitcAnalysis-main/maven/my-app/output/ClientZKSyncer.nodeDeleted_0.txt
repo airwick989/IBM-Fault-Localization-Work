@@ -1,0 +1,237 @@
+looking:ClientZKSyncer.nodeDeleted
+ClientZKSyncer	nodeDeleted
+-----------------------
+@Override
+public synchronized void nodeDeleted(String path) {
+    if (validate(path)) {
+        try {
+            if (ZKUtil.watchAndCheckExists(watcher, path)) {
+                getDataAndWatch(path);
+            }
+        } catch (KeeperException e) {
+            LOG.warn("Unexpected exception handling nodeDeleted event for path: " + path, e);
+        }
+    } else {
+        removeQueue(path);
+    }
+}
+-----------------------
+@Override
+public synchronized void nodeDeleted(String path) {
+    if (validate(path)) {
+        try {
+            if (ZKUtil.watchAndCheckExists(watcher, path)) {
+                getDataAndWatch(path);
+                {
+                    try {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, path);
+                        upsertQueue(path, data);
+                        {
+                            ZKData zkData = queues.get(node);
+                            if (zkData != null) {
+                                zkData.set(data);
+                                {
+                                    this.data = data;
+                                    notifyAll();
+                                }
+                                {
+                                    this.data = data;
+                                    notifyAll();
+                                }
+                            }
+                        }
+                        {
+                            ZKData zkData = queues.get(node);
+                            if (zkData != null) {
+                                zkData.set(data);
+                            }
+                        }
+                        {
+                            ZKData zkData = queues.get(node);
+                            if (zkData != null) {
+                                zkData.set(data);
+                            }
+                        }
+                    } catch (KeeperException e) {
+                        LOG.warn("Unexpected exception handling nodeCreated event", e);
+                    }
+                }
+                {
+                    try {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, path);
+                        upsertQueue(path, data);
+                    } catch (KeeperException e) {
+                        LOG.warn("Unexpected exception handling nodeCreated event", e);
+                    }
+                }
+                {
+                    try {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, path);
+                        upsertQueue(path, data);
+                    } catch (KeeperException e) {
+                        LOG.warn("Unexpected exception handling nodeCreated event", e);
+                    }
+                }
+                {
+                    try {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, path);
+                        upsertQueue(path, data);
+                    } catch (KeeperException e) {
+                        LOG.warn("Unexpected exception handling nodeCreated event", e);
+                    }
+                }
+            }
+            {
+                try {
+                    if (ZKUtil.watchAndCheckExists(watcher, node)) {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, node);
+                        if (data != null) {
+                            // put the data into queue
+                            upsertQueue(node, data);
+                        } else {
+                            // It existed but now does not, should has been tracked by our watcher, ignore
+                            LOG.debug("Found no data from " + node);
+                            watchAndCheckExists(node);
+                        }
+                    } else {
+                        // cleanup stale ZNodes on client ZK to avoid invalid requests to server
+                        ZKUtil.deleteNodeFailSilent(clientZkWatcher, node);
+                    }
+                } catch (KeeperException e) {
+                    server.abort("Unexpected exception during initialization, aborting", e);
+                }
+            }
+            {
+                try {
+                    if (ZKUtil.watchAndCheckExists(watcher, node)) {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, node);
+                        if (data != null) {
+                            // put the data into queue
+                            upsertQueue(node, data);
+                        } else {
+                            // It existed but now does not, should has been tracked by our watcher, ignore
+                            LOG.debug("Found no data from " + node);
+                            watchAndCheckExists(node);
+                        }
+                    } else {
+                        // cleanup stale ZNodes on client ZK to avoid invalid requests to server
+                        ZKUtil.deleteNodeFailSilent(clientZkWatcher, node);
+                    }
+                } catch (KeeperException e) {
+                    server.abort("Unexpected exception during initialization, aborting", e);
+                }
+            }
+            {
+                try {
+                    if (ZKUtil.watchAndCheckExists(watcher, node)) {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, node);
+                        if (data != null) {
+                            // put the data into queue
+                            upsertQueue(node, data);
+                        } else {
+                            // It existed but now does not, should has been tracked by our watcher, ignore
+                            LOG.debug("Found no data from " + node);
+                            watchAndCheckExists(node);
+                        }
+                    } else {
+                        // cleanup stale ZNodes on client ZK to avoid invalid requests to server
+                        ZKUtil.deleteNodeFailSilent(clientZkWatcher, node);
+                    }
+                } catch (KeeperException e) {
+                    server.abort("Unexpected exception during initialization, aborting", e);
+                }
+            }
+            {
+                try {
+                    if (ZKUtil.watchAndCheckExists(watcher, node)) {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, node);
+                        if (data != null) {
+                            // put the data into queue
+                            upsertQueue(node, data);
+                        } else {
+                            // It existed but now does not, should has been tracked by our watcher, ignore
+                            LOG.debug("Found no data from " + node);
+                            watchAndCheckExists(node);
+                        }
+                    } else {
+                        // cleanup stale ZNodes on client ZK to avoid invalid requests to server
+                        ZKUtil.deleteNodeFailSilent(clientZkWatcher, node);
+                    }
+                } catch (KeeperException e) {
+                    server.abort("Unexpected exception during initialization, aborting", e);
+                }
+            }
+            {
+                try {
+                    if (ZKUtil.watchAndCheckExists(watcher, node)) {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, node);
+                        if (data != null) {
+                            // put the data into queue
+                            upsertQueue(node, data);
+                        } else {
+                            // It existed but now does not, should has been tracked by our watcher, ignore
+                            LOG.debug("Found no data from " + node);
+                            watchAndCheckExists(node);
+                        }
+                    } else {
+                        // cleanup stale ZNodes on client ZK to avoid invalid requests to server
+                        ZKUtil.deleteNodeFailSilent(clientZkWatcher, node);
+                    }
+                } catch (KeeperException e) {
+                    server.abort("Unexpected exception during initialization, aborting", e);
+                }
+            }
+            {
+                try {
+                    if (ZKUtil.watchAndCheckExists(watcher, node)) {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, node);
+                        if (data != null) {
+                            // put the data into queue
+                            upsertQueue(node, data);
+                        } else {
+                            // It existed but now does not, should has been tracked by our watcher, ignore
+                            LOG.debug("Found no data from " + node);
+                            watchAndCheckExists(node);
+                        }
+                    } else {
+                        // cleanup stale ZNodes on client ZK to avoid invalid requests to server
+                        ZKUtil.deleteNodeFailSilent(clientZkWatcher, node);
+                    }
+                } catch (KeeperException e) {
+                    server.abort("Unexpected exception during initialization, aborting", e);
+                }
+            }
+        } catch (KeeperException e) {
+            LOG.warn("Unexpected exception handling nodeDeleted event for path: " + path, e);
+        }
+    } else {
+        removeQueue(path);
+        {
+            ZKData zkData = queues.remove(path);
+            if (zkData != null) {
+                zkData.delete();
+                {
+                    this.delete = true;
+                    notifyAll();
+                }
+                {
+                    this.delete = true;
+                    notifyAll();
+                }
+                {
+                    this.delete = true;
+                    notifyAll();
+                }
+                {
+                    this.delete = true;
+                    notifyAll();
+                }
+                {
+                    this.delete = true;
+                    notifyAll();
+                }
+            }
+        }
+    }
+}-----------------------
+possible Hot1

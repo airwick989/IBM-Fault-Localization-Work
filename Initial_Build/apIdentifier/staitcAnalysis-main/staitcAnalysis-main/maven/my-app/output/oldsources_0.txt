@@ -1,0 +1,15 @@
+looking:oldsources
+ReplicationSourceManager	finishRecoveredSource
+-----------------------
+synchronized (oldsources) {
+    if (!removeRecoveredSource(src)) {
+        return;
+    }
+}
+-----------------------
+synchronized (oldsources) {
+    if (!removeRecoveredSource(src)) {
+        return;
+    }
+}-----------------------
+possible Hot2

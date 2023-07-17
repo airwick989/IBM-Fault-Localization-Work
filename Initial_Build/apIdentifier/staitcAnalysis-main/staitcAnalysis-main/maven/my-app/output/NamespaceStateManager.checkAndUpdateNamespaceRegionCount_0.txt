@@ -1,0 +1,57 @@
+looking:NamespaceStateManager.checkAndUpdateNamespaceRegionCount
+NamespaceStateManager	checkAndUpdateNamespaceRegionCount
+-----------------------
+/**
+ * Check if adding a region violates namespace quota, if not update namespace cache. nnn * @return
+ * true, if region can be added to table.
+ * @throws IOException Signals that an I/O exception has occurred.
+ */
+synchronized boolean checkAndUpdateNamespaceRegionCount(TableName name, byte[] regionName, int incr) throws IOException {
+    String namespace = name.getNamespaceAsString();
+    NamespaceDescriptor nspdesc = getNamespaceDescriptor(namespace);
+    if (nspdesc != null) {
+        NamespaceTableAndRegionInfo currentStatus;
+        currentStatus = getState(namespace);
+        int regionCount = currentStatus.getRegionCount();
+        long maxRegionCount = TableNamespaceManager.getMaxRegions(nspdesc);
+        if (incr > 0 && regionCount >= maxRegionCount) {
+            LOG.warn("The region " + Bytes.toStringBinary(regionName) + " cannot be created. The region count  will exceed quota on the namespace. " + "This may be transient, please retry later if there are any ongoing split" + " operations in the namespace.");
+            return false;
+        }
+        NamespaceTableAndRegionInfo nsInfo = nsStateCache.get(namespace);
+        if (nsInfo != null) {
+            nsInfo.incRegionCountForTable(name, incr);
+        } else {
+            LOG.warn("Namespace state found null for namespace : " + namespace);
+        }
+    }
+    return true;
+}
+-----------------------
+/**
+ * Check if adding a region violates namespace quota, if not update namespace cache. nnn * @return
+ * true, if region can be added to table.
+ * @throws IOException Signals that an I/O exception has occurred.
+ */
+synchronized boolean checkAndUpdateNamespaceRegionCount(TableName name, byte[] regionName, int incr) throws IOException {
+    String namespace = name.getNamespaceAsString();
+    NamespaceDescriptor nspdesc = getNamespaceDescriptor(namespace);
+    if (nspdesc != null) {
+        NamespaceTableAndRegionInfo currentStatus;
+        currentStatus = getState(namespace);
+        int regionCount = currentStatus.getRegionCount();
+        long maxRegionCount = TableNamespaceManager.getMaxRegions(nspdesc);
+        if (incr > 0 && regionCount >= maxRegionCount) {
+            LOG.warn("The region " + Bytes.toStringBinary(regionName) + " cannot be created. The region count  will exceed quota on the namespace. " + "This may be transient, please retry later if there are any ongoing split" + " operations in the namespace.");
+            return false;
+        }
+        NamespaceTableAndRegionInfo nsInfo = nsStateCache.get(namespace);
+        if (nsInfo != null) {
+            nsInfo.incRegionCountForTable(name, incr);
+        } else {
+            LOG.warn("Namespace state found null for namespace : " + namespace);
+        }
+    }
+    return true;
+}-----------------------
+possible Hot2

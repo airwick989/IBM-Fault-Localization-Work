@@ -1,0 +1,23 @@
+looking:FlushThread.run
+FlushThread	run
+-----------------------
+synchronized (this) {
+    try {
+        wait();
+    } catch (InterruptedException ignored) {
+        if (done) {
+            break;
+        }
+    }
+}
+-----------------------
+synchronized (this) {
+    try {
+        wait();
+    } catch (InterruptedException ignored) {
+        if (done) {
+            break;
+        }
+    }
+}-----------------------
+possible Hot1

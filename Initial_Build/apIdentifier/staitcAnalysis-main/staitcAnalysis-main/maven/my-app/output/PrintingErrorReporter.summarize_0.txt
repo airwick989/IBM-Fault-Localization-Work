@@ -1,0 +1,27 @@
+looking:PrintingErrorReporter.summarize
+PrintingErrorReporter	summarize
+-----------------------
+@Override
+public synchronized int summarize() {
+    System.out.println(Integer.toString(errorCount) + " inconsistencies detected.");
+    if (errorCount == 0) {
+        System.out.println("Status: OK");
+        return 0;
+    } else {
+        System.out.println("Status: INCONSISTENT");
+        return -1;
+    }
+}
+-----------------------
+@Override
+public synchronized int summarize() {
+    System.out.println(Integer.toString(errorCount) + " inconsistencies detected.");
+    if (errorCount == 0) {
+        System.out.println("Status: OK");
+        return 0;
+    } else {
+        System.out.println("Status: INCONSISTENT");
+        return -1;
+    }
+}-----------------------
+possible Hot1

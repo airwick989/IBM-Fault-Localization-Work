@@ -1,0 +1,57 @@
+looking:WorkItemRegion.call
+WorkItemRegion	call
+-----------------------
+@Override
+public synchronized Void call() throws IOException {
+    errors.progress();
+    try {
+        // list all online regions from this region server
+        List<RegionInfo> regions = connection.getAdmin().getRegions(rsinfo);
+        regions = filterRegions(regions);
+        if (details) {
+            errors.detail("RegionServer: " + rsinfo.getServerName() + " number of regions: " + regions.size());
+            for (RegionInfo rinfo : regions) {
+                errors.detail("  " + rinfo.getRegionNameAsString() + " id: " + rinfo.getRegionId() + " encoded_name: " + rinfo.getEncodedName() + " start: " + Bytes.toStringBinary(rinfo.getStartKey()) + " end: " + Bytes.toStringBinary(rinfo.getEndKey()));
+            }
+        }
+        // check to see if the existence of this region matches the region in META
+        for (RegionInfo r : regions) {
+            HbckRegionInfo hbi = hbck.getOrCreateInfo(r.getEncodedName());
+            hbi.addServer(r, rsinfo);
+        }
+    } catch (IOException e) {
+        // unable to connect to the region server.
+        errors.reportError(ERROR_CODE.RS_CONNECT_FAILURE, "RegionServer: " + rsinfo.getServerName() + " Unable to fetch region information. " + e);
+        throw e;
+    }
+    return null;
+}
+-----------------------
+@Override
+public synchronized Void call() throws IOException {
+    errors.progress();
+    try {
+        // list all online regions from this region server
+        List<RegionInfo> regions = connection.getAdmin().getRegions(rsinfo);
+        regions = filterRegions(regions);
+        if (details) {
+            errors.detail("RegionServer: " + rsinfo.getServerName() + " number of regions: " + regions.size());
+            for (RegionInfo rinfo : regions) {
+                errors.detail("  " + rinfo.getRegionNameAsString() + " id: " + rinfo.getRegionId() + " encoded_name: " + rinfo.getEncodedName() + " start: " + Bytes.toStringBinary(rinfo.getStartKey()) + " end: " + Bytes.toStringBinary(rinfo.getEndKey()));
+            }
+        }
+        // check to see if the existence of this region matches the region in META
+        for (RegionInfo r : regions) {
+            HbckRegionInfo hbi = hbck.getOrCreateInfo(r.getEncodedName());
+            hbi.addServer(r, rsinfo);
+        }
+    } catch (IOException e) {
+        // unable to connect to the region server.
+        errors.reportError(ERROR_CODE.RS_CONNECT_FAILURE, "RegionServer: " + rsinfo.getServerName() + " Unable to fetch region information. " + e);
+        throw e;
+    }
+    return null;
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

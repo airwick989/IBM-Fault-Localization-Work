@@ -1,0 +1,13 @@
+looking:joinBarrierLock
+Procedure	getStatus
+-----------------------
+synchronized (joinBarrierLock) {
+    waiting = acquiringMembers.toString();
+    done = inBarrierMembers.toString();
+}
+-----------------------
+synchronized (joinBarrierLock) {
+    waiting = acquiringMembers.toString();
+    done = inBarrierMembers.toString();
+}-----------------------
+possible Hot2

@@ -1,0 +1,17 @@
+looking:flushed
+TestSplitWalDataLoss	test
+-----------------------
+synchronized (flushed) {
+    while (!flushed.booleanValue()) {
+        flushed.wait();
+    }
+}
+-----------------------
+synchronized (flushed) {
+    while (!flushed.booleanValue()) {
+        flushed.wait();
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

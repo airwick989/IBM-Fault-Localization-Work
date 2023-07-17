@@ -1,0 +1,11 @@
+looking:RateLimiter.getLimit
+RateLimiter	getLimit
+-----------------------
+public synchronized long getLimit() {
+    return limit;
+}
+-----------------------
+public synchronized long getLimit() {
+    return limit;
+}-----------------------
+possible Hot1

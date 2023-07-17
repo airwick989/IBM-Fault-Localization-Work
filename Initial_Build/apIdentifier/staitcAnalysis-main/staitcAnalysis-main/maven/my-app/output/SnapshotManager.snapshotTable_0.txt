@@ -1,0 +1,59 @@
+looking:SnapshotManager.snapshotTable
+SnapshotManager	snapshotTable
+-----------------------
+/**
+ * Take a snapshot using the specified handler. On failure the snapshot temporary working
+ * directory is removed. NOTE: prepareToTakeSnapshot() called before this one takes care of the
+ * rejecting the snapshot request if the table is busy with another snapshot/restore operation.
+ * @param snapshot the snapshot description
+ * @param handler  the snapshot handler
+ */
+private synchronized void snapshotTable(SnapshotDescription snapshot, final TakeSnapshotHandler handler) throws IOException {
+    try {
+        handler.prepare();
+        this.executorService.submit(handler);
+        this.snapshotHandlers.put(TableName.valueOf(snapshot.getTable()), handler);
+    } catch (Exception e) {
+        // cleanup the working directory by trying to delete it from the fs.
+        Path workingDir = SnapshotDescriptionUtils.getWorkingSnapshotDir(snapshot, rootDir, master.getConfiguration());
+        FileSystem workingDirFs = workingDir.getFileSystem(master.getConfiguration());
+        try {
+            if (!workingDirFs.delete(workingDir, true)) {
+                LOG.error("Couldn't delete working directory (" + workingDir + " for snapshot:" + ClientSnapshotDescriptionUtils.toString(snapshot));
+            }
+        } catch (IOException e1) {
+            LOG.error("Couldn't delete working directory (" + workingDir + " for snapshot:" + ClientSnapshotDescriptionUtils.toString(snapshot));
+        }
+        // fail the snapshot
+        throw new SnapshotCreationException("Could not build snapshot handler", e, ProtobufUtil.createSnapshotDesc(snapshot));
+    }
+}
+-----------------------
+/**
+ * Take a snapshot using the specified handler. On failure the snapshot temporary working
+ * directory is removed. NOTE: prepareToTakeSnapshot() called before this one takes care of the
+ * rejecting the snapshot request if the table is busy with another snapshot/restore operation.
+ * @param snapshot the snapshot description
+ * @param handler  the snapshot handler
+ */
+private synchronized void snapshotTable(SnapshotDescription snapshot, final TakeSnapshotHandler handler) throws IOException {
+    try {
+        handler.prepare();
+        this.executorService.submit(handler);
+        this.snapshotHandlers.put(TableName.valueOf(snapshot.getTable()), handler);
+    } catch (Exception e) {
+        // cleanup the working directory by trying to delete it from the fs.
+        Path workingDir = SnapshotDescriptionUtils.getWorkingSnapshotDir(snapshot, rootDir, master.getConfiguration());
+        FileSystem workingDirFs = workingDir.getFileSystem(master.getConfiguration());
+        try {
+            if (!workingDirFs.delete(workingDir, true)) {
+                LOG.error("Couldn't delete working directory (" + workingDir + " for snapshot:" + ClientSnapshotDescriptionUtils.toString(snapshot));
+            }
+        } catch (IOException e1) {
+            LOG.error("Couldn't delete working directory (" + workingDir + " for snapshot:" + ClientSnapshotDescriptionUtils.toString(snapshot));
+        }
+        // fail the snapshot
+        throw new SnapshotCreationException("Could not build snapshot handler", e, ProtobufUtil.createSnapshotDesc(snapshot));
+    }
+}-----------------------
+possible Hot1

@@ -1,0 +1,71 @@
+looking:ForeignExceptionDispatcher.receive
+ForeignExceptionDispatcher	receive
+-----------------------
+@Override
+public synchronized void receive(ForeignException e) {
+    // if we already have an exception, then ignore it
+    if (exception != null)
+        return;
+    LOG.debug(name + " accepting received exception", e);
+    // mark that we got the error
+    if (e != null) {
+        exception = e;
+    } else {
+        exception = new ForeignException(name, "");
+    }
+    // notify all the listeners
+    dispatch(e);
+}
+-----------------------
+@Override
+public synchronized void receive(ForeignException e) {
+    // if we already have an exception, then ignore it
+    if (exception != null)
+        return;
+    LOG.debug(name + " accepting received exception", e);
+    // mark that we got the error
+    if (e != null) {
+        exception = e;
+    } else {
+        exception = new ForeignException(name, "");
+    }
+    // notify all the listeners
+    dispatch(e);
+    {
+        // update all the listeners with the passed error
+        for (ForeignExceptionListener l : listeners) {
+            l.receive(e);
+            {
+                // if we already have an exception, then ignore it
+                if (exception != null)
+                    return;
+                LOG.debug(name + " accepting received exception", e);
+                // mark that we got the error
+                if (e != null) {
+                    exception = e;
+                } else {
+                    exception = new ForeignException(name, "");
+                }
+                // notify all the listeners
+                dispatch(e);
+            }
+            {
+                // if we already have an exception, then ignore it
+                if (exception != null)
+                    return;
+                LOG.debug(name + " accepting received exception", e);
+                // mark that we got the error
+                if (e != null) {
+                    exception = e;
+                } else {
+                    exception = new ForeignException(name, "");
+                }
+                // notify all the listeners
+                dispatch(e);
+            }
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

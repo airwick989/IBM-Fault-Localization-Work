@@ -1,0 +1,47 @@
+looking:EntryBuffers.getChunkToWrite
+EntryBuffers	getChunkToWrite
+-----------------------
+/**
+ * Returns RegionEntryBuffer a buffer of edits to be written.
+ */
+synchronized RegionEntryBuffer getChunkToWrite() {
+    long biggestSize = 0;
+    byte[] biggestBufferKey = null;
+    for (Map.Entry<byte[], RegionEntryBuffer> entry : buffers.entrySet()) {
+        long size = entry.getValue().heapSize();
+        if (size > biggestSize && (!currentlyWriting.contains(entry.getKey()))) {
+            biggestSize = size;
+            biggestBufferKey = entry.getKey();
+        }
+    }
+    if (biggestBufferKey == null) {
+        return null;
+    }
+    RegionEntryBuffer buffer = buffers.remove(biggestBufferKey);
+    currentlyWriting.add(biggestBufferKey);
+    return buffer;
+}
+-----------------------
+/**
+ * Returns RegionEntryBuffer a buffer of edits to be written.
+ */
+synchronized RegionEntryBuffer getChunkToWrite() {
+    long biggestSize = 0;
+    byte[] biggestBufferKey = null;
+    for (Map.Entry<byte[], RegionEntryBuffer> entry : buffers.entrySet()) {
+        long size = entry.getValue().heapSize();
+        if (size > biggestSize && (!currentlyWriting.contains(entry.getKey()))) {
+            biggestSize = size;
+            biggestBufferKey = entry.getKey();
+        }
+    }
+    if (biggestBufferKey == null) {
+        return null;
+    }
+    RegionEntryBuffer buffer = buffers.remove(biggestBufferKey);
+    currentlyWriting.add(biggestBufferKey);
+    return buffer;
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

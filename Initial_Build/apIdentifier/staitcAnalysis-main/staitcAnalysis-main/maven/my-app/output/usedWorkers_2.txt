@@ -1,0 +1,16 @@
+looking:usedWorkers
+SyncReplicationReplayWALManager	serverAdded
+-----------------------
+synchronized (usedWorkers) {
+    usedWorkers.wake(scheduler);
+}
+-----------------------
+synchronized (usedWorkers) {
+    usedWorkers.wake(scheduler);
+    {
+        if (!event.isReady()) {
+            event.wake(scheduler);
+        }
+    }
+}-----------------------
+possible Hot2

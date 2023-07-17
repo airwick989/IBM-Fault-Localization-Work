@@ -1,0 +1,11 @@
+looking:this.safePointWaiter
+RingBufferEventHandler	attainSafePoint
+-----------------------
+synchronized (this.safePointWaiter) {
+    this.safePointWaiter.wait(0, 1);
+}
+-----------------------
+synchronized (this.safePointWaiter) {
+    this.safePointWaiter.wait(0, 1);
+}-----------------------
+possible Hot1

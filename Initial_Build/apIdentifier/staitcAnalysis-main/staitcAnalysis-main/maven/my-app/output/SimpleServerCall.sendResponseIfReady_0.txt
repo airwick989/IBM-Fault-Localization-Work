@@ -1,0 +1,17 @@
+looking:SimpleServerCall.sendResponseIfReady
+SimpleServerCall	sendResponseIfReady
+-----------------------
+@Override
+public synchronized void sendResponseIfReady() throws IOException {
+    // set param null to reduce memory pressure
+    this.param = null;
+    this.responder.doRespond(getConnection(), this);
+}
+-----------------------
+@Override
+public synchronized void sendResponseIfReady() throws IOException {
+    // set param null to reduce memory pressure
+    this.param = null;
+    this.responder.doRespond(getConnection(), this);
+}-----------------------
+possible Hot1

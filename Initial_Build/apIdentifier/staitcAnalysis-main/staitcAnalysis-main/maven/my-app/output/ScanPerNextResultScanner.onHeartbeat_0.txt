@@ -1,0 +1,25 @@
+looking:ScanPerNextResultScanner.onHeartbeat
+ScanPerNextResultScanner	onHeartbeat
+-----------------------
+@Override
+public synchronized void onHeartbeat(ScanController controller) {
+    if (closed) {
+        controller.terminate();
+        return;
+    }
+    if (scan.isNeedCursorResult()) {
+        controller.cursor().ifPresent(c -> queue.add(Result.createCursorResult(c)));
+    }
+}
+-----------------------
+@Override
+public synchronized void onHeartbeat(ScanController controller) {
+    if (closed) {
+        controller.terminate();
+        return;
+    }
+    if (scan.isNeedCursorResult()) {
+        controller.cursor().ifPresent(c -> queue.add(Result.createCursorResult(c)));
+    }
+}-----------------------
+possible Hot1

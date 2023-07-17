@@ -1,0 +1,17 @@
+looking:PrintingErrorReporter.reportError
+PrintingErrorReporter	reportError
+-----------------------
+@Override
+public synchronized void reportError(ERROR_CODE errorCode, String message, HbckTableInfo table, HbckRegionInfo info) {
+    errorTables.add(table);
+    String reference = "(region " + info.getRegionNameAsString() + ")";
+    reportError(errorCode, reference + " " + message);
+}
+-----------------------
+@Override
+public synchronized void reportError(ERROR_CODE errorCode, String message, HbckTableInfo table, HbckRegionInfo info) {
+    errorTables.add(table);
+    String reference = "(region " + info.getRegionNameAsString() + ")";
+    reportError(errorCode, reference + " " + message);
+}-----------------------
+possible Hot2

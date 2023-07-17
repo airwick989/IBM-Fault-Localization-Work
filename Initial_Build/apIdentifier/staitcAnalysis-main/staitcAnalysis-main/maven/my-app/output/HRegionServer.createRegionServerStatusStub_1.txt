@@ -1,0 +1,162 @@
+looking:HRegionServer.createRegionServerStatusStub
+HRegionServer	createRegionServerStatusStub
+-----------------------
+/**
+ * Get the current master from ZooKeeper and open the RPC connection to it. To get a fresh
+ * connection, the current rssStub must be null. Method will block until a master is available.
+ * You can break from this block by requesting the server stop.
+ * @param refresh If true then master address will be read from ZK, otherwise use cached data
+ * @return master + port, or null if server has been stopped
+ */
+@InterfaceAudience.Private
+protected synchronized ServerName createRegionServerStatusStub(boolean refresh) {
+    if (rssStub != null) {
+        return masterAddressTracker.getMasterAddress();
+    }
+    ServerName sn = null;
+    long previousLogTime = 0;
+    RegionServerStatusService.BlockingInterface intRssStub = null;
+    LockService.BlockingInterface intLockStub = null;
+    boolean interrupted = false;
+    try {
+        while (keepLooping()) {
+            sn = this.masterAddressTracker.getMasterAddress(refresh);
+            if (sn == null) {
+                if (!keepLooping()) {
+                    // give up with no connection.
+                    LOG.debug("No master found and cluster is stopped; bailing out");
+                    return null;
+                }
+                if (EnvironmentEdgeManager.currentTime() > (previousLogTime + 1000)) {
+                    LOG.debug("No master found; retry");
+                    previousLogTime = EnvironmentEdgeManager.currentTime();
+                }
+                // let's try pull it from ZK directly
+                refresh = true;
+                if (sleepInterrupted(200)) {
+                    interrupted = true;
+                }
+                continue;
+            }
+            try {
+                BlockingRpcChannel channel = this.rpcClient.createBlockingRpcChannel(sn, userProvider.getCurrent(), shortOperationTimeout);
+                intRssStub = RegionServerStatusService.newBlockingStub(channel);
+                intLockStub = LockService.newBlockingStub(channel);
+                break;
+            } catch (IOException e) {
+                if (EnvironmentEdgeManager.currentTime() > (previousLogTime + 1000)) {
+                    e = e instanceof RemoteException ? ((RemoteException) e).unwrapRemoteException() : e;
+                    if (e instanceof ServerNotRunningYetException) {
+                        LOG.info("Master isn't available yet, retrying");
+                    } else {
+                        LOG.warn("Unable to connect to master. Retrying. Error was:", e);
+                    }
+                    previousLogTime = EnvironmentEdgeManager.currentTime();
+                }
+                if (sleepInterrupted(200)) {
+                    interrupted = true;
+                }
+            }
+        }
+    } finally {
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    this.rssStub = intRssStub;
+    this.lockStub = intLockStub;
+    return sn;
+}
+-----------------------
+/**
+ * Get the current master from ZooKeeper and open the RPC connection to it. To get a fresh
+ * connection, the current rssStub must be null. Method will block until a master is available.
+ * You can break from this block by requesting the server stop.
+ * @param refresh If true then master address will be read from ZK, otherwise use cached data
+ * @return master + port, or null if server has been stopped
+ */
+@InterfaceAudience.Private
+protected synchronized ServerName createRegionServerStatusStub(boolean refresh) {
+    if (rssStub != null) {
+        return masterAddressTracker.getMasterAddress();
+    }
+    ServerName sn = null;
+    long previousLogTime = 0;
+    RegionServerStatusService.BlockingInterface intRssStub = null;
+    LockService.BlockingInterface intLockStub = null;
+    boolean interrupted = false;
+    try {
+        while (keepLooping()) {
+            sn = this.masterAddressTracker.getMasterAddress(refresh);
+            if (sn == null) {
+                if (!keepLooping()) {
+                    // give up with no connection.
+                    LOG.debug("No master found and cluster is stopped; bailing out");
+                    return null;
+                }
+                if (EnvironmentEdgeManager.currentTime() > (previousLogTime + 1000)) {
+                    LOG.debug("No master found; retry");
+                    previousLogTime = EnvironmentEdgeManager.currentTime();
+                }
+                // let's try pull it from ZK directly
+                refresh = true;
+                if (sleepInterrupted(200)) {
+                    interrupted = true;
+                }
+                continue;
+                {
+                    boolean interrupted = false;
+                    try {
+                        Thread.sleep(millis);
+                    } catch (InterruptedException e) {
+                        LOG.warn("Interrupted while sleeping");
+                        interrupted = true;
+                    }
+                    return interrupted;
+                }
+                {
+                    boolean interrupted = false;
+                    try {
+                        Thread.sleep(millis);
+                    } catch (InterruptedException e) {
+                        LOG.warn("Interrupted while sleeping");
+                        interrupted = true;
+                    }
+                    return interrupted;
+                }
+            }
+            try {
+                BlockingRpcChannel channel = this.rpcClient.createBlockingRpcChannel(sn, userProvider.getCurrent(), shortOperationTimeout);
+                intRssStub = RegionServerStatusService.newBlockingStub(channel);
+                intLockStub = LockService.newBlockingStub(channel);
+                break;
+            } catch (IOException e) {
+                if (EnvironmentEdgeManager.currentTime() > (previousLogTime + 1000)) {
+                    e = e instanceof RemoteException ? ((RemoteException) e).unwrapRemoteException() : e;
+                    if (e instanceof ServerNotRunningYetException) {
+                        LOG.info("Master isn't available yet, retrying");
+                    } else {
+                        LOG.warn("Unable to connect to master. Retrying. Error was:", e);
+                    }
+                    previousLogTime = EnvironmentEdgeManager.currentTime();
+                }
+                if (sleepInterrupted(200)) {
+                    interrupted = true;
+                }
+            }
+        }
+        {
+            return !this.stopped && isClusterUp();
+        }
+    } finally {
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    this.rssStub = intRssStub;
+    this.lockStub = intLockStub;
+    return sn;
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

@@ -1,0 +1,48 @@
+looking:TaskMonitor.purgeExpiredTasks
+TaskMonitor	purgeExpiredTasks
+-----------------------
+private synchronized void purgeExpiredTasks() {
+    for (Iterator<TaskAndWeakRefPair> it = tasks.iterator(); it.hasNext(); ) {
+        TaskAndWeakRefPair pair = it.next();
+        MonitoredTask stat = pair.get();
+        if (pair.isDead()) {
+            // The class who constructed this leaked it. So we can
+            // assume it's done.
+            if (stat.getState() == MonitoredTaskImpl.State.RUNNING) {
+                LOG.warn("Status " + stat + " appears to have been leaked");
+                stat.cleanup();
+            }
+        }
+        if (canPurge(stat)) {
+            it.remove();
+        }
+    }
+}
+-----------------------
+private synchronized void purgeExpiredTasks() {
+    for (Iterator<TaskAndWeakRefPair> it = tasks.iterator(); it.hasNext(); ) {
+        TaskAndWeakRefPair pair = it.next();
+        MonitoredTask stat = pair.get();
+        if (pair.isDead()) {
+            // The class who constructed this leaked it. So we can
+            // assume it's done.
+            if (stat.getState() == MonitoredTaskImpl.State.RUNNING) {
+                LOG.warn("Status " + stat + " appears to have been leaked");
+                stat.cleanup();
+            }
+        }
+        if (canPurge(stat)) {
+            it.remove();
+        }
+        {
+            return weakProxy.get() == null;
+        }
+        {
+            long cts = stat.getCompletionTimestamp();
+            return (cts > 0 && EnvironmentEdgeManager.currentTime() - cts > expirationTime);
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

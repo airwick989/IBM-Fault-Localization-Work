@@ -1,0 +1,44 @@
+looking:this.oldsources
+ReplicationSourceManager	removePeer
+-----------------------
+// synchronized on oldsources to avoid adding recovered source for the to-be-removed peer
+// see NodeFailoverWorker.run
+synchronized (this.oldsources) {
+    // First close all the recovered sources for this peer
+    for (ReplicationSourceInterface src : oldsources) {
+        if (peerId.equals(src.getPeerId())) {
+            oldSourcesToDelete.add(src);
+        }
+    }
+    for (ReplicationSourceInterface src : oldSourcesToDelete) {
+        src.terminate(terminateMessage);
+        removeRecoveredSource(src);
+    }
+}
+-----------------------
+// see NodeFailoverWorker.run
+synchronized (this.oldsources) {
+    // First close all the recovered sources for this peer
+    for (ReplicationSourceInterface src : oldsources) {
+        if (peerId.equals(src.getPeerId())) {
+            oldSourcesToDelete.add(src);
+        }
+    }
+    for (ReplicationSourceInterface src : oldSourcesToDelete) {
+        src.terminate(terminateMessage);
+        removeRecoveredSource(src);
+        {
+            if (!this.oldsources.remove(src)) {
+                return false;
+            }
+            LOG.info("Done with the recovered queue {}", src.getQueueId());
+            // Delete queue from storage and memory
+            deleteQueue(src.getQueueId());
+            this.walsByIdRecoveredQueues.remove(src.getQueueId());
+            return true;
+        }
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

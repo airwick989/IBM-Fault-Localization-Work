@@ -1,0 +1,11 @@
+looking:failures
+TestMasterProcedureSchedulerConcurrency	run
+-----------------------
+synchronized (failures) {
+    failures.add(e.getMessage());
+}
+-----------------------
+synchronized (failures) {
+    failures.add(e.getMessage());
+}-----------------------
+possible Hot2

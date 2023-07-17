@@ -1,0 +1,15 @@
+looking:controller.dataAvailable
+EntryBuffers	doneWriting
+-----------------------
+synchronized (controller.dataAvailable) {
+    totalBuffered -= size;
+    // We may unblock writers
+    controller.dataAvailable.notifyAll();
+}
+-----------------------
+synchronized (controller.dataAvailable) {
+    totalBuffered -= size;
+    // We may unblock writers
+    controller.dataAvailable.notifyAll();
+}-----------------------
+possible Hot2

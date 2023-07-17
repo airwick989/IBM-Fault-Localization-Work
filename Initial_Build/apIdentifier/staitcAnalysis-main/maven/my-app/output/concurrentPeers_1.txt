@@ -1,9 +1,0 @@
-looking:concurrentPeers
-synchronized (concurrentPeers) {
-    assertTrue(concurrentPeers.remove(peerId));
-}
-
-synchronized (concurrentPeers) {
-    assertTrue(concurrentPeers.remove(peerId));
-}
-possible Hot2

@@ -1,0 +1,11 @@
+looking:holder
+SaslServerAuthenticationProviders	reset
+-----------------------
+synchronized (holder) {
+    holder.set(null);
+}
+-----------------------
+synchronized (holder) {
+    holder.set(null);
+}-----------------------
+possible Hot2

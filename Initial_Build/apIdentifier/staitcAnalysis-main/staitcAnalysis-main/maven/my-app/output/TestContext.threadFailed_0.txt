@@ -1,0 +1,17 @@
+looking:TestContext.threadFailed
+TestContext	threadFailed
+-----------------------
+public synchronized void threadFailed(Throwable t) {
+    if (err == null)
+        err = t;
+    LOG.error("Failed!", err);
+    notify();
+}
+-----------------------
+public synchronized void threadFailed(Throwable t) {
+    if (err == null)
+        err = t;
+    LOG.error("Failed!", err);
+    notify();
+}-----------------------
+possible Hot1

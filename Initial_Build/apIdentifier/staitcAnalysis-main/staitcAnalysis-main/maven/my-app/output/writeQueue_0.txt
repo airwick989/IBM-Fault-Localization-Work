@@ -1,0 +1,35 @@
+looking:writeQueue
+MultiVersionConcurrencyControl	tryAdvanceTo
+-----------------------
+synchronized (writeQueue) {
+    long currentRead = this.readPoint.get();
+    long currentWrite = this.writePoint.get();
+    if (currentRead != currentWrite) {
+        throw new RuntimeException("Already used this mvcc; currentRead=" + currentRead + ", currentWrite=" + currentWrite + "; too late to tryAdvanceTo");
+    }
+    if (expected != NONE && expected != currentRead) {
+        return false;
+    }
+    if (newStartPoint < currentRead) {
+        return false;
+    }
+    readPoint.set(newStartPoint);
+    writePoint.set(newStartPoint);
+}
+-----------------------
+synchronized (writeQueue) {
+    long currentRead = this.readPoint.get();
+    long currentWrite = this.writePoint.get();
+    if (currentRead != currentWrite) {
+        throw new RuntimeException("Already used this mvcc; currentRead=" + currentRead + ", currentWrite=" + currentWrite + "; too late to tryAdvanceTo");
+    }
+    if (expected != NONE && expected != currentRead) {
+        return false;
+    }
+    if (newStartPoint < currentRead) {
+        return false;
+    }
+    readPoint.set(newStartPoint);
+    writePoint.set(newStartPoint);
+}-----------------------
+possible Hot2

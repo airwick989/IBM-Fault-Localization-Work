@@ -1,0 +1,23 @@
+looking:ConnectionInfo.timedOut
+ConnectionInfo	timedOut
+-----------------------
+synchronized boolean timedOut(int maxIdleTime) {
+    long timeoutTime = lastAccessTime + maxIdleTime;
+    if (EnvironmentEdgeManager.currentTime() > timeoutTime) {
+        connections.remove(userName);
+        closed = true;
+        return true;
+    }
+    return false;
+}
+-----------------------
+synchronized boolean timedOut(int maxIdleTime) {
+    long timeoutTime = lastAccessTime + maxIdleTime;
+    if (EnvironmentEdgeManager.currentTime() > timeoutTime) {
+        connections.remove(userName);
+        closed = true;
+        return true;
+    }
+    return false;
+}-----------------------
+possible Hot1

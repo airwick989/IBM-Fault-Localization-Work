@@ -1,0 +1,13 @@
+looking:FileLinkInputStream.reset
+FileLinkInputStream	reset
+-----------------------
+@Override
+public synchronized void reset() throws IOException {
+    throw new IOException("mark/reset not supported");
+}
+-----------------------
+@Override
+public synchronized void reset() throws IOException {
+    throw new IOException("mark/reset not supported");
+}-----------------------
+possible Hot1

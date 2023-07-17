@@ -1,0 +1,31 @@
+looking:writeSelector.keys()
+SimpleRpcServerResponder	purge
+-----------------------
+// get the list of channels from list of keys.
+synchronized (writeSelector.keys()) {
+    for (SelectionKey key : writeSelector.keys()) {
+        SimpleServerRpcConnection connection = (SimpleServerRpcConnection) key.attachment();
+        if (connection == null) {
+            throw new IllegalStateException("Coding error: SelectionKey key without attachment.");
+        }
+        if (connection.lastSentTime > 0 && now > connection.lastSentTime + this.simpleRpcServer.purgeTimeout) {
+            conWithOldCalls.add(connection);
+        }
+    }
+}
+-----------------------
+// get the list of channels from list of keys.
+synchronized (writeSelector.keys()) {
+    for (SelectionKey key : writeSelector.keys()) {
+        SimpleServerRpcConnection connection = (SimpleServerRpcConnection) key.attachment();
+        if (connection == null) {
+            throw new IllegalStateException("Coding error: SelectionKey key without attachment.");
+        }
+        if (connection.lastSentTime > 0 && now > connection.lastSentTime + this.simpleRpcServer.purgeTimeout) {
+            conWithOldCalls.add(connection);
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

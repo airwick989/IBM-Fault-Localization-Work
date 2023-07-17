@@ -1,0 +1,20 @@
+looking:this.snapshotCleanerChore
+HMaster	switchSnapshotCleanup
+-----------------------
+synchronized (this.snapshotCleanerChore) {
+    switchSnapshotCleanup(on);
+}
+-----------------------
+synchronized (this.snapshotCleanerChore) {
+    switchSnapshotCleanup(on);
+    {
+        if (synchronous) {
+            synchronized (this.snapshotCleanerChore) {
+                switchSnapshotCleanup(on);
+            }
+        } else {
+            switchSnapshotCleanup(on);
+        }
+    }
+}-----------------------
+possible Hot1

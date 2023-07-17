@@ -1,9 +1,0 @@
-looking:this.signaller
-synchronized (this.signaller) {
-    this.signaller.notify();
-}
-
-synchronized (this.signaller) {
-    this.signaller.notify();
-}
-possible Hot1

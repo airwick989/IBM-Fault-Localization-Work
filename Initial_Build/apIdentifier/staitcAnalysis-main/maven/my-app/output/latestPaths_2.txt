@@ -1,9 +1,0 @@
-looking:latestPaths
-synchronized (latestPaths) {
-    return Sets.newHashSet(latestPaths.values());
-}
-
-synchronized (latestPaths) {
-    return Sets.newHashSet(latestPaths.values());
-}
-possible Hot2

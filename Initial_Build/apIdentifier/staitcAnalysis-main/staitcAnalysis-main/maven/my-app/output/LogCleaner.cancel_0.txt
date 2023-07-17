@@ -1,0 +1,31 @@
+looking:LogCleaner.cancel
+LogCleaner	cancel
+-----------------------
+@Override
+public synchronized void cancel(boolean mayInterruptIfRunning) {
+    LOG.debug("Cancelling LogCleaner");
+    super.cancel(mayInterruptIfRunning);
+    interruptOldWALsCleaner();
+}
+-----------------------
+@Override
+public synchronized void cancel(boolean mayInterruptIfRunning) {
+    LOG.debug("Cancelling LogCleaner");
+    super.cancel(mayInterruptIfRunning);
+    interruptOldWALsCleaner();
+    {
+        LOG.debug("Cancelling LogCleaner");
+        super.cancel(mayInterruptIfRunning);
+        interruptOldWALsCleaner();
+    }
+    {
+        for (Thread cleaner : oldWALsCleaner) {
+            LOG.trace("Interrupting thread: {}", cleaner);
+            cleaner.interrupt();
+        }
+        oldWALsCleaner.clear();
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

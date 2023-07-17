@@ -1,0 +1,43 @@
+looking:locallyCachedPolicies
+ActivePolicyEnforcement	getPolicyEnforcement
+-----------------------
+synchronized (locallyCachedPolicies) {
+    // When we don't have an policy enforcement for the table, there could be one of two cases:
+    // 1) The table has no quota defined
+    // 2) The table is not in violation of its quota
+    // In both of these cases, we want to make sure that access remains fast and we minimize
+    // object creation. We can accomplish this by locally caching policies instead of creating
+    // a new instance of the policy each time.
+    policy = locallyCachedPolicies.get(tableName);
+    // We have already created/cached the enforcement, use it again. `activePolicies` and
+    // `snapshots` are immutable, thus this policy is valid for the lifetime of `this`.
+    if (policy != null) {
+        return policy;
+    }
+    // Create a PolicyEnforcement for this table and snapshot. The snapshot may be null
+    // which is OK.
+    policy = factory.createWithoutViolation(rss, tableName, snapshots.get(tableName));
+    // Cache the policy we created
+    locallyCachedPolicies.put(tableName, policy);
+}
+-----------------------
+synchronized (locallyCachedPolicies) {
+    // When we don't have an policy enforcement for the table, there could be one of two cases:
+    // 1) The table has no quota defined
+    // 2) The table is not in violation of its quota
+    // In both of these cases, we want to make sure that access remains fast and we minimize
+    // object creation. We can accomplish this by locally caching policies instead of creating
+    // a new instance of the policy each time.
+    policy = locallyCachedPolicies.get(tableName);
+    // We have already created/cached the enforcement, use it again. `activePolicies` and
+    // `snapshots` are immutable, thus this policy is valid for the lifetime of `this`.
+    if (policy != null) {
+        return policy;
+    }
+    // Create a PolicyEnforcement for this table and snapshot. The snapshot may be null
+    // which is OK.
+    policy = factory.createWithoutViolation(rss, tableName, snapshots.get(tableName));
+    // Cache the policy we created
+    locallyCachedPolicies.put(tableName, policy);
+}-----------------------
+possible Hot1

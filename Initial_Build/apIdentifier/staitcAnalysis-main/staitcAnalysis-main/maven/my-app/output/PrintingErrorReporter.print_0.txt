@@ -1,0 +1,17 @@
+looking:PrintingErrorReporter.print
+PrintingErrorReporter	print
+-----------------------
+@Override
+public synchronized void print(String message) {
+    if (!summary) {
+        System.out.println(message);
+    }
+}
+-----------------------
+@Override
+public synchronized void print(String message) {
+    if (!summary) {
+        System.out.println(message);
+    }
+}-----------------------
+possible Hot1

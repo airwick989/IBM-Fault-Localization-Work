@@ -1,0 +1,11 @@
+looking:splitProc
+TestDirectStoreSplitsMerges	waitForSplitProcComplete
+-----------------------
+synchronized (splitProc) {
+    splitProc.wait(waitTime);
+}
+-----------------------
+synchronized (splitProc) {
+    splitProc.wait(waitTime);
+}-----------------------
+possible Hot1

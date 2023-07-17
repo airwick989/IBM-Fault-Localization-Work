@@ -1,0 +1,19 @@
+looking:NoWritesCompactionsViolationPolicyEnforcement.disable
+NoWritesCompactionsViolationPolicyEnforcement	disable
+-----------------------
+@Override
+public synchronized void disable() {
+    boolean ret = disableCompactions.compareAndSet(true, false);
+    if (!ret && LOG.isTraceEnabled()) {
+        LOG.trace("Compactions were already enabled upon disabling the policy");
+    }
+}
+-----------------------
+@Override
+public synchronized void disable() {
+    boolean ret = disableCompactions.compareAndSet(true, false);
+    if (!ret && LOG.isTraceEnabled()) {
+        LOG.trace("Compactions were already enabled upon disabling the policy");
+    }
+}-----------------------
+possible Hot1

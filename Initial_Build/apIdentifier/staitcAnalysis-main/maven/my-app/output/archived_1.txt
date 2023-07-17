@@ -1,9 +1,0 @@
-looking:archived
-synchronized (archived) {
-    archived.notifyAll();
-}
-
-synchronized (archived) {
-    archived.notifyAll();
-}
-possible Hot2

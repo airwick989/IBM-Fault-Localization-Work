@@ -1,9 +1,0 @@
-looking:serverNode
-synchronized (serverNode) {
-    serverNode.setState(state);
-}
-
-synchronized (serverNode) {
-    serverNode.setState(state);
-}
-possible Hot2

@@ -1,0 +1,15 @@
+looking:filesCompacting
+HStore	compact
+-----------------------
+synchronized (filesCompacting) {
+    // sanity check: we're compacting files that this store knows about
+    // TODO: change this to LOG.error() after more debugging
+    Preconditions.checkArgument(filesCompacting.containsAll(filesToCompact));
+}
+-----------------------
+synchronized (filesCompacting) {
+    // sanity check: we're compacting files that this store knows about
+    // TODO: change this to LOG.error() after more debugging
+    Preconditions.checkArgument(filesCompacting.containsAll(filesToCompact));
+}-----------------------
+possible Hot2

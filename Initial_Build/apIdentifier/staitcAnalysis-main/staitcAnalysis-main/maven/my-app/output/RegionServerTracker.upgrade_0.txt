@@ -1,0 +1,27 @@
+looking:RegionServerTracker.upgrade
+RegionServerTracker	upgrade
+-----------------------
+synchronized (this) {
+    Set<ServerName> liveServers = regionServers;
+    for (ServerName serverName : liveServers) {
+        RegionServerInfo info = getServerInfo(serverName);
+        ServerMetrics serverMetrics = info != null ? ServerMetricsBuilder.of(serverName, VersionInfoUtil.getVersionNumber(info.getVersionInfo()), info.getVersionInfo().getVersion()) : ServerMetricsBuilder.of(serverName);
+        serverManager.checkAndRecordNewServer(serverName, serverMetrics);
+    }
+    serverManager.findDeadServersAndProcess(deadServersFromPE, liveServersBeforeRestart);
+    active = true;
+}
+-----------------------
+synchronized (this) {
+    Set<ServerName> liveServers = regionServers;
+    for (ServerName serverName : liveServers) {
+        RegionServerInfo info = getServerInfo(serverName);
+        ServerMetrics serverMetrics = info != null ? ServerMetricsBuilder.of(serverName, VersionInfoUtil.getVersionNumber(info.getVersionInfo()), info.getVersionInfo().getVersion()) : ServerMetricsBuilder.of(serverName);
+        serverManager.checkAndRecordNewServer(serverName, serverMetrics);
+    }
+    serverManager.findDeadServersAndProcess(deadServersFromPE, liveServersBeforeRestart);
+    active = true;
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

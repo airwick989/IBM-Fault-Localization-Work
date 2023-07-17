@@ -1,0 +1,11 @@
+looking:TestTransitPeerSyncReplicationStateProcedure.class
+TestTransitPeerSyncReplicationStateProcedureBackoff	assertBackoffIncrease
+-----------------------
+synchronized (TestTransitPeerSyncReplicationStateProcedure.class) {
+    FAIL = false;
+}
+-----------------------
+synchronized (TestTransitPeerSyncReplicationStateProcedure.class) {
+    FAIL = false;
+}-----------------------
+possible Hot1

@@ -1,0 +1,17 @@
+looking:writestate
+HRegion	requestFlush0
+-----------------------
+synchronized (writestate) {
+    if (!this.writestate.isFlushRequested()) {
+        shouldFlush = true;
+        writestate.flushRequested = true;
+    }
+}
+-----------------------
+synchronized (writestate) {
+    if (!this.writestate.isFlushRequested()) {
+        shouldFlush = true;
+        writestate.flushRequested = true;
+    }
+}-----------------------
+possible Hot2

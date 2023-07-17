@@ -1,0 +1,11 @@
+looking:writestate
+HRegion	replayWALMetaEdit
+-----------------------
+synchronized (writestate) {
+    writestate.flushing = false;
+}
+-----------------------
+synchronized (writestate) {
+    writestate.flushing = false;
+}-----------------------
+possible Hot2

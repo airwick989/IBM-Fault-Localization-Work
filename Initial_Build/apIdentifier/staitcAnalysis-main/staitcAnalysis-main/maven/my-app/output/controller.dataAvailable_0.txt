@@ -1,0 +1,13 @@
+looking:controller.dataAvailable
+WriterThread	finish
+-----------------------
+synchronized (controller.dataAvailable) {
+    shouldStop = true;
+    controller.dataAvailable.notifyAll();
+}
+-----------------------
+synchronized (controller.dataAvailable) {
+    shouldStop = true;
+    controller.dataAvailable.notifyAll();
+}-----------------------
+possible Hot2

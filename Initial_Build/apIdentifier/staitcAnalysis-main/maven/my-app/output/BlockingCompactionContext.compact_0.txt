@@ -1,9 +1,0 @@
-looking:BlockingCompactionContext.compact
-synchronized (this) {
-    this.wait();
-}
-
-synchronized (this) {
-    this.wait();
-}
-possible Hot1

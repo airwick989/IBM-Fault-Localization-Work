@@ -1,0 +1,45 @@
+looking:MemoryBoundedLogMessageBuffer.add
+MemoryBoundedLogMessageBuffer	add
+-----------------------
+/**
+ * Append the given message to this buffer, automatically evicting older messages until the
+ * desired memory limit is achieved.
+ */
+public synchronized void add(String messageText) {
+    LogMessage message = new LogMessage(messageText, EnvironmentEdgeManager.currentTime());
+    usage += message.estimateHeapUsage();
+    messages.add(message);
+    while (usage > maxSizeBytes) {
+        LogMessage removed = messages.remove();
+        usage -= removed.estimateHeapUsage();
+        assert usage >= 0;
+    }
+}
+-----------------------
+/**
+ * Append the given message to this buffer, automatically evicting older messages until the
+ * desired memory limit is achieved.
+ */
+public synchronized void add(String messageText) {
+    LogMessage message = new LogMessage(messageText, EnvironmentEdgeManager.currentTime());
+    usage += message.estimateHeapUsage();
+    messages.add(message);
+    while (usage > maxSizeBytes) {
+        LogMessage removed = messages.remove();
+        usage -= removed.estimateHeapUsage();
+        assert usage >= 0;
+    }
+    {
+        LogMessage message = new LogMessage(messageText, EnvironmentEdgeManager.currentTime());
+        usage += message.estimateHeapUsage();
+        messages.add(message);
+        while (usage > maxSizeBytes) {
+            LogMessage removed = messages.remove();
+            usage -= removed.estimateHeapUsage();
+            assert usage >= 0;
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

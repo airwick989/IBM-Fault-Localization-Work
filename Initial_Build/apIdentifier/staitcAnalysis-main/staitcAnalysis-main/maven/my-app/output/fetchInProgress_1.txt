@@ -1,0 +1,11 @@
+looking:fetchInProgress
+CachedClusterId	attemptFetch
+-----------------------
+synchronized (fetchInProgress) {
+    fetchInProgress.notifyAll();
+}
+-----------------------
+synchronized (fetchInProgress) {
+    fetchInProgress.notifyAll();
+}-----------------------
+possible Hot2

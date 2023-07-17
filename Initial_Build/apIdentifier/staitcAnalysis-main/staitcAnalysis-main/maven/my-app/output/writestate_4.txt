@@ -1,0 +1,146 @@
+looking:writestate
+HRegion	replayWALFlushStartMarker
+-----------------------
+// we will use writestate as a coarse-grain lock for all the replay events
+// (flush, compaction, region open etc)
+synchronized (writestate) {
+    try {
+        if (flush.getFlushSequenceNumber() < lastReplayedOpenRegionSeqId) {
+            LOG.warn(getRegionInfo().getEncodedName() + " : " + "Skipping replaying flush event :" + TextFormat.shortDebugString(flush) + " because its sequence id is smaller than this regions lastReplayedOpenRegionSeqId " + " of " + lastReplayedOpenRegionSeqId);
+            return null;
+        }
+        if (numMutationsWithoutWAL.sum() > 0) {
+            numMutationsWithoutWAL.reset();
+            dataInMemoryWithoutWAL.reset();
+        }
+        if (!writestate.flushing) {
+            // we do not have an active snapshot and corresponding this.prepareResult. This means
+            // we can just snapshot our memstores and continue as normal.
+            // invoke prepareFlushCache. Send null as wal since we do not want the flush events in wal
+            PrepareFlushResult prepareResult = internalPrepareFlushCache(null, flushSeqId, storesToFlush, status, false, FlushLifeCycleTracker.DUMMY);
+            if (prepareResult.result == null) {
+                // save the PrepareFlushResult so that we can use it later from commit flush
+                this.writestate.flushing = true;
+                this.prepareFlushResult = prepareResult;
+                status.markComplete("Flush prepare successful");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(getRegionInfo().getEncodedName() + " : " + " Prepared flush with seqId:" + flush.getFlushSequenceNumber());
+                }
+            } else {
+                // special case empty memstore. We will still save the flush result in this case, since
+                // our memstore ie empty, but the primary is still flushing
+                if (prepareResult.getResult().getResult() == FlushResult.Result.CANNOT_FLUSH_MEMSTORE_EMPTY) {
+                    this.writestate.flushing = true;
+                    this.prepareFlushResult = prepareResult;
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(getRegionInfo().getEncodedName() + " : " + " Prepared empty flush with seqId:" + flush.getFlushSequenceNumber());
+                    }
+                }
+                status.abort("Flush prepare failed with " + prepareResult.result);
+                // nothing much to do. prepare flush failed because of some reason.
+            }
+            return prepareResult;
+        } else {
+            // we already have an active snapshot.
+            if (flush.getFlushSequenceNumber() == this.prepareFlushResult.flushOpSeqId) {
+                // They define the same flush. Log and continue.
+                LOG.warn(getRegionInfo().getEncodedName() + " : " + "Received a flush prepare marker with the same seqId: " + +flush.getFlushSequenceNumber() + " before clearing the previous one with seqId: " + prepareFlushResult.flushOpSeqId + ". Ignoring");
+                // ignore
+            } else if (flush.getFlushSequenceNumber() < this.prepareFlushResult.flushOpSeqId) {
+                // We received a flush with a smaller seqNum than what we have prepared. We can only
+                // ignore this prepare flush request.
+                LOG.warn(getRegionInfo().getEncodedName() + " : " + "Received a flush prepare marker with a smaller seqId: " + +flush.getFlushSequenceNumber() + " before clearing the previous one with seqId: " + prepareFlushResult.flushOpSeqId + ". Ignoring");
+                // ignore
+            } else {
+                // We received a flush with a larger seqNum than what we have prepared
+                LOG.warn(getRegionInfo().getEncodedName() + " : " + "Received a flush prepare marker with a larger seqId: " + +flush.getFlushSequenceNumber() + " before clearing the previous one with seqId: " + prepareFlushResult.flushOpSeqId + ". Ignoring");
+                // We do not have multiple active snapshots in the memstore or a way to merge current
+                // memstore snapshot with the contents and resnapshot for now. We cannot take
+                // another snapshot and drop the previous one because that will cause temporary
+                // data loss in the secondary. So we ignore this for now, deferring the resolution
+                // to happen when we see the corresponding flush commit marker. If we have a memstore
+                // snapshot with x, and later received another prepare snapshot with y (where x < y),
+                // when we see flush commit for y, we will drop snapshot for x, and can also drop all
+                // the memstore edits if everything in memstore is < y. This is the usual case for
+                // RS crash + recovery where we might see consequtive prepare flush wal markers.
+                // Otherwise, this will cause more memory to be used in secondary replica until a
+                // further prapare + commit flush is seen and replayed.
+            }
+        }
+    } finally {
+        status.cleanup();
+        writestate.notifyAll();
+    }
+}
+-----------------------
+// (flush, compaction, region open etc)
+synchronized (writestate) {
+    try {
+        if (flush.getFlushSequenceNumber() < lastReplayedOpenRegionSeqId) {
+            LOG.warn(getRegionInfo().getEncodedName() + " : " + "Skipping replaying flush event :" + TextFormat.shortDebugString(flush) + " because its sequence id is smaller than this regions lastReplayedOpenRegionSeqId " + " of " + lastReplayedOpenRegionSeqId);
+            return null;
+        }
+        if (numMutationsWithoutWAL.sum() > 0) {
+            numMutationsWithoutWAL.reset();
+            dataInMemoryWithoutWAL.reset();
+        }
+        if (!writestate.flushing) {
+            // we do not have an active snapshot and corresponding this.prepareResult. This means
+            // we can just snapshot our memstores and continue as normal.
+            // invoke prepareFlushCache. Send null as wal since we do not want the flush events in wal
+            PrepareFlushResult prepareResult = internalPrepareFlushCache(null, flushSeqId, storesToFlush, status, false, FlushLifeCycleTracker.DUMMY);
+            if (prepareResult.result == null) {
+                // save the PrepareFlushResult so that we can use it later from commit flush
+                this.writestate.flushing = true;
+                this.prepareFlushResult = prepareResult;
+                status.markComplete("Flush prepare successful");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(getRegionInfo().getEncodedName() + " : " + " Prepared flush with seqId:" + flush.getFlushSequenceNumber());
+                }
+            } else {
+                // special case empty memstore. We will still save the flush result in this case, since
+                // our memstore ie empty, but the primary is still flushing
+                if (prepareResult.getResult().getResult() == FlushResult.Result.CANNOT_FLUSH_MEMSTORE_EMPTY) {
+                    this.writestate.flushing = true;
+                    this.prepareFlushResult = prepareResult;
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(getRegionInfo().getEncodedName() + " : " + " Prepared empty flush with seqId:" + flush.getFlushSequenceNumber());
+                    }
+                }
+                status.abort("Flush prepare failed with " + prepareResult.result);
+                // nothing much to do. prepare flush failed because of some reason.
+            }
+            return prepareResult;
+        } else {
+            // we already have an active snapshot.
+            if (flush.getFlushSequenceNumber() == this.prepareFlushResult.flushOpSeqId) {
+                // They define the same flush. Log and continue.
+                LOG.warn(getRegionInfo().getEncodedName() + " : " + "Received a flush prepare marker with the same seqId: " + +flush.getFlushSequenceNumber() + " before clearing the previous one with seqId: " + prepareFlushResult.flushOpSeqId + ". Ignoring");
+                // ignore
+            } else if (flush.getFlushSequenceNumber() < this.prepareFlushResult.flushOpSeqId) {
+                // We received a flush with a smaller seqNum than what we have prepared. We can only
+                // ignore this prepare flush request.
+                LOG.warn(getRegionInfo().getEncodedName() + " : " + "Received a flush prepare marker with a smaller seqId: " + +flush.getFlushSequenceNumber() + " before clearing the previous one with seqId: " + prepareFlushResult.flushOpSeqId + ". Ignoring");
+                // ignore
+            } else {
+                // We received a flush with a larger seqNum than what we have prepared
+                LOG.warn(getRegionInfo().getEncodedName() + " : " + "Received a flush prepare marker with a larger seqId: " + +flush.getFlushSequenceNumber() + " before clearing the previous one with seqId: " + prepareFlushResult.flushOpSeqId + ". Ignoring");
+                // We do not have multiple active snapshots in the memstore or a way to merge current
+                // memstore snapshot with the contents and resnapshot for now. We cannot take
+                // another snapshot and drop the previous one because that will cause temporary
+                // data loss in the secondary. So we ignore this for now, deferring the resolution
+                // to happen when we see the corresponding flush commit marker. If we have a memstore
+                // snapshot with x, and later received another prepare snapshot with y (where x < y),
+                // when we see flush commit for y, we will drop snapshot for x, and can also drop all
+                // the memstore edits if everything in memstore is < y. This is the usual case for
+                // RS crash + recovery where we might see consequtive prepare flush wal markers.
+                // Otherwise, this will cause more memory to be used in secondary replica until a
+                // further prapare + commit flush is seen and replayed.
+            }
+        }
+    } finally {
+        status.cleanup();
+        writestate.notifyAll();
+    }
+}-----------------------
+possible Hot2

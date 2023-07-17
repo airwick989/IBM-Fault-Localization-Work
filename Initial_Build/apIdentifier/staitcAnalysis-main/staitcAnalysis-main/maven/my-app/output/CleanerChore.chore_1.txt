@@ -1,0 +1,13 @@
+looking:CleanerChore.chore
+CleanerChore	chore
+-----------------------
+synchronized (this) {
+    future = null;
+    forceRun = false;
+}
+-----------------------
+synchronized (this) {
+    future = null;
+    forceRun = false;
+}-----------------------
+possible Hot2

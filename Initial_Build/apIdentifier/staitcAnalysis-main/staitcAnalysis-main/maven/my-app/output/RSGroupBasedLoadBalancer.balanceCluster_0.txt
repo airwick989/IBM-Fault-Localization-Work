@@ -1,0 +1,95 @@
+looking:RSGroupBasedLoadBalancer.balanceCluster
+RSGroupBasedLoadBalancer	balanceCluster
+-----------------------
+/**
+ * Balance by RSGroup.
+ */
+@Override
+public synchronized List<RegionPlan> balanceCluster(Map<TableName, Map<ServerName, List<RegionInfo>>> loadOfAllTable) throws IOException {
+    if (!isOnline()) {
+        throw new ConstraintException(RSGroupInfoManager.class.getSimpleName() + " is not online, unable to perform balance");
+    }
+    // Calculate correct assignments and a list of RegionPlan for mis-placed regions
+    Pair<Map<TableName, Map<ServerName, List<RegionInfo>>>, List<RegionPlan>> correctedStateAndRegionPlans = correctAssignments(loadOfAllTable);
+    Map<TableName, Map<ServerName, List<RegionInfo>>> correctedLoadOfAllTable = correctedStateAndRegionPlans.getFirst();
+    List<RegionPlan> regionPlans = correctedStateAndRegionPlans.getSecond();
+    RSGroupInfo defaultInfo = rsGroupInfoManager.getRSGroup(RSGroupInfo.DEFAULT_GROUP);
+    // Add RegionPlan
+    // for the regions which have been placed according to the region server group assignment
+    // into the movement list
+    try {
+        // For each rsgroup
+        for (RSGroupInfo rsgroup : rsGroupInfoManager.listRSGroups()) {
+            LOG.debug("Balancing RSGroup={}", rsgroup.getName());
+            Map<TableName, Map<ServerName, List<RegionInfo>>> loadOfTablesInGroup = new HashMap<>();
+            for (Map.Entry<TableName, Map<ServerName, List<RegionInfo>>> entry : correctedLoadOfAllTable.entrySet()) {
+                TableName tableName = entry.getKey();
+                RSGroupInfo targetRSGInfo = RSGroupUtil.getRSGroupInfo(masterServices, rsGroupInfoManager, tableName).orElse(defaultInfo);
+                if (targetRSGInfo.getName().equals(rsgroup.getName())) {
+                    loadOfTablesInGroup.put(tableName, entry.getValue());
+                }
+            }
+            List<RegionPlan> groupPlans = null;
+            if (!loadOfTablesInGroup.isEmpty()) {
+                LOG.info("Start Generate Balance plan for group: " + rsgroup.getName());
+                groupPlans = this.internalBalancer.balanceCluster(loadOfTablesInGroup);
+            }
+            if (groupPlans != null) {
+                regionPlans.addAll(groupPlans);
+            }
+        }
+    } catch (IOException exp) {
+        LOG.warn("Exception while balancing cluster.", exp);
+        regionPlans.clear();
+    }
+    // Return the whole movement list
+    return regionPlans;
+}
+-----------------------
+/**
+ * Balance by RSGroup.
+ */
+@Override
+public synchronized List<RegionPlan> balanceCluster(Map<TableName, Map<ServerName, List<RegionInfo>>> loadOfAllTable) throws IOException {
+    if (!isOnline()) {
+        throw new ConstraintException(RSGroupInfoManager.class.getSimpleName() + " is not online, unable to perform balance");
+    }
+    // Calculate correct assignments and a list of RegionPlan for mis-placed regions
+    Pair<Map<TableName, Map<ServerName, List<RegionInfo>>>, List<RegionPlan>> correctedStateAndRegionPlans = correctAssignments(loadOfAllTable);
+    Map<TableName, Map<ServerName, List<RegionInfo>>> correctedLoadOfAllTable = correctedStateAndRegionPlans.getFirst();
+    List<RegionPlan> regionPlans = correctedStateAndRegionPlans.getSecond();
+    RSGroupInfo defaultInfo = rsGroupInfoManager.getRSGroup(RSGroupInfo.DEFAULT_GROUP);
+    // Add RegionPlan
+    // for the regions which have been placed according to the region server group assignment
+    // into the movement list
+    try {
+        // For each rsgroup
+        for (RSGroupInfo rsgroup : rsGroupInfoManager.listRSGroups()) {
+            LOG.debug("Balancing RSGroup={}", rsgroup.getName());
+            Map<TableName, Map<ServerName, List<RegionInfo>>> loadOfTablesInGroup = new HashMap<>();
+            for (Map.Entry<TableName, Map<ServerName, List<RegionInfo>>> entry : correctedLoadOfAllTable.entrySet()) {
+                TableName tableName = entry.getKey();
+                RSGroupInfo targetRSGInfo = RSGroupUtil.getRSGroupInfo(masterServices, rsGroupInfoManager, tableName).orElse(defaultInfo);
+                if (targetRSGInfo.getName().equals(rsgroup.getName())) {
+                    loadOfTablesInGroup.put(tableName, entry.getValue());
+                }
+            }
+            List<RegionPlan> groupPlans = null;
+            if (!loadOfTablesInGroup.isEmpty()) {
+                LOG.info("Start Generate Balance plan for group: " + rsgroup.getName());
+                groupPlans = this.internalBalancer.balanceCluster(loadOfTablesInGroup);
+            }
+            if (groupPlans != null) {
+                regionPlans.addAll(groupPlans);
+            }
+        }
+    } catch (IOException exp) {
+        LOG.warn("Exception while balancing cluster.", exp);
+        regionPlans.clear();
+    }
+    // Return the whole movement list
+    return regionPlans;
+}-----------------------
+possible Hot1
+possible type Hot3_2
+2

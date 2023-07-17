@@ -1,0 +1,17 @@
+looking:SplitWALProcedure.setTimeoutFailure
+SplitWALProcedure	setTimeoutFailure
+-----------------------
+@Override
+protected synchronized boolean setTimeoutFailure(MasterProcedureEnv env) {
+    setState(ProcedureProtos.ProcedureState.RUNNABLE);
+    env.getProcedureScheduler().addFront(this);
+    return false;
+}
+-----------------------
+@Override
+protected synchronized boolean setTimeoutFailure(MasterProcedureEnv env) {
+    setState(ProcedureProtos.ProcedureState.RUNNABLE);
+    env.getProcedureScheduler().addFront(this);
+    return false;
+}-----------------------
+possible Hot1

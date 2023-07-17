@@ -1,0 +1,11 @@
+looking:rsReports
+AssignmentManager	getRSReports
+-----------------------
+synchronized (rsReports) {
+    rsReports.entrySet().forEach(e -> rsReportsSnapshot.put(e.getKey(), e.getValue()));
+}
+-----------------------
+synchronized (rsReports) {
+    rsReports.entrySet().forEach(e -> rsReportsSnapshot.put(e.getKey(), e.getValue()));
+}-----------------------
+possible Hot2

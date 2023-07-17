@@ -1,0 +1,24 @@
+looking:MonitoredRPCHandlerImpl.getRPC
+MonitoredRPCHandlerImpl	getRPC
+-----------------------
+/**
+ * Produces a string representation of the method currently being serviced by this Handler.
+ * @return a string representing the method call without parameters
+ */
+@Override
+public synchronized String getRPC() {
+    return getRPC(false);
+}
+-----------------------
+/**
+ * Produces a string representation of the method currently being serviced by this Handler.
+ * @return a string representing the method call without parameters
+ */
+@Override
+public synchronized String getRPC() {
+    return getRPC(false);
+    {
+        return getRPC(false);
+    }
+}-----------------------
+possible Hot2

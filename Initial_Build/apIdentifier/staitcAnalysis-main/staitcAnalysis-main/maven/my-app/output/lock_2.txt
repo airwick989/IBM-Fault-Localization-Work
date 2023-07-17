@@ -1,0 +1,25 @@
+looking:lock
+TestEventHandler	process
+-----------------------
+synchronized (lock) {
+    while (lock.get()) {
+        try {
+            lock.wait();
+        } catch (InterruptedException e) {
+            // do nothing
+        }
+    }
+}
+-----------------------
+synchronized (lock) {
+    while (lock.get()) {
+        try {
+            lock.wait();
+        } catch (InterruptedException e) {
+            // do nothing
+        }
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

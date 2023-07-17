@@ -1,0 +1,15 @@
+looking:TestContext.checkException
+TestContext	checkException
+-----------------------
+private synchronized void checkException() throws Exception {
+    if (err != null) {
+        throw new RuntimeException("Deferred", err);
+    }
+}
+-----------------------
+private synchronized void checkException() throws Exception {
+    if (err != null) {
+        throw new RuntimeException("Deferred", err);
+    }
+}-----------------------
+possible Hot1

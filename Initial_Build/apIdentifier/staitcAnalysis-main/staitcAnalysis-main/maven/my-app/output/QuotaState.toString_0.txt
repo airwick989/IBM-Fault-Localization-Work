@@ -1,0 +1,52 @@
+looking:QuotaState.toString
+QuotaState	toString
+-----------------------
+@Override
+public synchronized String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("QuotaState(ts=" + getLastUpdate());
+    if (isBypass()) {
+        builder.append(" bypass");
+    } else {
+        if (globalLimiter != NoopQuotaLimiter.get()) {
+            // builder.append(" global-limiter");
+            builder.append(" " + globalLimiter);
+        }
+    }
+    builder.append(')');
+    return builder.toString();
+}
+-----------------------
+@Override
+public synchronized String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("QuotaState(ts=" + getLastUpdate());
+    if (isBypass()) {
+        builder.append(" bypass");
+    } else {
+        if (globalLimiter != NoopQuotaLimiter.get()) {
+            // builder.append(" global-limiter");
+            builder.append(" " + globalLimiter);
+        }
+    }
+    builder.append(')');
+    return builder.toString();
+    {
+        return globalLimiter == NoopQuotaLimiter.get();
+    }
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("QuotaState(ts=" + getLastUpdate());
+        if (isBypass()) {
+            builder.append(" bypass");
+        } else {
+            if (globalLimiter != NoopQuotaLimiter.get()) {
+                // builder.append(" global-limiter");
+                builder.append(" " + globalLimiter);
+            }
+        }
+        builder.append(')');
+        return builder.toString();
+    }
+}-----------------------
+possible Hot1

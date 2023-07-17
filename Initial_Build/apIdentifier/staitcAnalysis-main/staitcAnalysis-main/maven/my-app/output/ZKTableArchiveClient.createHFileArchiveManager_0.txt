@@ -1,0 +1,23 @@
+looking:ZKTableArchiveClient.createHFileArchiveManager
+ZKTableArchiveClient	createHFileArchiveManager
+-----------------------
+/**
+ * @return A new {@link HFileArchiveManager} to manage which tables' hfiles should be archived
+ *         rather than deleted.
+ * @throws KeeperException if we can't reach zookeeper
+ * @throws IOException     if an unexpected network issue occurs
+ */
+private synchronized HFileArchiveManager createHFileArchiveManager() throws KeeperException, IOException {
+    return new HFileArchiveManager(this.connection, this.getConf());
+}
+-----------------------
+/**
+ * @return A new {@link HFileArchiveManager} to manage which tables' hfiles should be archived
+ *         rather than deleted.
+ * @throws KeeperException if we can't reach zookeeper
+ * @throws IOException     if an unexpected network issue occurs
+ */
+private synchronized HFileArchiveManager createHFileArchiveManager() throws KeeperException, IOException {
+    return new HFileArchiveManager(this.connection, this.getConf());
+}-----------------------
+possible Hot1

@@ -1,0 +1,15 @@
+looking:zkwLock
+HBaseReplicationEndpoint	disconnect
+-----------------------
+synchronized (zkwLock) {
+    if (zkw != null) {
+        zkw.close();
+    }
+}
+-----------------------
+synchronized (zkwLock) {
+    if (zkw != null) {
+        zkw.close();
+    }
+}-----------------------
+possible Hot2

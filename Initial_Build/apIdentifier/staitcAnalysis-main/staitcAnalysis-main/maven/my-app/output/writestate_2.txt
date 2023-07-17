@@ -1,0 +1,79 @@
+looking:writestate
+HRegion	waitForFlushes
+-----------------------
+synchronized (writestate) {
+    if (this.writestate.readOnly) {
+        // we should not wait for replayed flushed if we are read only (for example in case the
+        // region is a secondary replica).
+        return true;
+    }
+    if (!writestate.flushing)
+        return true;
+    long start = EnvironmentEdgeManager.currentTime();
+    long duration = 0;
+    boolean interrupted = false;
+    LOG.debug("waiting for cache flush to complete for region " + this);
+    try {
+        while (writestate.flushing) {
+            if (timeout > 0 && duration >= timeout)
+                break;
+            try {
+                long toWait = timeout == 0 ? 0 : (timeout - duration);
+                writestate.wait(toWait);
+            } catch (InterruptedException iex) {
+                // essentially ignore and propagate the interrupt back up
+                LOG.warn("Interrupted while waiting in region {}", this);
+                interrupted = true;
+                break;
+            } finally {
+                duration = EnvironmentEdgeManager.currentTime() - start;
+            }
+        }
+    } finally {
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    LOG.debug("Waited {} ms for region {} flush to complete", duration, this);
+    return !(writestate.flushing);
+}
+-----------------------
+synchronized (writestate) {
+    if (this.writestate.readOnly) {
+        // we should not wait for replayed flushed if we are read only (for example in case the
+        // region is a secondary replica).
+        return true;
+    }
+    if (!writestate.flushing)
+        return true;
+    long start = EnvironmentEdgeManager.currentTime();
+    long duration = 0;
+    boolean interrupted = false;
+    LOG.debug("waiting for cache flush to complete for region " + this);
+    try {
+        while (writestate.flushing) {
+            if (timeout > 0 && duration >= timeout)
+                break;
+            try {
+                long toWait = timeout == 0 ? 0 : (timeout - duration);
+                writestate.wait(toWait);
+            } catch (InterruptedException iex) {
+                // essentially ignore and propagate the interrupt back up
+                LOG.warn("Interrupted while waiting in region {}", this);
+                interrupted = true;
+                break;
+            } finally {
+                duration = EnvironmentEdgeManager.currentTime() - start;
+            }
+        }
+    } finally {
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    LOG.debug("Waited {} ms for region {} flush to complete", duration, this);
+    return !(writestate.flushing);
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

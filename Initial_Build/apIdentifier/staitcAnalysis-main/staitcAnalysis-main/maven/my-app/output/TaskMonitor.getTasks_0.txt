@@ -1,0 +1,77 @@
+looking:TaskMonitor.getTasks
+TaskMonitor	getTasks
+-----------------------
+/**
+ * Produces a list containing copies of the current state of all non-expired MonitoredTasks
+ * handled by this TaskMonitor.
+ * @param filter type of wanted tasks
+ * @return A filtered list of MonitoredTasks.
+ */
+public synchronized List<MonitoredTask> getTasks(String filter) {
+    purgeExpiredTasks();
+    TaskFilter taskFilter = createTaskFilter(filter);
+    ArrayList<MonitoredTask> results = Lists.newArrayListWithCapacity(tasks.size() + rpcTasks.size());
+    processTasks(tasks, taskFilter, results);
+    processTasks(rpcTasks, taskFilter, results);
+    return results;
+}
+-----------------------
+/**
+ * Produces a list containing copies of the current state of all non-expired MonitoredTasks
+ * handled by this TaskMonitor.
+ * @param filter type of wanted tasks
+ * @return A filtered list of MonitoredTasks.
+ */
+public synchronized List<MonitoredTask> getTasks(String filter) {
+    purgeExpiredTasks();
+    TaskFilter taskFilter = createTaskFilter(filter);
+    ArrayList<MonitoredTask> results = Lists.newArrayListWithCapacity(tasks.size() + rpcTasks.size());
+    processTasks(tasks, taskFilter, results);
+    processTasks(rpcTasks, taskFilter, results);
+    return results;
+    {
+        for (Iterator<TaskAndWeakRefPair> it = tasks.iterator(); it.hasNext(); ) {
+            TaskAndWeakRefPair pair = it.next();
+            MonitoredTask stat = pair.get();
+            if (pair.isDead()) {
+                // The class who constructed this leaked it. So we can
+                // assume it's done.
+                if (stat.getState() == MonitoredTaskImpl.State.RUNNING) {
+                    LOG.warn("Status " + stat + " appears to have been leaked");
+                    stat.cleanup();
+                }
+            }
+            if (canPurge(stat)) {
+                it.remove();
+            }
+            {
+                return weakProxy.get() == null;
+            }
+            {
+                return weakProxy.get() == null;
+            }
+            {
+                long cts = stat.getCompletionTimestamp();
+                return (cts > 0 && EnvironmentEdgeManager.currentTime() - cts > expirationTime);
+            }
+            {
+                return weakProxy.get() == null;
+            }
+            {
+                long cts = stat.getCompletionTimestamp();
+                return (cts > 0 && EnvironmentEdgeManager.currentTime() - cts > expirationTime);
+            }
+        }
+    }
+    {
+        for (TaskAndWeakRefPair task : tasks) {
+            MonitoredTask t = task.get();
+            if (!filter.filter(t)) {
+                results.add(t.clone());
+            }
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

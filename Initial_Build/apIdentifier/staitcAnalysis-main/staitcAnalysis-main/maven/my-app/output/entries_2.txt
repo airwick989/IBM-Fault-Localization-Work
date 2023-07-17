@@ -1,0 +1,44 @@
+looking:entries
+RegionReplicationSink	stop
+-----------------------
+synchronized (entries) {
+    stopping = true;
+    clearAllEntries();
+    if (!sending) {
+        stopped = true;
+        entries.notifyAll();
+    }
+}
+-----------------------
+synchronized (entries) {
+    stopping = true;
+    clearAllEntries();
+    if (!sending) {
+        stopped = true;
+        entries.notifyAll();
+    }
+    {
+        long toClearSize = 0;
+        for (SinkEntry entry : entries) {
+            toClearSize += entry.size;
+            entry.replicated();
+            {
+                if (rpcCall != null) {
+                    rpcCall.releaseByWAL();
+                }
+            }
+            {
+                if (rpcCall != null) {
+                    rpcCall.releaseByWAL();
+                }
+            }
+        }
+        entries.clear();
+        pendingSize -= toClearSize;
+        manager.decrease(toClearSize);
+        return toClearSize;
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

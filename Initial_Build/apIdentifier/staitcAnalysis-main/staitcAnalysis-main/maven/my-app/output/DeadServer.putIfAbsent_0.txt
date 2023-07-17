@@ -1,0 +1,17 @@
+looking:DeadServer.putIfAbsent
+DeadServer	putIfAbsent
+-----------------------
+/**
+ * Adds the server to the dead server list if it's not there already.
+ */
+synchronized void putIfAbsent(ServerName sn) {
+    this.deadServers.putIfAbsent(sn, EnvironmentEdgeManager.currentTime());
+}
+-----------------------
+/**
+ * Adds the server to the dead server list if it's not there already.
+ */
+synchronized void putIfAbsent(ServerName sn) {
+    this.deadServers.putIfAbsent(sn, EnvironmentEdgeManager.currentTime());
+}-----------------------
+possible Hot1

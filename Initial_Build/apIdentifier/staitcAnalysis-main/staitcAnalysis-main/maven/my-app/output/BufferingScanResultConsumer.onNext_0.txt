@@ -1,0 +1,21 @@
+looking:BufferingScanResultConsumer.onNext
+BufferingScanResultConsumer	onNext
+-----------------------
+@Override
+public synchronized void onNext(Result[] results, ScanController controller) {
+    for (Result result : results) {
+        queue.offer(result);
+    }
+    notifyAll();
+}
+-----------------------
+@Override
+public synchronized void onNext(Result[] results, ScanController controller) {
+    for (Result result : results) {
+        queue.offer(result);
+    }
+    notifyAll();
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

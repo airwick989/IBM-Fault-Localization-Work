@@ -1,0 +1,17 @@
+looking:SHARED_DATA_MAP
+RegionCoprocessorHost	createEnvironment
+-----------------------
+// make sure only one thread can add maps
+synchronized (SHARED_DATA_MAP) {
+    // as long as at least one RegionEnvironment holds on to its classData it will
+    // remain in this map
+    classData = SHARED_DATA_MAP.computeIfAbsent(instance.getClass().getName(), k -> new ConcurrentHashMap<>());
+}
+-----------------------
+// make sure only one thread can add maps
+synchronized (SHARED_DATA_MAP) {
+    // as long as at least one RegionEnvironment holds on to its classData it will
+    // remain in this map
+    classData = SHARED_DATA_MAP.computeIfAbsent(instance.getClass().getName(), k -> new ConcurrentHashMap<>());
+}-----------------------
+possible Hot1

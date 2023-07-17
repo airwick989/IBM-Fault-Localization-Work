@@ -1,0 +1,19 @@
+looking:zkwLock
+HBaseReplicationEndpoint	reloadZkWatcher
+-----------------------
+synchronized (zkwLock) {
+    if (zkw != null) {
+        zkw.close();
+    }
+    zkw = new ZKWatcher(ctx.getConfiguration(), "connection to cluster: " + ctx.getPeerId(), this);
+    zkw.registerListener(new PeerRegionServerListener(this));
+}
+-----------------------
+synchronized (zkwLock) {
+    if (zkw != null) {
+        zkw.close();
+    }
+    zkw = new ZKWatcher(ctx.getConfiguration(), "connection to cluster: " + ctx.getPeerId(), this);
+    zkw.registerListener(new PeerRegionServerListener(this));
+}-----------------------
+possible Hot2

@@ -1,0 +1,25 @@
+looking:storefiles
+FileBasedStoreFileTracker	doSetStoreFiles
+-----------------------
+synchronized (storefiles) {
+    storefiles.clear();
+    StoreFileList.Builder builder = StoreFileList.newBuilder();
+    for (StoreFileInfo info : files) {
+        storefiles.put(info.getPath().getName(), info);
+        builder.addStoreFile(toStoreFileEntry(info));
+    }
+    backedFile.update(builder);
+}
+-----------------------
+synchronized (storefiles) {
+    storefiles.clear();
+    StoreFileList.Builder builder = StoreFileList.newBuilder();
+    for (StoreFileInfo info : files) {
+        storefiles.put(info.getPath().getName(), info);
+        builder.addStoreFile(toStoreFileEntry(info));
+    }
+    backedFile.update(builder);
+}-----------------------
+possible Hot2
+possible type Hot3_2
+1

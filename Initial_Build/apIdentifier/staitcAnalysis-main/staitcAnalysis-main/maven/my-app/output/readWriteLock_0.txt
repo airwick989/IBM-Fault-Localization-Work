@@ -1,0 +1,15 @@
+looking:readWriteLock
+IdReadWriteLock	waitForWaiters
+-----------------------
+synchronized (readWriteLock) {
+    if (readWriteLock.getQueueLength() >= numWaiters) {
+        return;
+    }
+}
+-----------------------
+synchronized (readWriteLock) {
+    if (readWriteLock.getQueueLength() >= numWaiters) {
+        return;
+    }
+}-----------------------
+possible Hot1

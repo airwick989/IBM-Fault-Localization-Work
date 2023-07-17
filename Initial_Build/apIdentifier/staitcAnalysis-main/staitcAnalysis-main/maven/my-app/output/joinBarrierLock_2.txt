@@ -1,0 +1,17 @@
+looking:joinBarrierLock
+Procedure	barrierAcquiredByMember
+-----------------------
+synchronized (joinBarrierLock) {
+    if (this.acquiringMembers.remove(member)) {
+        this.inBarrierMembers.add(member);
+        acquiredBarrierLatch.countDown();
+    }
+}
+-----------------------
+synchronized (joinBarrierLock) {
+    if (this.acquiringMembers.remove(member)) {
+        this.inBarrierMembers.add(member);
+        acquiredBarrierLatch.countDown();
+    }
+}-----------------------
+possible Hot2

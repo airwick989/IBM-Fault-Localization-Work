@@ -1,0 +1,15 @@
+looking:oc
+ServerNonceManager	cleanUpOldNonces
+-----------------------
+synchronized (oc) {
+    if (oc.getState() == OperationContext.WAIT || !oc.isExpired(cutoff))
+        continue;
+    nonces.remove(entry.getKey());
+}
+-----------------------
+synchronized (oc) {
+    if (oc.getState() == OperationContext.WAIT || !oc.isExpired(cutoff))
+        continue;
+    nonces.remove(entry.getKey());
+}-----------------------
+possible Hot1

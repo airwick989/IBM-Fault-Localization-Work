@@ -1,0 +1,11 @@
+looking:archived
+WaitingHRegionFileSystem	removeStoreFiles
+-----------------------
+synchronized (archived) {
+    archived.notifyAll();
+}
+-----------------------
+synchronized (archived) {
+    archived.notifyAll();
+}-----------------------
+possible Hot2

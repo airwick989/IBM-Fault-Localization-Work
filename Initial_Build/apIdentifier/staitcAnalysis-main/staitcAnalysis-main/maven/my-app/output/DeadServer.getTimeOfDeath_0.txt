@@ -1,0 +1,23 @@
+looking:DeadServer.getTimeOfDeath
+DeadServer	getTimeOfDeath
+-----------------------
+/**
+ * Get the time when a server died
+ * @param deadServerName the dead server name
+ * @return the date when the server died
+ */
+public synchronized Date getTimeOfDeath(final ServerName deadServerName) {
+    Long time = deadServers.get(deadServerName);
+    return time == null ? null : new Date(time);
+}
+-----------------------
+/**
+ * Get the time when a server died
+ * @param deadServerName the dead server name
+ * @return the date when the server died
+ */
+public synchronized Date getTimeOfDeath(final ServerName deadServerName) {
+    Long time = deadServers.get(deadServerName);
+    return time == null ? null : new Date(time);
+}-----------------------
+possible Hot1

@@ -1,0 +1,16 @@
+looking:HRegion.replayWALFlushCommitMarker
+HRegion	replayWALFlushCommitMarker
+-----------------------
+// C. Finally notify anyone waiting on memstore to clear:
+// e.g. checkResources().
+synchronized (this) {
+    // FindBugs NN_NAKED_NOTIFY
+    notifyAll();
+}
+-----------------------
+// e.g. checkResources().
+synchronized (this) {
+    // FindBugs NN_NAKED_NOTIFY
+    notifyAll();
+}-----------------------
+possible Hot1

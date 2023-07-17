@@ -1,0 +1,11 @@
+looking:server.getLoadBalancer()
+MasterRpcServices	switchBalancer
+-----------------------
+synchronized (server.getLoadBalancer()) {
+    server.loadBalancerTracker.setBalancerOn(newValue);
+}
+-----------------------
+synchronized (server.getLoadBalancer()) {
+    server.loadBalancerTracker.setBalancerOn(newValue);
+}-----------------------
+possible Hot1

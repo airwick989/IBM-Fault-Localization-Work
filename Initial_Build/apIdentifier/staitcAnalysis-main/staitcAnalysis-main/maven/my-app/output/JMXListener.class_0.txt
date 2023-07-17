@@ -1,0 +1,56 @@
+looking:JMXListener.class
+JMXListener	stopConnectorServer
+-----------------------
+synchronized (JMXListener.class) {
+    if (JMX_CS != null) {
+        JMX_CS.stop();
+        LOG.info("ConnectorServer stopped!");
+        JMX_CS = null;
+    }
+    // deregister the RMI registry
+    if (rmiRegistry != null) {
+        UnicastRemoteObject.unexportObject(rmiRegistry, true);
+    }
+}
+-----------------------
+synchronized (JMXListener.class) {
+    if (JMX_CS != null) {
+        JMX_CS.stop();
+        LOG.info("ConnectorServer stopped!");
+        JMX_CS = null;
+        {
+            stopConnectorServer();
+            {
+                synchronized (JMXListener.class) {
+                    if (JMX_CS != null) {
+                        JMX_CS.stop();
+                        LOG.info("ConnectorServer stopped!");
+                        JMX_CS = null;
+                    }
+                    // deregister the RMI registry
+                    if (rmiRegistry != null) {
+                        UnicastRemoteObject.unexportObject(rmiRegistry, true);
+                    }
+                }
+            }
+            {
+                synchronized (JMXListener.class) {
+                    if (JMX_CS != null) {
+                        JMX_CS.stop();
+                        LOG.info("ConnectorServer stopped!");
+                        JMX_CS = null;
+                    }
+                    // deregister the RMI registry
+                    if (rmiRegistry != null) {
+                        UnicastRemoteObject.unexportObject(rmiRegistry, true);
+                    }
+                }
+            }
+        }
+    }
+    // deregister the RMI registry
+    if (rmiRegistry != null) {
+        UnicastRemoteObject.unexportObject(rmiRegistry, true);
+    }
+}-----------------------
+possible Hot2

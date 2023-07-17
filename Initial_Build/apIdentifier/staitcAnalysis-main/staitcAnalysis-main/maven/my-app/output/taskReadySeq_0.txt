@@ -1,0 +1,13 @@
+looking:taskReadySeq
+ZkSplitLogWorkerCoordination	nodeChildrenChanged
+-----------------------
+synchronized (taskReadySeq) {
+    this.taskReadySeq.incrementAndGet();
+    taskReadySeq.notify();
+}
+-----------------------
+synchronized (taskReadySeq) {
+    this.taskReadySeq.incrementAndGet();
+    taskReadySeq.notify();
+}-----------------------
+possible Hot2

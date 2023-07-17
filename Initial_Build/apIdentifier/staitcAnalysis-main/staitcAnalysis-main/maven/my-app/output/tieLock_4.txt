@@ -1,0 +1,41 @@
+looking:tieLock
+SequenceIdAccounting	findLower
+-----------------------
+// Keeping the old behavior of iterating unflushedSeqNums under oldestSeqNumsLock.
+synchronized (tieLock) {
+    for (Map.Entry<byte[], Long> e : sequenceids.entrySet()) {
+        Map<ImmutableByteArray, Long> m = this.lowestUnflushedSequenceIds.get(e.getKey());
+        if (m == null) {
+            continue;
+        }
+        for (Map.Entry<ImmutableByteArray, Long> me : m.entrySet()) {
+            if (me.getValue() <= e.getValue()) {
+                if (toFlush == null) {
+                    toFlush = new TreeMap(Bytes.BYTES_COMPARATOR);
+                }
+                toFlush.computeIfAbsent(e.getKey(), k -> new ArrayList<>()).add(Bytes.toBytes(me.getKey().toString()));
+            }
+        }
+    }
+}
+-----------------------
+// Keeping the old behavior of iterating unflushedSeqNums under oldestSeqNumsLock.
+synchronized (tieLock) {
+    for (Map.Entry<byte[], Long> e : sequenceids.entrySet()) {
+        Map<ImmutableByteArray, Long> m = this.lowestUnflushedSequenceIds.get(e.getKey());
+        if (m == null) {
+            continue;
+        }
+        for (Map.Entry<ImmutableByteArray, Long> me : m.entrySet()) {
+            if (me.getValue() <= e.getValue()) {
+                if (toFlush == null) {
+                    toFlush = new TreeMap(Bytes.BYTES_COMPARATOR);
+                }
+                toFlush.computeIfAbsent(e.getKey(), k -> new ArrayList<>()).add(Bytes.toBytes(me.getKey().toString()));
+            }
+        }
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+2

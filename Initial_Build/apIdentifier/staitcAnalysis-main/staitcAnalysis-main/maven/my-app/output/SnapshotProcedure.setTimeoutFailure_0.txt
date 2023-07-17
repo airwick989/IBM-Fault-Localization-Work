@@ -1,0 +1,17 @@
+looking:SnapshotProcedure.setTimeoutFailure
+SnapshotProcedure	setTimeoutFailure
+-----------------------
+@Override
+protected synchronized boolean setTimeoutFailure(MasterProcedureEnv env) {
+    setState(ProcedureState.RUNNABLE);
+    env.getProcedureScheduler().addFront(this);
+    return false;
+}
+-----------------------
+@Override
+protected synchronized boolean setTimeoutFailure(MasterProcedureEnv env) {
+    setState(ProcedureState.RUNNABLE);
+    env.getProcedureScheduler().addFront(this);
+    return false;
+}-----------------------
+possible Hot1

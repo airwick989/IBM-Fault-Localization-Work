@@ -1,0 +1,23 @@
+looking:ZKData.get
+ZKData	get
+-----------------------
+synchronized byte[] get() throws InterruptedException {
+    while (!delete && data == null) {
+        wait();
+    }
+    byte[] d = data;
+    data = null;
+    return d;
+}
+-----------------------
+synchronized byte[] get() throws InterruptedException {
+    while (!delete && data == null) {
+        wait();
+    }
+    byte[] d = data;
+    data = null;
+    return d;
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

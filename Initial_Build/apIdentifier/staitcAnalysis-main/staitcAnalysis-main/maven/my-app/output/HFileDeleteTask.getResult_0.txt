@@ -1,0 +1,49 @@
+looking:HFileDeleteTask.getResult
+HFileDeleteTask	getResult
+-----------------------
+public synchronized boolean getResult(long waitIfNotFinished) {
+    long waitTimeMsec = 0;
+    try {
+        while (!done) {
+            long startTimeNanos = System.nanoTime();
+            wait(waitIfNotFinished);
+            waitTimeMsec += TimeUnit.MILLISECONDS.convert(System.nanoTime() - startTimeNanos, TimeUnit.NANOSECONDS);
+            if (done) {
+                return this.result;
+            }
+            if (waitTimeMsec > timeoutMsec) {
+                LOG.warn("Wait more than " + timeoutMsec + " ms for deleting " + this.filePath + ", exit...");
+                return false;
+            }
+        }
+    } catch (InterruptedException e) {
+        LOG.warn("Interrupted while waiting for result of deleting " + filePath + ", will return false", e);
+        return false;
+    }
+    return this.result;
+}
+-----------------------
+public synchronized boolean getResult(long waitIfNotFinished) {
+    long waitTimeMsec = 0;
+    try {
+        while (!done) {
+            long startTimeNanos = System.nanoTime();
+            wait(waitIfNotFinished);
+            waitTimeMsec += TimeUnit.MILLISECONDS.convert(System.nanoTime() - startTimeNanos, TimeUnit.NANOSECONDS);
+            if (done) {
+                return this.result;
+            }
+            if (waitTimeMsec > timeoutMsec) {
+                LOG.warn("Wait more than " + timeoutMsec + " ms for deleting " + this.filePath + ", exit...");
+                return false;
+            }
+        }
+    } catch (InterruptedException e) {
+        LOG.warn("Interrupted while waiting for result of deleting " + filePath + ", will return false", e);
+        return false;
+    }
+    return this.result;
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

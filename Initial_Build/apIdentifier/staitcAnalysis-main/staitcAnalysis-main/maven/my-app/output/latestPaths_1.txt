@@ -1,0 +1,11 @@
+looking:latestPaths
+ReplicationSourceManager	getSizeOfLatestPath
+-----------------------
+synchronized (latestPaths) {
+    return latestPaths.size();
+}
+-----------------------
+synchronized (latestPaths) {
+    return latestPaths.size();
+}-----------------------
+possible Hot2

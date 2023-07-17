@@ -1,0 +1,17 @@
+looking:BufferingScanResultConsumer.onError
+BufferingScanResultConsumer	onError
+-----------------------
+@Override
+public synchronized void onError(Throwable error) {
+    finished = true;
+    this.error = error;
+    notifyAll();
+}
+-----------------------
+@Override
+public synchronized void onError(Throwable error) {
+    finished = true;
+    this.error = error;
+    notifyAll();
+}-----------------------
+possible Hot1

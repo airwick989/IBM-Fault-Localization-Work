@@ -1,0 +1,11 @@
+looking:DeadServer.size
+DeadServer	size
+-----------------------
+public synchronized int size() {
+    return deadServers.size();
+}
+-----------------------
+public synchronized int size() {
+    return deadServers.size();
+}-----------------------
+possible Hot1

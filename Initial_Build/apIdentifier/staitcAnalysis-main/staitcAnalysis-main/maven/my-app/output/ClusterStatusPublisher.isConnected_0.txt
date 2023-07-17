@@ -1,0 +1,11 @@
+looking:ClusterStatusPublisher.isConnected
+ClusterStatusPublisher	isConnected
+-----------------------
+private synchronized boolean isConnected() {
+    return this.connected;
+}
+-----------------------
+private synchronized boolean isConnected() {
+    return this.connected;
+}-----------------------
+possible Hot1

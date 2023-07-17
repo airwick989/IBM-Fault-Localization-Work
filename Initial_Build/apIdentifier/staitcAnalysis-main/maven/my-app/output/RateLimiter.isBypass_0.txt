@@ -1,9 +1,0 @@
-looking:RateLimiter.isBypass
-public synchronized boolean isBypass() {
-    return getLimit() == Long.MAX_VALUE;
-}
-
-public synchronized boolean isBypass() {
-    return getLimit() == Long.MAX_VALUE;
-}
-possible Hot1

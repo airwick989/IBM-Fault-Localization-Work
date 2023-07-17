@@ -1,0 +1,64 @@
+looking:AsyncProtobufLogWriter.close
+AsyncProtobufLogWriter	close
+-----------------------
+@Override
+public synchronized void close() throws IOException {
+    if (this.output == null) {
+        return;
+    }
+    try {
+        writeWALTrailer();
+        output.close();
+    } catch (Exception e) {
+        LOG.warn("normal close failed, try recover", e);
+        output.recoverAndClose(null);
+    }
+    /**
+     * We have to call {@link AsyncFSOutput#getSyncedLength()} after {@link AsyncFSOutput#close()}
+     * to get the final length synced to underlying filesystem because {@link AsyncFSOutput#close()}
+     * may also flush some data to underlying filesystem.
+     */
+    this.finalSyncedLength = this.output.getSyncedLength();
+    this.output = null;
+}
+-----------------------
+@Override
+public synchronized void close() throws IOException {
+    if (this.output == null) {
+        return;
+    }
+    try {
+        writeWALTrailer();
+        output.close();
+        {
+            if (this.output == null) {
+                return;
+            }
+            try {
+                writeWALTrailer();
+                output.close();
+            } catch (Exception e) {
+                LOG.warn("normal close failed, try recover", e);
+                output.recoverAndClose(null);
+            }
+            /**
+             * We have to call {@link AsyncFSOutput#getSyncedLength()} after {@link AsyncFSOutput#close()}
+             * to get the final length synced to underlying filesystem because {@link AsyncFSOutput#close()}
+             * may also flush some data to underlying filesystem.
+             */
+            this.finalSyncedLength = this.output.getSyncedLength();
+            this.output = null;
+        }
+    } catch (Exception e) {
+        LOG.warn("normal close failed, try recover", e);
+        output.recoverAndClose(null);
+    }
+    /**
+     * We have to call {@link AsyncFSOutput#getSyncedLength()} after {@link AsyncFSOutput#close()}
+     * to get the final length synced to underlying filesystem because {@link AsyncFSOutput#close()}
+     * may also flush some data to underlying filesystem.
+     */
+    this.finalSyncedLength = this.output.getSyncedLength();
+    this.output = null;
+}-----------------------
+possible Hot1

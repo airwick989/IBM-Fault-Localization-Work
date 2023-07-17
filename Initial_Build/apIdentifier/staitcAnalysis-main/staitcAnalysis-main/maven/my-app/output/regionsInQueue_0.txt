@@ -1,0 +1,39 @@
+looking:regionsInQueue
+MemStoreFlusher	getBiggestMemStoreRegion
+-----------------------
+synchronized (regionsInQueue) {
+    for (Map.Entry<Long, Collection<HRegion>> entry : regionsBySize.entrySet()) {
+        for (HRegion region : entry.getValue()) {
+            if (excludedRegions.contains(region)) {
+                continue;
+            }
+            if (region.writestate.flushing || !region.writestate.writesEnabled) {
+                continue;
+            }
+            if (checkStoreFileCount && isTooManyStoreFiles(region)) {
+                continue;
+            }
+            return region;
+        }
+    }
+}
+-----------------------
+synchronized (regionsInQueue) {
+    for (Map.Entry<Long, Collection<HRegion>> entry : regionsBySize.entrySet()) {
+        for (HRegion region : entry.getValue()) {
+            if (excludedRegions.contains(region)) {
+                continue;
+            }
+            if (region.writestate.flushing || !region.writestate.writesEnabled) {
+                continue;
+            }
+            if (checkStoreFileCount && isTooManyStoreFiles(region)) {
+                continue;
+            }
+            return region;
+        }
+    }
+}-----------------------
+possible Hot2
+possible type Hot3_2
+2
