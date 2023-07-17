@@ -1,0 +1,9 @@
+looking:QuotaState.getLastQuery
+public synchronized long getLastQuery() {
+    return lastQuery;
+}
+
+public synchronized long getLastQuery() {
+    return lastQuery;
+}
+possible Hot1

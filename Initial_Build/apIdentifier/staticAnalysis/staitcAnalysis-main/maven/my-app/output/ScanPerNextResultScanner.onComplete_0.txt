@@ -1,0 +1,13 @@
+looking:ScanPerNextResultScanner.onComplete
+@Override
+public synchronized void onComplete() {
+    closed = true;
+    notifyAll();
+}
+
+@Override
+public synchronized void onComplete() {
+    closed = true;
+    notifyAll();
+}
+possible Hot1

@@ -1,0 +1,15 @@
+looking:CPRegionServerObserver.waitUtilTriggered
+public synchronized void waitUtilTriggered() throws InterruptedException {
+    while (!triggered) {
+        wait();
+    }
+}
+
+public synchronized void waitUtilTriggered() throws InterruptedException {
+    while (!triggered) {
+        wait();
+    }
+}
+possible Hot1
+possible type Hot3_2
+1

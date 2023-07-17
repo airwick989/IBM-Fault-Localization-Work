@@ -1,0 +1,25 @@
+looking:PrintingErrorReporter.report
+/**
+ * Report error information, but do not increment the error count. Intended for cases where the
+ * actual error would have been reported previously. n
+ */
+@Override
+public synchronized void report(String message) {
+    if (!summary) {
+        System.out.println("ERROR: " + message);
+    }
+    showProgress = 0;
+}
+
+/**
+ * Report error information, but do not increment the error count. Intended for cases where the
+ * actual error would have been reported previously. n
+ */
+@Override
+public synchronized void report(String message) {
+    if (!summary) {
+        System.out.println("ERROR: " + message);
+    }
+    showProgress = 0;
+}
+possible Hot1

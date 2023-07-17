@@ -1,0 +1,15 @@
+looking:writestate
+synchronized (writestate) {
+    writestate.compacting.decrementAndGet();
+    if (writestate.compacting.get() <= 0) {
+        writestate.notifyAll();
+    }
+}
+
+synchronized (writestate) {
+    writestate.compacting.decrementAndGet();
+    if (writestate.compacting.get() <= 0) {
+        writestate.notifyAll();
+    }
+}
+possible Hot2

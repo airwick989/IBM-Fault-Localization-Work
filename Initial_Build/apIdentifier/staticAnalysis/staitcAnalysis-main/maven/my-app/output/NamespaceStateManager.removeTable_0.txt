@@ -1,0 +1,20 @@
+looking:NamespaceStateManager.removeTable
+synchronized void removeTable(TableName tableName) {
+    NamespaceTableAndRegionInfo info = nsStateCache.get(tableName.getNamespaceAsString());
+    if (info != null) {
+        {
+            NamespaceTableAndRegionInfo info = nsStateCache.get(tableName.getNamespaceAsString());
+            if (info != null) {
+                info.removeTable(tableName);
+            }
+        }
+    }
+}
+
+synchronized void removeTable(TableName tableName) {
+    NamespaceTableAndRegionInfo info = nsStateCache.get(tableName.getNamespaceAsString());
+    if (info != null) {
+        info.removeTable(tableName);
+    }
+}
+possible Hot1

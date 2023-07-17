@@ -1,0 +1,19 @@
+looking:entries
+synchronized (entries) {
+    stopping = true;
+    clearAllEntries();
+    if (!sending) {
+        stopped = true;
+        entries.notifyAll();
+    }
+}
+
+synchronized (entries) {
+    stopping = true;
+    clearAllEntries();
+    if (!sending) {
+        stopped = true;
+        entries.notifyAll();
+    }
+}
+possible Hot2

@@ -1,0 +1,88 @@
+looking:SimpleServerRpcConnection.close
+@Override
+public synchronized void close() {
+    disposeSasl();
+    data = null;
+    callCleanupIfNeeded();
+    if (!channel.isOpen()) {
+        return;
+    }
+    try {
+        socket.shutdownOutput();
+    } catch (Exception ignored) {
+        if (SimpleRpcServer.LOG.isTraceEnabled()) {
+            SimpleRpcServer.LOG.trace("Ignored exception", ignored);
+        }
+    }
+    if (channel.isOpen()) {
+        try {
+            channel.close();
+        } catch (Exception ignored) {
+        }
+    }
+    try {
+        {
+            disposeSasl();
+            data = null;
+            callCleanupIfNeeded();
+            if (!channel.isOpen()) {
+                return;
+            }
+            try {
+                socket.shutdownOutput();
+            } catch (Exception ignored) {
+                if (SimpleRpcServer.LOG.isTraceEnabled()) {
+                    SimpleRpcServer.LOG.trace("Ignored exception", ignored);
+                }
+            }
+            if (channel.isOpen()) {
+                try {
+                    channel.close();
+                } catch (Exception ignored) {
+                }
+            }
+            try {
+                socket.close();
+            } catch (Exception ignored) {
+                if (SimpleRpcServer.LOG.isTraceEnabled()) {
+                    SimpleRpcServer.LOG.trace("Ignored exception", ignored);
+                }
+            }
+        }
+    } catch (Exception ignored) {
+        if (SimpleRpcServer.LOG.isTraceEnabled()) {
+            SimpleRpcServer.LOG.trace("Ignored exception", ignored);
+        }
+    }
+}
+
+@Override
+public synchronized void close() {
+    disposeSasl();
+    data = null;
+    callCleanupIfNeeded();
+    if (!channel.isOpen()) {
+        return;
+    }
+    try {
+        socket.shutdownOutput();
+    } catch (Exception ignored) {
+        if (SimpleRpcServer.LOG.isTraceEnabled()) {
+            SimpleRpcServer.LOG.trace("Ignored exception", ignored);
+        }
+    }
+    if (channel.isOpen()) {
+        try {
+            channel.close();
+        } catch (Exception ignored) {
+        }
+    }
+    try {
+        socket.close();
+    } catch (Exception ignored) {
+        if (SimpleRpcServer.LOG.isTraceEnabled()) {
+            SimpleRpcServer.LOG.trace("Ignored exception", ignored);
+        }
+    }
+}
+possible Hot1

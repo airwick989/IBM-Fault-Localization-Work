@@ -1,0 +1,25 @@
+looking:WRITER
+synchronized (WRITER) {
+    try {
+        for (Entry entry : replicateContext.getEntries()) {
+            WRITER.append(entry);
+        }
+        WRITER.sync(false);
+    } catch (IOException e) {
+        throw new UncheckedIOException(e);
+    }
+}
+
+synchronized (WRITER) {
+    try {
+        for (Entry entry : replicateContext.getEntries()) {
+            WRITER.append(entry);
+        }
+        WRITER.sync(false);
+    } catch (IOException e) {
+        throw new UncheckedIOException(e);
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

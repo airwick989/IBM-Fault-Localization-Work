@@ -1,0 +1,34 @@
+looking:grabTaskLock
+synchronized (grabTaskLock) {
+    if (workerInGrabTask) {
+        // currentTask can change but that's ok
+        String taskpath = currentTask;
+        if (taskpath != null && taskpath.equals(path)) {
+            LOG.info("retrying data watch on " + path);
+            SplitLogCounters.tot_wkr_get_data_retry.increment();
+            {
+                watcher.getRecoverableZooKeeper().getZooKeeper().getData(currentTask, watcher, new GetDataAsyncCallback(), null);
+                SplitLogCounters.tot_wkr_get_data_queued.increment();
+            }
+        } else {
+            // no point setting a watch on the task which this worker is not
+            // working upon anymore
+        }
+    }
+}
+
+synchronized (grabTaskLock) {
+    if (workerInGrabTask) {
+        // currentTask can change but that's ok
+        String taskpath = currentTask;
+        if (taskpath != null && taskpath.equals(path)) {
+            LOG.info("retrying data watch on " + path);
+            SplitLogCounters.tot_wkr_get_data_retry.increment();
+            getDataSetWatchAsync();
+        } else {
+            // no point setting a watch on the task which this worker is not
+            // working upon anymore
+        }
+    }
+}
+possible Hot2

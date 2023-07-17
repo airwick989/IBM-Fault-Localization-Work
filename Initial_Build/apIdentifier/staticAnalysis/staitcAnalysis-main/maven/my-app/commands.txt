@@ -1,0 +1,19 @@
+mvn clean install
+//mvn package
+mvn dependency:copy-dependencies
+
+
+
+
+//java -cp target/my-app-1.0-SNAPSHOT.jar com.mycompany.app.App
+
+
+java -cp "target/dependency/*;target/my-app-1.0-SNAPSHOT.jar" com.mycompany.app.App
+
+
+
+mvn clean install
+mvn dependency:copy-dependencies
+mvn package
+java -cp "target/dependency/*;target/my-app-1.0-SNAPSHOT.jar" com.mycompany.app.App false
+dot -Tpng ast.dot > ast.png

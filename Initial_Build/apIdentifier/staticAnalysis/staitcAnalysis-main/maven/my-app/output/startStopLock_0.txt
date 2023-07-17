@@ -1,0 +1,37 @@
+looking:startStopLock
+synchronized (startStopLock) {
+    if (started) {
+        return;
+    }
+    {
+        synchronized (startStopLock) {
+            if (started) {
+                return;
+            }
+            regionNormalizerTracker.start();
+            if (worker != null) {
+                // worker will be null when master is in maintenance mode.
+                pool.submit(worker);
+            }
+            started = true;
+        }
+    }
+    if (worker != null) {
+        // worker will be null when master is in maintenance mode.
+        pool.submit(worker);
+    }
+    started = true;
+}
+
+synchronized (startStopLock) {
+    if (started) {
+        return;
+    }
+    regionNormalizerTracker.start();
+    if (worker != null) {
+        // worker will be null when master is in maintenance mode.
+        pool.submit(worker);
+    }
+    started = true;
+}
+possible Hot2

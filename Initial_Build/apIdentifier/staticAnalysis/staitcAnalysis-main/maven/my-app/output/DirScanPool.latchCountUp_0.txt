@@ -1,0 +1,9 @@
+looking:DirScanPool.latchCountUp
+synchronized void latchCountUp() {
+    cleanerLatch++;
+}
+
+synchronized void latchCountUp() {
+    cleanerLatch++;
+}
+possible Hot1

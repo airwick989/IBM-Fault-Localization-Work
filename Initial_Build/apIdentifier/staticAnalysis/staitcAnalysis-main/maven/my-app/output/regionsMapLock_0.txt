@@ -1,0 +1,17 @@
+looking:regionsMapLock
+synchronized (regionsMapLock) {
+    RegionStateNode node = regionsMap.computeIfAbsent(regionInfo.getRegionName(), key -> new RegionStateNode(regionInfo, regionInTransition));
+    if (encodedRegionsMap.get(regionInfo.getEncodedName()) != node) {
+        encodedRegionsMap.put(regionInfo.getEncodedName(), node);
+    }
+    return node;
+}
+
+synchronized (regionsMapLock) {
+    RegionStateNode node = regionsMap.computeIfAbsent(regionInfo.getRegionName(), key -> new RegionStateNode(regionInfo, regionInTransition));
+    if (encodedRegionsMap.get(regionInfo.getEncodedName()) != node) {
+        encodedRegionsMap.put(regionInfo.getEncodedName(), node);
+    }
+    return node;
+}
+possible Hot2

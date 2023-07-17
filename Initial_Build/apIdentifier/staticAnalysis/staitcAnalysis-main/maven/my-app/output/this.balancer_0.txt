@@ -1,0 +1,27 @@
+looking:this.balancer
+synchronized (this.balancer) {
+    BalanceResponse response = balance();
+    if (!response.isBalancerRan()) {
+        Map<TableName, Map<ServerName, List<RegionInfo>>> assignments = this.assignmentManager.getRegionStates().getAssignmentsForBalancer(this.tableStateManager, this.serverManager.getOnlineServersList());
+        for (Map<ServerName, List<RegionInfo>> serverMap : assignments.values()) {
+            serverMap.keySet().removeAll(this.serverManager.getDrainingServersList());
+        }
+        this.balancer.updateBalancerLoadInfo(assignments);
+    }
+    return response;
+}
+
+synchronized (this.balancer) {
+    BalanceResponse response = balance();
+    if (!response.isBalancerRan()) {
+        Map<TableName, Map<ServerName, List<RegionInfo>>> assignments = this.assignmentManager.getRegionStates().getAssignmentsForBalancer(this.tableStateManager, this.serverManager.getOnlineServersList());
+        for (Map<ServerName, List<RegionInfo>> serverMap : assignments.values()) {
+            serverMap.keySet().removeAll(this.serverManager.getDrainingServersList());
+        }
+        this.balancer.updateBalancerLoadInfo(assignments);
+    }
+    return response;
+}
+possible Hot2
+possible type Hot3_2
+1

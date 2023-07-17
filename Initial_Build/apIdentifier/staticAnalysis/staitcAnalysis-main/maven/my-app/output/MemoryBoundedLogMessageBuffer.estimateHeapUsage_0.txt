@@ -1,0 +1,15 @@
+looking:MemoryBoundedLogMessageBuffer.estimateHeapUsage
+/**
+ * Estimate the number of bytes this buffer is currently using.
+ */
+synchronized long estimateHeapUsage() {
+    return usage;
+}
+
+/**
+ * Estimate the number of bytes this buffer is currently using.
+ */
+synchronized long estimateHeapUsage() {
+    return usage;
+}
+possible Hot1

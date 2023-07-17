@@ -1,0 +1,25 @@
+looking:SnapshotManager.isTakingAnySnapshot
+/**
+ * The snapshot operation processing as following: <br>
+ * 1. Create a Snapshot Handler, and do some initialization; <br>
+ * 2. Put the handler into snapshotHandlers <br>
+ * So when we consider if any snapshot is taking, we should consider both the takingSnapshotLock
+ * and snapshotHandlers;
+ * @return true to indicate that there're some running snapshots.
+ */
+public synchronized boolean isTakingAnySnapshot() {
+    return this.takingSnapshotLock.getReadHoldCount() > 0 || this.snapshotHandlers.size() > 0 || this.snapshotToProcIdMap.size() > 0;
+}
+
+/**
+ * The snapshot operation processing as following: <br>
+ * 1. Create a Snapshot Handler, and do some initialization; <br>
+ * 2. Put the handler into snapshotHandlers <br>
+ * So when we consider if any snapshot is taking, we should consider both the takingSnapshotLock
+ * and snapshotHandlers;
+ * @return true to indicate that there're some running snapshots.
+ */
+public synchronized boolean isTakingAnySnapshot() {
+    return this.takingSnapshotLock.getReadHoldCount() > 0 || this.snapshotHandlers.size() > 0 || this.snapshotToProcIdMap.size() > 0;
+}
+possible Hot1

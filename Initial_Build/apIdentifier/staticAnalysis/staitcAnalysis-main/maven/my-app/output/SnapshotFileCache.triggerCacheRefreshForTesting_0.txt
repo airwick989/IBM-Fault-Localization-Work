@@ -1,0 +1,76 @@
+looking:SnapshotFileCache.triggerCacheRefreshForTesting
+/**
+ * Trigger a cache refresh, even if its before the next cache refresh. Does not affect pending
+ * cache refreshes.
+ * <p/>
+ * Blocks until the cache is refreshed.
+ * <p/>
+ * Exposed for TESTING.
+ */
+public synchronized void triggerCacheRefreshForTesting() {
+    try {
+        {
+            // just list the snapshot directory directly, do not check the modification time for the root
+            // snapshot directory, as some file system implementations do not modify the parent directory's
+            // modTime when there are new sub items, for example, S3.
+            FileStatus[] snapshotDirs = CommonFSUtils.listStatus(fs, snapshotDir, p -> !p.getName().equals(SnapshotDescriptionUtils.SNAPSHOT_TMP_DIR_NAME));
+            // clear the cache, as in the below code, either we will also clear the snapshots, or we will
+            // refill the file name cache again.
+            if (ArrayUtils.isEmpty(snapshotDirs)) {
+                // remove all the remembered snapshots because we don't have any left
+                if (LOG.isDebugEnabled() && this.snapshots.size() > 0) {
+                    LOG.debug("No snapshots on-disk, clear cache");
+                }
+                this.snapshots = ImmutableMap.of();
+                this.cache = ImmutableSet.of();
+                return;
+            }
+            ImmutableSet.Builder<String> cacheBuilder = ImmutableSet.builder();
+            ImmutableMap.Builder<String, SnapshotDirectoryInfo> snapshotsBuilder = ImmutableMap.builder();
+            // iterate over all the cached snapshots and see if we need to update some, it is not an
+            // expensive operation if we do not reload the manifest of snapshots.
+            for (FileStatus snapshotDir : snapshotDirs) {
+                String name = snapshotDir.getPath().getName();
+                SnapshotDirectoryInfo files = snapshots.get(name);
+                // if we don't know about the snapshot or its been modified, we need to update the
+                // files the latter could occur where I create a snapshot, then delete it, and then make a
+                // new snapshot with the same name. We will need to update the cache the information from
+                // that new snapshot, even though it has the same name as the files referenced have
+                // probably changed.
+                if (files == null || files.hasBeenModified(snapshotDir.getModificationTime())) {
+                    Collection<String> storedFiles = fileInspector.filesUnderSnapshot(fs, snapshotDir.getPath());
+                    files = new SnapshotDirectoryInfo(snapshotDir.getModificationTime(), storedFiles);
+                }
+                // add all the files to cache
+                cacheBuilder.addAll(files.getFiles());
+                snapshotsBuilder.put(name, files);
+            }
+            // set the snapshots we are tracking
+            this.snapshots = snapshotsBuilder.build();
+            this.cache = cacheBuilder.build();
+        }
+    } catch (IOException e) {
+        LOG.warn("Failed to refresh snapshot hfile cache!", e);
+    }
+    LOG.debug("Current cache:" + cache);
+}
+
+/**
+ * Trigger a cache refresh, even if its before the next cache refresh. Does not affect pending
+ * cache refreshes.
+ * <p/>
+ * Blocks until the cache is refreshed.
+ * <p/>
+ * Exposed for TESTING.
+ */
+public synchronized void triggerCacheRefreshForTesting() {
+    try {
+        refreshCache();
+    } catch (IOException e) {
+        LOG.warn("Failed to refresh snapshot hfile cache!", e);
+    }
+    LOG.debug("Current cache:" + cache);
+}
+possible Hot1
+possible type Hot3_2
+1

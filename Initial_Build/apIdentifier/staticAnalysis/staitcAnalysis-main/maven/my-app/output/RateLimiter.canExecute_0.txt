@@ -1,0 +1,51 @@
+looking:RateLimiter.canExecute
+/**
+ * Are there enough available resources to allow execution?
+ * @param amount the number of required resources, a non-negative number
+ * @return true if there are enough available resources, otherwise false
+ */
+public synchronized boolean canExecute(final long amount) {
+    {
+        return getLimit() == Long.MAX_VALUE;
+    }
+    long refillAmount = refill(limit);
+    if (refillAmount == 0 && avail < amount) {
+        return false;
+    }
+    // check for positive overflow
+    if (avail <= Long.MAX_VALUE - refillAmount) {
+        avail = Math.max(0, Math.min(avail + refillAmount, limit));
+    } else {
+        avail = Math.max(0, limit);
+    }
+    if (avail >= amount) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Are there enough available resources to allow execution?
+ * @param amount the number of required resources, a non-negative number
+ * @return true if there are enough available resources, otherwise false
+ */
+public synchronized boolean canExecute(final long amount) {
+    if (isBypass()) {
+        return true;
+    }
+    long refillAmount = refill(limit);
+    if (refillAmount == 0 && avail < amount) {
+        return false;
+    }
+    // check for positive overflow
+    if (avail <= Long.MAX_VALUE - refillAmount) {
+        avail = Math.max(0, Math.min(avail + refillAmount, limit));
+    } else {
+        avail = Math.max(0, limit);
+    }
+    if (avail >= amount) {
+        return true;
+    }
+    return false;
+}
+possible Hot1

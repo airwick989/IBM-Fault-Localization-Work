@@ -1,0 +1,11 @@
+looking:WorkerAssigner.addUsedWorker
+public synchronized void addUsedWorker(ServerName worker) {
+    // load used worker when master restart
+    currentWorkers.compute(worker, (serverName, availableWorker) -> availableWorker == null ? maxTasks - 1 : availableWorker - 1);
+}
+
+public synchronized void addUsedWorker(ServerName worker) {
+    // load used worker when master restart
+    currentWorkers.compute(worker, (serverName, availableWorker) -> availableWorker == null ? maxTasks - 1 : availableWorker - 1);
+}
+possible Hot1

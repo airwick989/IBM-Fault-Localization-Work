@@ -1,0 +1,15 @@
+looking:joinBarrierLock
+synchronized (joinBarrierLock) {
+    removed = this.inBarrierMembers.remove(member);
+    if (removed) {
+        releasedBarrierLatch.countDown();
+    }
+}
+
+synchronized (joinBarrierLock) {
+    removed = this.inBarrierMembers.remove(member);
+    if (removed) {
+        releasedBarrierLatch.countDown();
+    }
+}
+possible Hot2

@@ -1,0 +1,15 @@
+looking:LOCK
+synchronized (LOCK) {
+    if (!isInit) {
+        namedQueueRecorder = new NamedQueueRecorder(conf);
+        isInit = true;
+    }
+}
+
+synchronized (LOCK) {
+    if (!isInit) {
+        namedQueueRecorder = new NamedQueueRecorder(conf);
+        isInit = true;
+    }
+}
+possible Hot1

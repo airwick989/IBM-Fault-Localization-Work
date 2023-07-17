@@ -1,0 +1,11 @@
+looking:ServerRemoteProcedure.completionCleanup
+@Override
+protected synchronized void completionCleanup(MasterProcedureEnv env) {
+    env.getRemoteDispatcher().removeCompletedOperation(targetServer, this);
+}
+
+@Override
+protected synchronized void completionCleanup(MasterProcedureEnv env) {
+    env.getRemoteDispatcher().removeCompletedOperation(targetServer, this);
+}
+possible Hot1

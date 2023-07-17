@@ -1,0 +1,27 @@
+looking:writestate
+// for start flush, we need to take a snapshot of the current memstore
+synchronized (writestate) {
+    if (!writestate.flushing) {
+        this.writestate.flushing = true;
+    } else {
+        // usually this should not happen but let's make the code more robust, it is not a
+        // big deal to just ignore it, the refreshStoreFiles call should have the ability to
+        // clean up the inconsistent state.
+        LOG.debug("NOT flushing {} as already flushing", getRegionInfo());
+        break;
+    }
+}
+
+// for start flush, we need to take a snapshot of the current memstore
+synchronized (writestate) {
+    if (!writestate.flushing) {
+        this.writestate.flushing = true;
+    } else {
+        // usually this should not happen but let's make the code more robust, it is not a
+        // big deal to just ignore it, the refreshStoreFiles call should have the ability to
+        // clean up the inconsistent state.
+        LOG.debug("NOT flushing {} as already flushing", getRegionInfo());
+        break;
+    }
+}
+possible Hot2

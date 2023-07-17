@@ -1,0 +1,11 @@
+looking:deadWorkersLock
+synchronized (deadWorkersLock) {
+    localDeadWorkers = deadWorkers;
+    deadWorkers = null;
+}
+
+synchronized (deadWorkersLock) {
+    localDeadWorkers = deadWorkers;
+    deadWorkers = null;
+}
+possible Hot2

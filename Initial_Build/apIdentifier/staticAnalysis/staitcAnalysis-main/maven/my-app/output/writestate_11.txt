@@ -1,0 +1,165 @@
+looking:writestate
+synchronized (writestate) {
+    for (HStore store : stores.values()) {
+        // TODO: some stores might see new data from flush, while others do not which
+        // MIGHT break atomic edits across column families.
+        long maxSeqIdBefore = store.getMaxSequenceId().orElse(0L);
+        {
+            {
+                {
+                    {
+                        {
+                            return refreshStoreFiles(false);
+                        }
+                    }
+                }
+            }
+        }
+        long storeSeqId = store.getMaxSequenceId().orElse(0L);
+        if (storeSeqId < smallestSeqIdInStores) {
+            smallestSeqIdInStores = storeSeqId;
+        }
+        // see whether we can drop the memstore or the snapshot
+        if (storeSeqId > maxSeqIdBefore) {
+            if (writestate.flushing) {
+                // only drop memstore snapshots if they are smaller than last flush for the store
+                if (this.prepareFlushResult.flushOpSeqId <= storeSeqId) {
+                    StoreFlushContext ctx = this.prepareFlushResult.storeFlushCtxs == null ? null : this.prepareFlushResult.storeFlushCtxs.get(store.getColumnFamilyDescriptor().getName());
+                    if (ctx != null) {
+                        MemStoreSize mss = store.getFlushableSize();
+                        ctx.abort();
+                        {
+                            decrMemStoreSize(mss.getDataSize(), mss.getHeapSize(), mss.getOffHeapSize(), mss.getCellsCount());
+                        }
+                        this.prepareFlushResult.storeFlushCtxs.remove(store.getColumnFamilyDescriptor().getName());
+                        totalFreedDataSize += mss.getDataSize();
+                    }
+                }
+            }
+            {
+                TraceUtil.trace(() -> {
+                    {
+                        // If catalog region, do not impose resource constraints or block updates.
+                        if (this.getRegionInfo().isMetaRegion()) {
+                            return;
+                        }
+                        MemStoreSize mss = this.memStoreSizing.getMemStoreSize();
+                        if (mss.getHeapSize() + mss.getOffHeapSize() > this.blockingMemStoreSize) {
+                            blockedRequestsCount.increment();
+                            requestFlush();
+                            // Don't print current limit because it will vary too much. The message is used as a key
+                            // over in RetriesExhaustedWithDetailsException processing.
+                            final String regionName = this.getRegionInfo() == null ? "unknown" : this.getRegionInfo().getEncodedName();
+                            final String serverName = this.getRegionServerServices() == null ? "unknown" : (this.getRegionServerServices().getServerName() == null ? "unknown" : this.getRegionServerServices().getServerName().toString());
+                            RegionTooBusyException rtbe = new RegionTooBusyException("Over memstore limit=" + org.apache.hadoop.hbase.procedure2.util.StringUtils.humanSize(this.blockingMemStoreSize) + ", regionName=" + regionName + ", server=" + serverName);
+                            LOG.warn("Region is too busy due to exceeding memstore size limit.", rtbe);
+                            throw rtbe;
+                        }
+                    }
+                    // Do a rough check that we have resources to accept a write. The check is
+                    // 'rough' in that between the resource check and the call to obtain a
+                    // read lock, resources may run out. For now, the thought is that this
+                    // will be extremely rare; we'll deal with it when it happens.
+                    checkResources();
+                    startRegionOperation(Operation.PUT);
+                    try {
+                        {
+                            {
+                                {
+                                    return mutate(mutation, false);
+                                }
+                            }
+                        }
+                    } finally {
+                        closeRegionOperation(Operation.PUT);
+                    }
+                }, () -> createRegionSpan("Region.put"));
+            }
+        }
+    }
+    {
+        if (writestate.flushing) {
+            boolean canDrop = true;
+            if (prepareFlushResult.storeFlushCtxs != null) {
+                for (Entry<byte[], StoreFlushContext> entry : prepareFlushResult.storeFlushCtxs.entrySet()) {
+                    HStore store = getStore(entry.getKey());
+                    if (store == null) {
+                        continue;
+                    }
+                    if (store.getSnapshotSize().getDataSize() > 0) {
+                        canDrop = false;
+                        break;
+                    }
+                }
+            }
+            // this means that all the stores in the region has finished flushing, but the WAL marker
+            // may not have been written or we did not receive it yet.
+            if (canDrop) {
+                writestate.flushing = false;
+                this.prepareFlushResult = null;
+            }
+        }
+    }
+    // if all stores ended up dropping their snapshots, we can safely drop the
+    // advance the mvcc read point so that the new flushed files are visible.
+    // either greater than flush seq number or they were already picked up via flush.
+    for (HStore s : stores.values()) {
+        mvcc.advanceTo(s.getMaxMemStoreTS().orElse(0L));
+    }
+    // smallestSeqIdInStores is the seqId that we have a corresponding hfile for. We can safely
+    // skip all edits that are to be replayed in the future with that has a smaller seqId
+    // than this. We are updating lastReplayedOpenRegionSeqId so that we can skip all edits
+    // that we have picked the flush files for
+    if (this.lastReplayedOpenRegionSeqId < smallestSeqIdInStores) {
+        this.lastReplayedOpenRegionSeqId = smallestSeqIdInStores;
+    }
+}
+
+synchronized (writestate) {
+    for (HStore store : stores.values()) {
+        // TODO: some stores might see new data from flush, while others do not which
+        // MIGHT break atomic edits across column families.
+        long maxSeqIdBefore = store.getMaxSequenceId().orElse(0L);
+        // refresh the store files. This is similar to observing a region open wal marker.
+        store.refreshStoreFiles();
+        long storeSeqId = store.getMaxSequenceId().orElse(0L);
+        if (storeSeqId < smallestSeqIdInStores) {
+            smallestSeqIdInStores = storeSeqId;
+        }
+        // see whether we can drop the memstore or the snapshot
+        if (storeSeqId > maxSeqIdBefore) {
+            if (writestate.flushing) {
+                // only drop memstore snapshots if they are smaller than last flush for the store
+                if (this.prepareFlushResult.flushOpSeqId <= storeSeqId) {
+                    StoreFlushContext ctx = this.prepareFlushResult.storeFlushCtxs == null ? null : this.prepareFlushResult.storeFlushCtxs.get(store.getColumnFamilyDescriptor().getName());
+                    if (ctx != null) {
+                        MemStoreSize mss = store.getFlushableSize();
+                        ctx.abort();
+                        this.decrMemStoreSize(mss);
+                        this.prepareFlushResult.storeFlushCtxs.remove(store.getColumnFamilyDescriptor().getName());
+                        totalFreedDataSize += mss.getDataSize();
+                    }
+                }
+            }
+            map.put(store, storeSeqId);
+        }
+    }
+    // if all stores ended up dropping their snapshots, we can safely drop the
+    // prepareFlushResult
+    dropPrepareFlushIfPossible();
+    // advance the mvcc read point so that the new flushed files are visible.
+    // either greater than flush seq number or they were already picked up via flush.
+    for (HStore s : stores.values()) {
+        mvcc.advanceTo(s.getMaxMemStoreTS().orElse(0L));
+    }
+    // smallestSeqIdInStores is the seqId that we have a corresponding hfile for. We can safely
+    // skip all edits that are to be replayed in the future with that has a smaller seqId
+    // than this. We are updating lastReplayedOpenRegionSeqId so that we can skip all edits
+    // that we have picked the flush files for
+    if (this.lastReplayedOpenRegionSeqId < smallestSeqIdInStores) {
+        this.lastReplayedOpenRegionSeqId = smallestSeqIdInStores;
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

@@ -27,7 +27,7 @@ function LocalizationResults() {
     if(lctype === "Type 0"){
         lcDescription = "Type 0 Contention means that the lock contention classifier found minimal or no lock contention within your Java program."
     }
-    else if(lctype == "Type 1"){
+    else if(lctype === "Type 1"){
         lcDescription = "Type 1 contention means that the lock contention classifier found that a thread(s) is holding the lock to a critical section for a prolonged time."
     }
     else{

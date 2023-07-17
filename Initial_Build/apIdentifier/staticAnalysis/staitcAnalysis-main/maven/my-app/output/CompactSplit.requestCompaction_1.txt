@@ -1,0 +1,11 @@
+looking:CompactSplit.requestCompaction
+@Override
+public synchronized void requestCompaction(HRegion region, HStore store, String why, int priority, CompactionLifeCycleTracker tracker, User user) throws IOException {
+    requestCompactionInternal(region, store, why, priority, true, tracker, getCompleteTracker(tracker, () -> 1), user);
+}
+
+@Override
+public synchronized void requestCompaction(HRegion region, HStore store, String why, int priority, CompactionLifeCycleTracker tracker, User user) throws IOException {
+    requestCompactionInternal(region, store, why, priority, true, tracker, getCompleteTracker(tracker, () -> 1), user);
+}
+possible Hot2

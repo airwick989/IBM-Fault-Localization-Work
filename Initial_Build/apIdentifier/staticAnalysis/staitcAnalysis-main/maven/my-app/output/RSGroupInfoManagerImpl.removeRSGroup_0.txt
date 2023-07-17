@@ -1,0 +1,59 @@
+looking:RSGroupInfoManagerImpl.removeRSGroup
+@Override
+public synchronized void removeRSGroup(String groupName) throws IOException {
+    RSGroupInfo rsGroupInfo = getRSGroupInfo(groupName);
+    int serverCount = rsGroupInfo.getServers().size();
+    if (serverCount > 0) {
+        throw new ConstraintException("RSGroup " + groupName + " has " + serverCount + " servers; you must remove these servers from the RSGroup before" + " the RSGroup can be removed.");
+    }
+    for (TableDescriptor td : masterServices.getTableDescriptors().getAll().values()) {
+        if (td.getRegionServerGroup().map(groupName::equals).orElse(false)) {
+            throw new ConstraintException("RSGroup " + groupName + " is already referenced by " + td.getTableName() + "; you must remove all the tables from the RSGroup before " + "the RSGroup can be removed.");
+        }
+    }
+    for (NamespaceDescriptor ns : masterServices.getClusterSchema().getNamespaces()) {
+        String nsGroup = ns.getConfigurationValue(RSGroupInfo.NAMESPACE_DESC_PROP_GROUP);
+        if (nsGroup != null && nsGroup.equals(groupName)) {
+            throw new ConstraintException("RSGroup " + groupName + " is referenced by namespace: " + ns.getName());
+        }
+    }
+    Map<String, RSGroupInfo> rsGroupMap = holder.groupName2Group;
+    if (!rsGroupMap.containsKey(groupName) || groupName.equals(RSGroupInfo.DEFAULT_GROUP)) {
+        throw new ConstraintException("Group " + groupName + " does not exist or is a reserved " + "group");
+    }
+    Map<String, RSGroupInfo> newGroupMap = Maps.newHashMap(rsGroupMap);
+    newGroupMap.remove(groupName);
+    flushConfig(newGroupMap);
+    LOG.info("Remove group {} done", groupName);
+}
+
+@Override
+public synchronized void removeRSGroup(String groupName) throws IOException {
+    RSGroupInfo rsGroupInfo = getRSGroupInfo(groupName);
+    int serverCount = rsGroupInfo.getServers().size();
+    if (serverCount > 0) {
+        throw new ConstraintException("RSGroup " + groupName + " has " + serverCount + " servers; you must remove these servers from the RSGroup before" + " the RSGroup can be removed.");
+    }
+    for (TableDescriptor td : masterServices.getTableDescriptors().getAll().values()) {
+        if (td.getRegionServerGroup().map(groupName::equals).orElse(false)) {
+            throw new ConstraintException("RSGroup " + groupName + " is already referenced by " + td.getTableName() + "; you must remove all the tables from the RSGroup before " + "the RSGroup can be removed.");
+        }
+    }
+    for (NamespaceDescriptor ns : masterServices.getClusterSchema().getNamespaces()) {
+        String nsGroup = ns.getConfigurationValue(RSGroupInfo.NAMESPACE_DESC_PROP_GROUP);
+        if (nsGroup != null && nsGroup.equals(groupName)) {
+            throw new ConstraintException("RSGroup " + groupName + " is referenced by namespace: " + ns.getName());
+        }
+    }
+    Map<String, RSGroupInfo> rsGroupMap = holder.groupName2Group;
+    if (!rsGroupMap.containsKey(groupName) || groupName.equals(RSGroupInfo.DEFAULT_GROUP)) {
+        throw new ConstraintException("Group " + groupName + " does not exist or is a reserved " + "group");
+    }
+    Map<String, RSGroupInfo> newGroupMap = Maps.newHashMap(rsGroupMap);
+    newGroupMap.remove(groupName);
+    flushConfig(newGroupMap);
+    LOG.info("Remove group {} done", groupName);
+}
+possible Hot1
+possible type Hot3_2
+1

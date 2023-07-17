@@ -1,0 +1,23 @@
+looking:SnapshotFileCache.this
+synchronized (SnapshotFileCache.this) {
+    try {
+        SnapshotFileCache.this.refreshCache();
+    } catch (IOException e) {
+        LOG.warn("Failed to refresh snapshot hfile cache!", e);
+        // clear all the cached entries if we meet an error
+        cache = ImmutableSet.of();
+        snapshots = ImmutableMap.of();
+    }
+}
+
+synchronized (SnapshotFileCache.this) {
+    try {
+        SnapshotFileCache.this.refreshCache();
+    } catch (IOException e) {
+        LOG.warn("Failed to refresh snapshot hfile cache!", e);
+        // clear all the cached entries if we meet an error
+        cache = ImmutableSet.of();
+        snapshots = ImmutableMap.of();
+    }
+}
+possible Hot1

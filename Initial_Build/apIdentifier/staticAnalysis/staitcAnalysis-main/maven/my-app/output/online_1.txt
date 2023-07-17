@@ -1,0 +1,19 @@
+looking:online
+synchronized (online) {
+    try {
+        online.wait(msgInterval);
+    } catch (InterruptedException ie) {
+        Thread.currentThread().interrupt();
+        break;
+    }
+}
+
+synchronized (online) {
+    try {
+        online.wait(msgInterval);
+    } catch (InterruptedException ie) {
+        Thread.currentThread().interrupt();
+        break;
+    }
+}
+possible Hot2

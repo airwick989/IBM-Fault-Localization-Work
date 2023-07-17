@@ -1,0 +1,193 @@
+looking:ReplicationBarrierCleaner.chore
+@Override
+public synchronized // running instance at a time.
+void chore() {
+    long totalRows = 0;
+    long cleanedRows = 0;
+    long deletedRows = 0;
+    long deletedBarriers = 0;
+    long deletedLastPushedSeqIds = 0;
+    TableName tableName = null;
+    List<String> peerIds = null;
+    try (Table metaTable = conn.getTable(TableName.META_TABLE_NAME);
+        ResultScanner scanner = metaTable.getScanner(new Scan().addFamily(HConstants.REPLICATION_BARRIER_FAMILY).readAllVersions())) {
+        for (; ; ) {
+            Result result = scanner.next();
+            if (result == null) {
+                break;
+            }
+            totalRows++;
+            long[] barriers = ReplicationBarrierFamilyFormat.getReplicationBarriers(result);
+            if (barriers.length == 0) {
+                continue;
+            }
+            byte[] regionName = result.getRow();
+            TableName tn = RegionInfo.getTable(regionName);
+            if (!tn.equals(tableName)) {
+                tableName = tn;
+                peerIds = peerManager.getSerialPeerIdsBelongsTo(tableName);
+            }
+            if (peerIds.isEmpty()) {
+                // no serial replication
+                // check if the region has already been removed, i.e, no catalog family
+                if (metaTable.exists(new Get(regionName).addFamily(HConstants.CATALOG_FAMILY))) {
+                    // exists, then only keep the newest barrier
+                    Cell cell = result.getColumnLatestCell(HConstants.REPLICATION_BARRIER_FAMILY, HConstants.SEQNUM_QUALIFIER);
+                    metaTable.delete(new Delete(regionName).addFamily(HConstants.REPLICATION_BARRIER_FAMILY, cell.getTimestamp() - 1));
+                    deletedBarriers += barriers.length - 1;
+                } else {
+                    // not exists, delete all the barriers
+                    metaTable.delete(new Delete(regionName).addFamily(HConstants.REPLICATION_BARRIER_FAMILY));
+                    deletedBarriers += barriers.length;
+                }
+                cleanedRows++;
+                continue;
+            }
+            String encodedRegionName = RegionInfo.encodeRegionName(regionName);
+            long pushedSeqId = Long.MAX_VALUE;
+            for (String peerId : peerIds) {
+                pushedSeqId = Math.min(pushedSeqId, peerManager.getQueueStorage().getLastSequenceId(encodedRegionName, peerId));
+            }
+            int index = Arrays.binarySearch(barriers, pushedSeqId);
+            if (index == -1) {
+                // beyond the first barrier, usually this should not happen but anyway let's add a check
+                // for it.
+                continue;
+            }
+            if (index < 0) {
+                index = -index - 1;
+            } else {
+                index++;
+            }
+            // A special case for merged/split region, and also deleted tables, where we are in the last
+            // closed range and the pushedSeqId is the last barrier minus 1.
+            if (index == barriers.length - 1 && pushedSeqId == barriers[barriers.length - 1] - 1) {
+                // check if the region has already been removed, i.e, no catalog family
+                if (!metaTable.exists(new Get(regionName).addFamily(HConstants.CATALOG_FAMILY))) {
+                    ReplicationQueueStorage queueStorage = peerManager.getQueueStorage();
+                    for (String peerId : peerIds) {
+                        queueStorage.removeLastSequenceIds(peerId, Arrays.asList(encodedRegionName));
+                        deletedLastPushedSeqIds++;
+                    }
+                    metaTable.delete(new Delete(regionName).addFamily(HConstants.REPLICATION_BARRIER_FAMILY));
+                    deletedRows++;
+                    deletedBarriers += barriers.length;
+                    continue;
+                }
+            }
+            // the barrier before 'index - 1'(exclusive) can be safely removed. See the algorithm in
+            // SerialReplicationChecker for more details.
+            if (index - 1 > 0) {
+                List<Cell> cells = result.getColumnCells(HConstants.REPLICATION_BARRIER_FAMILY, HConstants.SEQNUM_QUALIFIER);
+                // All barriers before this cell(exclusive) can be removed
+                Cell cell = cells.get(cells.size() - index);
+                metaTable.delete(new Delete(regionName).addFamily(HConstants.REPLICATION_BARRIER_FAMILY, cell.getTimestamp() - 1));
+                cleanedRows++;
+                deletedBarriers += index - 1;
+            }
+        }
+    } catch (ReplicationException | IOException e) {
+        LOG.warn("Failed to clean up replication barrier", e);
+    }
+    if (totalRows > 0) {
+        LOG.info("TotalRows={}, cleanedRows={}, deletedRows={}, deletedBarriers={}, " + "deletedLastPushedSeqIds={}", totalRows, cleanedRows, deletedRows, deletedBarriers, deletedLastPushedSeqIds);
+    }
+}
+
+@Override
+public synchronized // running instance at a time.
+void chore() {
+    long totalRows = 0;
+    long cleanedRows = 0;
+    long deletedRows = 0;
+    long deletedBarriers = 0;
+    long deletedLastPushedSeqIds = 0;
+    TableName tableName = null;
+    List<String> peerIds = null;
+    try (Table metaTable = conn.getTable(TableName.META_TABLE_NAME);
+        ResultScanner scanner = metaTable.getScanner(new Scan().addFamily(HConstants.REPLICATION_BARRIER_FAMILY).readAllVersions())) {
+        for (; ; ) {
+            Result result = scanner.next();
+            if (result == null) {
+                break;
+            }
+            totalRows++;
+            long[] barriers = ReplicationBarrierFamilyFormat.getReplicationBarriers(result);
+            if (barriers.length == 0) {
+                continue;
+            }
+            byte[] regionName = result.getRow();
+            TableName tn = RegionInfo.getTable(regionName);
+            if (!tn.equals(tableName)) {
+                tableName = tn;
+                peerIds = peerManager.getSerialPeerIdsBelongsTo(tableName);
+            }
+            if (peerIds.isEmpty()) {
+                // no serial replication
+                // check if the region has already been removed, i.e, no catalog family
+                if (metaTable.exists(new Get(regionName).addFamily(HConstants.CATALOG_FAMILY))) {
+                    // exists, then only keep the newest barrier
+                    Cell cell = result.getColumnLatestCell(HConstants.REPLICATION_BARRIER_FAMILY, HConstants.SEQNUM_QUALIFIER);
+                    metaTable.delete(new Delete(regionName).addFamily(HConstants.REPLICATION_BARRIER_FAMILY, cell.getTimestamp() - 1));
+                    deletedBarriers += barriers.length - 1;
+                } else {
+                    // not exists, delete all the barriers
+                    metaTable.delete(new Delete(regionName).addFamily(HConstants.REPLICATION_BARRIER_FAMILY));
+                    deletedBarriers += barriers.length;
+                }
+                cleanedRows++;
+                continue;
+            }
+            String encodedRegionName = RegionInfo.encodeRegionName(regionName);
+            long pushedSeqId = Long.MAX_VALUE;
+            for (String peerId : peerIds) {
+                pushedSeqId = Math.min(pushedSeqId, peerManager.getQueueStorage().getLastSequenceId(encodedRegionName, peerId));
+            }
+            int index = Arrays.binarySearch(barriers, pushedSeqId);
+            if (index == -1) {
+                // beyond the first barrier, usually this should not happen but anyway let's add a check
+                // for it.
+                continue;
+            }
+            if (index < 0) {
+                index = -index - 1;
+            } else {
+                index++;
+            }
+            // A special case for merged/split region, and also deleted tables, where we are in the last
+            // closed range and the pushedSeqId is the last barrier minus 1.
+            if (index == barriers.length - 1 && pushedSeqId == barriers[barriers.length - 1] - 1) {
+                // check if the region has already been removed, i.e, no catalog family
+                if (!metaTable.exists(new Get(regionName).addFamily(HConstants.CATALOG_FAMILY))) {
+                    ReplicationQueueStorage queueStorage = peerManager.getQueueStorage();
+                    for (String peerId : peerIds) {
+                        queueStorage.removeLastSequenceIds(peerId, Arrays.asList(encodedRegionName));
+                        deletedLastPushedSeqIds++;
+                    }
+                    metaTable.delete(new Delete(regionName).addFamily(HConstants.REPLICATION_BARRIER_FAMILY));
+                    deletedRows++;
+                    deletedBarriers += barriers.length;
+                    continue;
+                }
+            }
+            // the barrier before 'index - 1'(exclusive) can be safely removed. See the algorithm in
+            // SerialReplicationChecker for more details.
+            if (index - 1 > 0) {
+                List<Cell> cells = result.getColumnCells(HConstants.REPLICATION_BARRIER_FAMILY, HConstants.SEQNUM_QUALIFIER);
+                // All barriers before this cell(exclusive) can be removed
+                Cell cell = cells.get(cells.size() - index);
+                metaTable.delete(new Delete(regionName).addFamily(HConstants.REPLICATION_BARRIER_FAMILY, cell.getTimestamp() - 1));
+                cleanedRows++;
+                deletedBarriers += index - 1;
+            }
+        }
+    } catch (ReplicationException | IOException e) {
+        LOG.warn("Failed to clean up replication barrier", e);
+    }
+    if (totalRows > 0) {
+        LOG.info("TotalRows={}, cleanedRows={}, deletedRows={}, deletedBarriers={}, " + "deletedLastPushedSeqIds={}", totalRows, cleanedRows, deletedRows, deletedBarriers, deletedLastPushedSeqIds);
+    }
+}
+possible Hot1
+possible type Hot3_2
+2

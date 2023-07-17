@@ -1,0 +1,17 @@
+looking:locks
+synchronized (locks) {
+    while (locks.contains(name)) {
+        locks.wait();
+    }
+    locks.add(name);
+}
+
+synchronized (locks) {
+    while (locks.contains(name)) {
+        locks.wait();
+    }
+    locks.add(name);
+}
+possible Hot2
+possible type Hot3_2
+1

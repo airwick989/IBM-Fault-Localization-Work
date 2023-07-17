@@ -1,0 +1,17 @@
+looking:SpaceQuotaSnapshotNotifierForTest.transitionTable
+@Override
+public synchronized void transitionTable(TableName tableName, SpaceQuotaSnapshot snapshot) {
+    if (LOG.isTraceEnabled()) {
+        LOG.trace("Persisting " + tableName + "=>" + snapshot);
+    }
+    tableQuotaSnapshots.put(tableName, snapshot);
+}
+
+@Override
+public synchronized void transitionTable(TableName tableName, SpaceQuotaSnapshot snapshot) {
+    if (LOG.isTraceEnabled()) {
+        LOG.trace("Persisting " + tableName + "=>" + snapshot);
+    }
+    tableQuotaSnapshots.put(tableName, snapshot);
+}
+possible Hot1

@@ -1,0 +1,41 @@
+looking:RenewLeaseConsumer.onNext
+@Override
+public synchronized void onNext(Result[] results, ScanController controller) {
+    for (Result result : results) {
+        this.results.add(result);
+    }
+    if (!suspended) {
+        ScanResumer resumer = controller.suspend();
+        new Thread(() -> {
+            Threads.sleep(2 * SCANNER_LEASE_TIMEOUT_PERIOD_MS);
+            try {
+                TABLE.put(new Put(Bytes.toBytes(String.format("%02d", 10))).addColumn(FAMILY, CQ, Bytes.toBytes(10))).get();
+            } catch (Exception e) {
+                onError(e);
+            }
+            resumer.resume();
+        }).start();
+    }
+}
+
+@Override
+public synchronized void onNext(Result[] results, ScanController controller) {
+    for (Result result : results) {
+        this.results.add(result);
+    }
+    if (!suspended) {
+        ScanResumer resumer = controller.suspend();
+        new Thread(() -> {
+            Threads.sleep(2 * SCANNER_LEASE_TIMEOUT_PERIOD_MS);
+            try {
+                TABLE.put(new Put(Bytes.toBytes(String.format("%02d", 10))).addColumn(FAMILY, CQ, Bytes.toBytes(10))).get();
+            } catch (Exception e) {
+                onError(e);
+            }
+            resumer.resume();
+        }).start();
+    }
+}
+possible Hot1
+possible type Hot3_2
+1

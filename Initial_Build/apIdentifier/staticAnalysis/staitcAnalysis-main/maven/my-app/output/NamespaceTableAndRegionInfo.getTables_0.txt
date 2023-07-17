@@ -1,0 +1,17 @@
+looking:NamespaceTableAndRegionInfo.getTables
+/**
+ * Gets the set of table names belonging to namespace.
+ * @return A set of table names.
+ */
+synchronized Set<TableName> getTables() {
+    return this.tableAndRegionInfo.keySet();
+}
+
+/**
+ * Gets the set of table names belonging to namespace.
+ * @return A set of table names.
+ */
+synchronized Set<TableName> getTables() {
+    return this.tableAndRegionInfo.keySet();
+}
+possible Hot1

@@ -1,0 +1,31 @@
+looking:Listener.doStop
+synchronized void doStop() {
+    if (selector != null) {
+        selector.wakeup();
+        Thread.yield();
+    }
+    if (acceptChannel != null) {
+        try {
+            acceptChannel.socket().close();
+        } catch (IOException e) {
+            LOG.info(getName() + ": exception in closing listener socket. " + e);
+        }
+    }
+    readPool.shutdownNow();
+}
+
+synchronized void doStop() {
+    if (selector != null) {
+        selector.wakeup();
+        Thread.yield();
+    }
+    if (acceptChannel != null) {
+        try {
+            acceptChannel.socket().close();
+        } catch (IOException e) {
+            LOG.info(getName() + ": exception in closing listener socket. " + e);
+        }
+    }
+    readPool.shutdownNow();
+}
+possible Hot1

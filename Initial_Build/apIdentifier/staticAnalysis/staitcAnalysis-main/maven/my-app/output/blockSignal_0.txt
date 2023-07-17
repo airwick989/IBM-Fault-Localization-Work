@@ -1,0 +1,9 @@
+looking:blockSignal
+synchronized (blockSignal) {
+    blockSignal.notifyAll();
+}
+
+synchronized (blockSignal) {
+    blockSignal.notifyAll();
+}
+possible Hot1

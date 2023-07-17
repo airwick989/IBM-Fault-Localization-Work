@@ -1,0 +1,52 @@
+looking:TaskMonitor.getTasks
+/**
+ * Produces a list containing copies of the current state of all non-expired MonitoredTasks
+ * handled by this TaskMonitor.
+ * @param filter type of wanted tasks
+ * @return A filtered list of MonitoredTasks.
+ */
+public synchronized List<MonitoredTask> getTasks(String filter) {
+    {
+        for (Iterator<TaskAndWeakRefPair> it = tasks.iterator(); it.hasNext(); ) {
+            TaskAndWeakRefPair pair = it.next();
+            MonitoredTask stat = pair.get();
+            {
+                long cts = stat.getCompletionTimestamp();
+                return (cts > 0 && EnvironmentEdgeManager.currentTime() - cts > expirationTime);
+            }
+            if (canPurge(stat)) {
+                it.remove();
+            }
+        }
+    }
+    TaskFilter taskFilter = createTaskFilter(filter);
+    {
+        for (TaskAndWeakRefPair task : tasks) {
+            MonitoredTask t = task.get();
+            if (!filter.filter(t)) {
+                results.add(t.clone());
+            }
+        }
+    }
+    processTasks(tasks, taskFilter, results);
+    processTasks(rpcTasks, taskFilter, results);
+    return results;
+}
+
+/**
+ * Produces a list containing copies of the current state of all non-expired MonitoredTasks
+ * handled by this TaskMonitor.
+ * @param filter type of wanted tasks
+ * @return A filtered list of MonitoredTasks.
+ */
+public synchronized List<MonitoredTask> getTasks(String filter) {
+    purgeExpiredTasks();
+    TaskFilter taskFilter = createTaskFilter(filter);
+    ArrayList<MonitoredTask> results = Lists.newArrayListWithCapacity(tasks.size() + rpcTasks.size());
+    processTasks(tasks, taskFilter, results);
+    processTasks(rpcTasks, taskFilter, results);
+    return results;
+}
+possible Hot1
+possible type Hot3_2
+1

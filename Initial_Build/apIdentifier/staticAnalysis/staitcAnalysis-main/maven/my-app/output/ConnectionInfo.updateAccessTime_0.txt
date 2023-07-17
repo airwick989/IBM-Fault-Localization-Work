@@ -1,0 +1,27 @@
+looking:ConnectionInfo.updateAccessTime
+synchronized boolean updateAccessTime() {
+    if (closed) {
+        return false;
+    }
+    if (connection.isAborted() || connection.isClosed()) {
+        LOG.info("Unexpected: cached Connection is aborted/closed, removed from cache");
+        connections.remove(userName);
+        return false;
+    }
+    lastAccessTime = EnvironmentEdgeManager.currentTime();
+    return true;
+}
+
+synchronized boolean updateAccessTime() {
+    if (closed) {
+        return false;
+    }
+    if (connection.isAborted() || connection.isClosed()) {
+        LOG.info("Unexpected: cached Connection is aborted/closed, removed from cache");
+        connections.remove(userName);
+        return false;
+    }
+    lastAccessTime = EnvironmentEdgeManager.currentTime();
+    return true;
+}
+possible Hot1

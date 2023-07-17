@@ -1,0 +1,27 @@
+looking:grabTaskLock
+// heartbeats the task znode by upping its version
+synchronized (grabTaskLock) {
+    if (workerInGrabTask) {
+        // currentTask can change
+        String taskpath = currentTask;
+        if (taskpath != null && taskpath.equals(path)) {
+            {
+                watcher.getRecoverableZooKeeper().getZooKeeper().getData(currentTask, watcher, new GetDataAsyncCallback(), null);
+                SplitLogCounters.tot_wkr_get_data_queued.increment();
+            }
+        }
+    }
+}
+
+// there will be a self generated dataChanged event every time attemptToOwnTask()
+// heartbeats the task znode by upping its version
+synchronized (grabTaskLock) {
+    if (workerInGrabTask) {
+        // currentTask can change
+        String taskpath = currentTask;
+        if (taskpath != null && taskpath.equals(path)) {
+            getDataSetWatchAsync();
+        }
+    }
+}
+possible Hot2

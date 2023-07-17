@@ -1,0 +1,11 @@
+looking:ForeignExceptionDispatcher.getException
+@Override
+synchronized public ForeignException getException() {
+    return exception;
+}
+
+@Override
+synchronized public ForeignException getException() {
+    return exception;
+}
+possible Hot1

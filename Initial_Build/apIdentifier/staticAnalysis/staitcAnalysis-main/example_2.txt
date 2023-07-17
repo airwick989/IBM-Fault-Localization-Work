@@ -1,0 +1,46 @@
+test.class
+synchronized(test.class){
+	System.out.println("hi");
+	}
+
+lock_1
+synchronized(lock_1){
+	synchronized(lock_2){
+		synchronized(lock_3){
+			System.out.println(x);
+			}
+		}
+	}
+
+lock_2
+synchronized(lock_2){
+	synchronized(lock_3){
+		System.out.println(x);
+		}
+	}
+
+lock_3
+synchronized(lock_3){
+	System.out.println(x);
+	}
+
+other.B
+public synchronized void B(){
+	for(int x=0;x<100;x++){
+		//A.update();
+		//Thread.sleep(20);
+		}
+	}
+
+test_2.class
+synchronized(test_2.class){
+	System.out.println("hi");
+	}
+
+more.C
+public synchronized void C(){
+	while(true){
+		//things
+		}
+	}
+

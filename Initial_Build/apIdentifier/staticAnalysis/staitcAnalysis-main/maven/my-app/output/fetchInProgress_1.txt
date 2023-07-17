@@ -1,0 +1,9 @@
+looking:fetchInProgress
+synchronized (fetchInProgress) {
+    fetchInProgress.notifyAll();
+}
+
+synchronized (fetchInProgress) {
+    fetchInProgress.notifyAll();
+}
+possible Hot2

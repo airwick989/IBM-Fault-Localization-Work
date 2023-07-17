@@ -1,0 +1,70 @@
+looking:SnapshotManager.restoreSnapshot
+/**
+ * Restore the specified snapshot. The restore will fail if the destination table has a snapshot
+ * or restore in progress.
+ * @param snapshot        Snapshot Descriptor
+ * @param tableDescriptor Table Descriptor
+ * @param nonceKey        unique identifier to prevent duplicated RPC
+ * @param restoreAcl      true to restore acl of snapshot
+ * @return procId the ID of the restore snapshot procedure
+ */
+private synchronized long restoreSnapshot(final SnapshotDescription snapshot, final TableDescriptor tableDescriptor, final NonceKey nonceKey, final boolean restoreAcl) throws HBaseSnapshotException {
+    final TableName tableName = tableDescriptor.getTableName();
+    {
+        Long procId = this.restoreTableToProcIdMap.get(tableName);
+        if (procId == null) {
+            return false;
+        }
+        ProcedureExecutor<MasterProcedureEnv> procExec = master.getMasterProcedureExecutor();
+        if (procExec.isRunning() && !procExec.isFinished(procId)) {
+            return true;
+        } else {
+            this.restoreTableToProcIdMap.remove(tableName);
+            return false;
+        }
+    }
+    // make sure we aren't running a restore on the same table
+    if (isRestoringTable(tableName)) {
+        throw new RestoreSnapshotException("Restore already in progress on the table=" + tableName);
+    }
+    try {
+        long procId = master.getMasterProcedureExecutor().submitProcedure(new RestoreSnapshotProcedure(master.getMasterProcedureExecutor().getEnvironment(), tableDescriptor, snapshot, restoreAcl), nonceKey);
+        this.restoreTableToProcIdMap.put(tableName, procId);
+        return procId;
+    } catch (Exception e) {
+        String msg = "Couldn't restore the snapshot=" + ClientSnapshotDescriptionUtils.toString(snapshot) + " on table=" + tableName;
+        LOG.error(msg, e);
+        throw new RestoreSnapshotException(msg, e);
+    }
+}
+
+/**
+ * Restore the specified snapshot. The restore will fail if the destination table has a snapshot
+ * or restore in progress.
+ * @param snapshot        Snapshot Descriptor
+ * @param tableDescriptor Table Descriptor
+ * @param nonceKey        unique identifier to prevent duplicated RPC
+ * @param restoreAcl      true to restore acl of snapshot
+ * @return procId the ID of the restore snapshot procedure
+ */
+private synchronized long restoreSnapshot(final SnapshotDescription snapshot, final TableDescriptor tableDescriptor, final NonceKey nonceKey, final boolean restoreAcl) throws HBaseSnapshotException {
+    final TableName tableName = tableDescriptor.getTableName();
+    // make sure we aren't running a snapshot on the same table
+    if (isTableTakingAnySnapshot(tableName)) {
+        throw new RestoreSnapshotException("Snapshot in progress on the restore table=" + tableName);
+    }
+    // make sure we aren't running a restore on the same table
+    if (isRestoringTable(tableName)) {
+        throw new RestoreSnapshotException("Restore already in progress on the table=" + tableName);
+    }
+    try {
+        long procId = master.getMasterProcedureExecutor().submitProcedure(new RestoreSnapshotProcedure(master.getMasterProcedureExecutor().getEnvironment(), tableDescriptor, snapshot, restoreAcl), nonceKey);
+        this.restoreTableToProcIdMap.put(tableName, procId);
+        return procId;
+    } catch (Exception e) {
+        String msg = "Couldn't restore the snapshot=" + ClientSnapshotDescriptionUtils.toString(snapshot) + " on table=" + tableName;
+        LOG.error(msg, e);
+        throw new RestoreSnapshotException(msg, e);
+    }
+}
+possible Hot1

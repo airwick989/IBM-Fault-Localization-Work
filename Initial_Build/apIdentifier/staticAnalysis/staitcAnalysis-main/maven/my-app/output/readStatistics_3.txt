@@ -1,0 +1,9 @@
+looking:readStatistics
+synchronized (readStatistics) {
+    return readStatistics.totalZeroCopyBytesRead;
+}
+
+synchronized (readStatistics) {
+    return readStatistics.totalZeroCopyBytesRead;
+}
+possible Hot2

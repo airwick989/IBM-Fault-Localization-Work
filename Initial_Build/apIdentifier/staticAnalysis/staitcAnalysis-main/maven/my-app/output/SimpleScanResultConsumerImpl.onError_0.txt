@@ -1,0 +1,15 @@
+looking:SimpleScanResultConsumerImpl.onError
+@Override
+public synchronized void onError(Throwable error) {
+    this.error = error;
+    finished = true;
+    notifyAll();
+}
+
+@Override
+public synchronized void onError(Throwable error) {
+    this.error = error;
+    finished = true;
+    notifyAll();
+}
+possible Hot1

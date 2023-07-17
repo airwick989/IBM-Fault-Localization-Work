@@ -1,0 +1,23 @@
+looking:NamespaceTableAndRegionInfo.addTable
+synchronized void addTable(TableName tableName, int regionCount) {
+    if (!name.equalsIgnoreCase(tableName.getNamespaceAsString())) {
+        throw new IllegalStateException("Table : " + tableName + " does not belong to namespace " + name);
+    }
+    if (!tableAndRegionInfo.containsKey(tableName)) {
+        tableAndRegionInfo.put(tableName, new AtomicInteger(regionCount));
+    } else {
+        throw new IllegalStateException("Table already in the cache " + tableName);
+    }
+}
+
+synchronized void addTable(TableName tableName, int regionCount) {
+    if (!name.equalsIgnoreCase(tableName.getNamespaceAsString())) {
+        throw new IllegalStateException("Table : " + tableName + " does not belong to namespace " + name);
+    }
+    if (!tableAndRegionInfo.containsKey(tableName)) {
+        tableAndRegionInfo.put(tableName, new AtomicInteger(regionCount));
+    } else {
+        throw new IllegalStateException("Table already in the cache " + tableName);
+    }
+}
+possible Hot1

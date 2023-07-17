@@ -1,0 +1,15 @@
+looking:ServerManager.isServerKnownAndOnline
+/**
+ * Returns whether the server is online, dead, or unknown.
+ */
+public synchronized ServerLiveState isServerKnownAndOnline(ServerName serverName) {
+    return onlineServers.containsKey(serverName) ? ServerLiveState.LIVE : (deadservers.isDeadServer(serverName) ? ServerLiveState.DEAD : ServerLiveState.UNKNOWN);
+}
+
+/**
+ * Returns whether the server is online, dead, or unknown.
+ */
+public synchronized ServerLiveState isServerKnownAndOnline(ServerName serverName) {
+    return onlineServers.containsKey(serverName) ? ServerLiveState.LIVE : (deadservers.isDeadServer(serverName) ? ServerLiveState.DEAD : ServerLiveState.UNKNOWN);
+}
+possible Hot1

@@ -1,0 +1,25 @@
+looking:HRegionServer.createRegionServerStatusStub
+/**
+ * Get the current master from ZooKeeper and open the RPC connection to it. To get a fresh
+ * connection, the current rssStub must be null. Method will block until a master is available.
+ * You can break from this block by requesting the server stop.
+ * @return master + port, or null if server has been stopped
+ */
+private synchronized ServerName createRegionServerStatusStub() {
+    {
+        // Create RS stub without refreshing the master node from ZK, use cached data
+        return createRegionServerStatusStub(false);
+    }
+}
+
+/**
+ * Get the current master from ZooKeeper and open the RPC connection to it. To get a fresh
+ * connection, the current rssStub must be null. Method will block until a master is available.
+ * You can break from this block by requesting the server stop.
+ * @return master + port, or null if server has been stopped
+ */
+private synchronized ServerName createRegionServerStatusStub() {
+    // Create RS stub without refreshing the master node from ZK, use cached data
+    return createRegionServerStatusStub(false);
+}
+possible Hot2

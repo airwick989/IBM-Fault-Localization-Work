@@ -1,0 +1,11 @@
+looking:this.drainingServers
+synchronized (this.drainingServers) {
+    this.drainingServers.remove(sn);
+    this.serverManager.removeServerFromDrainList(sn);
+}
+
+synchronized (this.drainingServers) {
+    this.drainingServers.remove(sn);
+    this.serverManager.removeServerFromDrainList(sn);
+}
+possible Hot2

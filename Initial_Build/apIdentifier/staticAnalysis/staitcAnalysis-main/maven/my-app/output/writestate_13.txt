@@ -1,0 +1,13 @@
+looking:writestate
+synchronized (writestate) {
+    writestate.flushing = false;
+    this.writestate.flushRequested = false;
+    writestate.notifyAll();
+}
+
+synchronized (writestate) {
+    writestate.flushing = false;
+    this.writestate.flushRequested = false;
+    writestate.notifyAll();
+}
+possible Hot2

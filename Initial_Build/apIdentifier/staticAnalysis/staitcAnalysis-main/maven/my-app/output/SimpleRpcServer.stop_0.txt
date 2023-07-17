@@ -1,0 +1,62 @@
+looking:SimpleRpcServer.stop
+/**
+ * Stops the service. No new calls will be handled after this is called.
+ */
+@Override
+public synchronized void stop() {
+    LOG.info("Stopping server on " + port);
+    running = false;
+    if (authTokenSecretMgr != null) {
+        authTokenSecretMgr.stop();
+        authTokenSecretMgr = null;
+    }
+    listener.interrupt();
+    {
+        if (selector != null) {
+            selector.wakeup();
+            Thread.yield();
+        }
+        if (acceptChannel != null) {
+            try {
+                acceptChannel.socket().close();
+            } catch (IOException e) {
+                LOG.info(getName() + ": exception in closing listener socket. " + e);
+            }
+        }
+        readPool.shutdownNow();
+    }
+    {
+        LOG.info("Stopping server on " + port);
+        running = false;
+        if (authTokenSecretMgr != null) {
+            authTokenSecretMgr.stop();
+            authTokenSecretMgr = null;
+        }
+        listener.interrupt();
+        listener.doStop();
+        responder.interrupt();
+        scheduler.stop();
+        notifyAll();
+    }
+    scheduler.stop();
+    notifyAll();
+}
+
+/**
+ * Stops the service. No new calls will be handled after this is called.
+ */
+@Override
+public synchronized void stop() {
+    LOG.info("Stopping server on " + port);
+    running = false;
+    if (authTokenSecretMgr != null) {
+        authTokenSecretMgr.stop();
+        authTokenSecretMgr = null;
+    }
+    listener.interrupt();
+    listener.doStop();
+    responder.interrupt();
+    scheduler.stop();
+    notifyAll();
+}
+possible Hot1

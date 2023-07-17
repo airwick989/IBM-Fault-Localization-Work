@@ -1,0 +1,91 @@
+looking:ChunkCreator.putbackChunks
+synchronized void putbackChunks(Set<Integer> chunks) {
+    // if there is no pool just try to clear the chunkIdMap in case there is something
+    if (dataChunksPool == null && indexChunksPool == null) {
+        {
+            this.chunkIdMap.keySet().removeAll(chunkIDs);
+        }
+        return;
+    }
+    // if there is a pool, go over all chunk IDs that came back, the chunks may be from pool or not
+    for (int chunkID : chunks) {
+        // translate chunk ID to chunk, if chunk initially wasn't in pool
+        // this translation will (most likely) return null
+        Chunk chunk = ChunkCreator.this.getChunk(chunkID);
+        if (chunk != null) {
+            if (chunk.isFromPool() && chunk.isIndexChunk()) {
+                {
+                    // if there is no pool just try to clear the chunkIdMap in case there is something
+                    if (dataChunksPool == null && indexChunksPool == null) {
+                        this.removeChunks(chunks);
+                        return;
+                    }
+                    // if there is a pool, go over all chunk IDs that came back, the chunks may be from pool or not
+                    for (int chunkID : chunks) {
+                        // translate chunk ID to chunk, if chunk initially wasn't in pool
+                        // this translation will (most likely) return null
+                        Chunk chunk = ChunkCreator.this.getChunk(chunkID);
+                        if (chunk != null) {
+                            if (chunk.isFromPool() && chunk.isIndexChunk()) {
+                                indexChunksPool.putbackChunks(chunk);
+                            } else if (chunk.isFromPool() && chunk.isDataChunk()) {
+                                dataChunksPool.putbackChunks(chunk);
+                            } else {
+                                // chunks which are not from one of the pools
+                                // should be released without going to the pools.
+                                // Removing them from chunkIdMap will cause their removal by the GC.
+                                this.removeChunk(chunkID);
+                            }
+                        }
+                        // if chunk is null, it was never covered by the chunkIdMap (and so wasn't in pool also),
+                        // so we have nothing to do on its release
+                    }
+                    return;
+                }
+            } else if (chunk.isFromPool() && chunk.isDataChunk()) {
+                dataChunksPool.putbackChunks(chunk);
+            } else {
+                {
+                    return this.chunkIdMap.remove(chunkId);
+                }
+                // chunks which are not from one of the pools
+                // should be released without going to the pools.
+            }
+        }
+        // if chunk is null, it was never covered by the chunkIdMap (and so wasn't in pool also),
+        // so we have nothing to do on its release
+    }
+    return;
+}
+
+synchronized void putbackChunks(Set<Integer> chunks) {
+    // if there is no pool just try to clear the chunkIdMap in case there is something
+    if (dataChunksPool == null && indexChunksPool == null) {
+        this.removeChunks(chunks);
+        return;
+    }
+    // if there is a pool, go over all chunk IDs that came back, the chunks may be from pool or not
+    for (int chunkID : chunks) {
+        // translate chunk ID to chunk, if chunk initially wasn't in pool
+        // this translation will (most likely) return null
+        Chunk chunk = ChunkCreator.this.getChunk(chunkID);
+        if (chunk != null) {
+            if (chunk.isFromPool() && chunk.isIndexChunk()) {
+                indexChunksPool.putbackChunks(chunk);
+            } else if (chunk.isFromPool() && chunk.isDataChunk()) {
+                dataChunksPool.putbackChunks(chunk);
+            } else {
+                // chunks which are not from one of the pools
+                // should be released without going to the pools.
+                // Removing them from chunkIdMap will cause their removal by the GC.
+                this.removeChunk(chunkID);
+            }
+        }
+        // if chunk is null, it was never covered by the chunkIdMap (and so wasn't in pool also),
+        // so we have nothing to do on its release
+    }
+    return;
+}
+possible Hot1
+possible type Hot3_2
+2

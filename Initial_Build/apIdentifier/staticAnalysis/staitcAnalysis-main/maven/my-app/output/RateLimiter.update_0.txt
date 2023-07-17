@@ -1,0 +1,43 @@
+looking:RateLimiter.update
+/**
+ * Sets the current instance of RateLimiter to a new values. if current limit is smaller than the
+ * new limit, bump up the available resources. Otherwise allow clients to use up the previously
+ * available resources.
+ */
+public synchronized void update(final RateLimiter other) {
+    this.tunit = other.tunit;
+    if (this.limit < other.limit) {
+        // If avail is capped to this.limit, it will never overflow,
+        // otherwise, avail may overflow, just be careful here.
+        long diff = other.limit - this.limit;
+        if (this.avail <= Long.MAX_VALUE - diff) {
+            this.avail += diff;
+            this.avail = Math.min(this.avail, other.limit);
+        } else {
+            this.avail = other.limit;
+        }
+    }
+    this.limit = other.limit;
+}
+
+/**
+ * Sets the current instance of RateLimiter to a new values. if current limit is smaller than the
+ * new limit, bump up the available resources. Otherwise allow clients to use up the previously
+ * available resources.
+ */
+public synchronized void update(final RateLimiter other) {
+    this.tunit = other.tunit;
+    if (this.limit < other.limit) {
+        // If avail is capped to this.limit, it will never overflow,
+        // otherwise, avail may overflow, just be careful here.
+        long diff = other.limit - this.limit;
+        if (this.avail <= Long.MAX_VALUE - diff) {
+            this.avail += diff;
+            this.avail = Math.min(this.avail, other.limit);
+        } else {
+            this.avail = other.limit;
+        }
+    }
+    this.limit = other.limit;
+}
+possible Hot1

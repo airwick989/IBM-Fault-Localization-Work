@@ -1,0 +1,55 @@
+looking:writestate
+synchronized (writestate) {
+    if (this.writestate.readOnly) {
+        // we should not wait for replayed flushed if we are read only (for example in case the
+        // region is a secondary replica).
+        return;
+    }
+    boolean interrupted = false;
+    try {
+        while (writestate.compacting.get() > 0 || writestate.flushing) {
+            LOG.debug("waiting for " + writestate.compacting + " compactions" + (writestate.flushing ? " & cache flush" : "") + " to complete for region " + this);
+            try {
+                writestate.wait();
+            } catch (InterruptedException iex) {
+                // essentially ignore and propagate the interrupt back up
+                LOG.warn("Interrupted while waiting in region {}", this);
+                interrupted = true;
+                break;
+            }
+        }
+    } finally {
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+
+synchronized (writestate) {
+    if (this.writestate.readOnly) {
+        // we should not wait for replayed flushed if we are read only (for example in case the
+        // region is a secondary replica).
+        return;
+    }
+    boolean interrupted = false;
+    try {
+        while (writestate.compacting.get() > 0 || writestate.flushing) {
+            LOG.debug("waiting for " + writestate.compacting + " compactions" + (writestate.flushing ? " & cache flush" : "") + " to complete for region " + this);
+            try {
+                writestate.wait();
+            } catch (InterruptedException iex) {
+                // essentially ignore and propagate the interrupt back up
+                LOG.warn("Interrupted while waiting in region {}", this);
+                interrupted = true;
+                break;
+            }
+        }
+    } finally {
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

@@ -1,0 +1,72 @@
+looking:RSGroupInfoManagerImpl.init
+private synchronized void init() throws IOException {
+    {
+        List<RSGroupInfo> groupList = new ArrayList<>();
+        // Overwrite anything read from zk, group table is source of truth
+        // if online read from GROUP table
+        if (forceOnline || isOnline()) {
+            LOG.debug("Refreshing in Online mode.");
+            groupList.addAll(retrieveGroupListFromGroupTable());
+        } else {
+            LOG.debug("Refreshing in Offline mode.");
+            groupList.addAll(retrieveGroupListFromZookeeper());
+        }
+        // This is added to the last of the list so it overwrites the 'default' rsgroup loaded
+        // from region group table or zk
+        groupList.add(new RSGroupInfo(RSGroupInfo.DEFAULT_GROUP, getDefaultServers(groupList)));
+        // populate the data
+        HashMap<String, RSGroupInfo> newGroupMap = Maps.newHashMap();
+        for (RSGroupInfo group : groupList) {
+            newGroupMap.put(group.getName(), group);
+        }
+        {
+            this.holder = new RSGroupInfoHolder(newRSGroupMap);
+        }
+        updateCacheOfRSGroups(newGroupMap.keySet());
+    }
+    masterServices.getServerManager().registerListener(new ServerListener() {
+
+        @Override
+        public void serverAdded(ServerName serverName) {
+            {
+                LOG.info("Updating default servers.");
+                Map<String, RSGroupInfo> newGroupMap = Maps.newHashMap(holder.groupName2Group);
+                RSGroupInfo oldDefaultGroupInfo = getRSGroup(RSGroupInfo.DEFAULT_GROUP);
+                assert oldDefaultGroupInfo != null;
+                RSGroupInfo newDefaultGroupInfo = new RSGroupInfo(RSGroupInfo.DEFAULT_GROUP, getDefaultServers());
+                newDefaultGroupInfo.addAllTables(oldDefaultGroupInfo.getTables());
+                newGroupMap.put(RSGroupInfo.DEFAULT_GROUP, newDefaultGroupInfo);
+                // do not need to persist, as we do not persist default group.
+                resetRSGroupMap(newGroupMap);
+                LOG.info("Updated default servers, {} servers", newDefaultGroupInfo.getServers().size());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("New default servers list: {}", newDefaultGroupInfo.getServers());
+                }
+            }
+        }
+
+        @Override
+        public void serverRemoved(ServerName serverName) {
+            updateDefaultServers();
+        }
+    });
+}
+
+private synchronized void init() throws IOException {
+    refresh(false);
+    masterServices.getServerManager().registerListener(new ServerListener() {
+
+        @Override
+        public void serverAdded(ServerName serverName) {
+            updateDefaultServers();
+        }
+
+        @Override
+        public void serverRemoved(ServerName serverName) {
+            updateDefaultServers();
+        }
+    });
+}
+possible Hot1
+possible type Hot3_2
+1

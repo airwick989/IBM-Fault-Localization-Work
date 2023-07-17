@@ -1,0 +1,75 @@
+looking:UserQuotaState.toString
+@Override
+public synchronized String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("UserQuotaState(ts=" + getLastUpdate());
+    if (bypassGlobals)
+        builder.append(" bypass-globals");
+    {
+        return !bypassGlobals && getGlobalLimiterWithoutUpdatingLastQuery() == NoopQuotaLimiter.get() && (tableLimiters == null || tableLimiters.isEmpty()) && (namespaceLimiters == null || namespaceLimiters.isEmpty());
+    }
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("UserQuotaState(ts=" + getLastUpdate());
+        if (bypassGlobals)
+            builder.append(" bypass-globals");
+        if (isBypass()) {
+            builder.append(" bypass");
+        } else {
+            if (getGlobalLimiterWithoutUpdatingLastQuery() != NoopQuotaLimiter.get()) {
+                builder.append(" global-limiter");
+            }
+            if (tableLimiters != null && !tableLimiters.isEmpty()) {
+                builder.append(" [");
+                for (TableName table : tableLimiters.keySet()) {
+                    builder.append(" " + table);
+                }
+                builder.append(" ]");
+            }
+            if (namespaceLimiters != null && !namespaceLimiters.isEmpty()) {
+                builder.append(" [");
+                for (String ns : namespaceLimiters.keySet()) {
+                    builder.append(" " + ns);
+                }
+                builder.append(" ]");
+            }
+        }
+        builder.append(')');
+        return builder.toString();
+    }
+    return builder.toString();
+}
+
+@Override
+public synchronized String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("UserQuotaState(ts=" + getLastUpdate());
+    if (bypassGlobals)
+        builder.append(" bypass-globals");
+    if (isBypass()) {
+        builder.append(" bypass");
+    } else {
+        if (getGlobalLimiterWithoutUpdatingLastQuery() != NoopQuotaLimiter.get()) {
+            builder.append(" global-limiter");
+        }
+        if (tableLimiters != null && !tableLimiters.isEmpty()) {
+            builder.append(" [");
+            for (TableName table : tableLimiters.keySet()) {
+                builder.append(" " + table);
+            }
+            builder.append(" ]");
+        }
+        if (namespaceLimiters != null && !namespaceLimiters.isEmpty()) {
+            builder.append(" [");
+            for (String ns : namespaceLimiters.keySet()) {
+                builder.append(" " + ns);
+            }
+            builder.append(" ]");
+        }
+    }
+    builder.append(')');
+    return builder.toString();
+}
+possible Hot1
+possible type Hot3_2
+1

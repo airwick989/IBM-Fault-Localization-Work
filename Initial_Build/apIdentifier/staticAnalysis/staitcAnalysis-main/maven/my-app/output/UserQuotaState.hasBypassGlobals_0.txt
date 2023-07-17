@@ -1,0 +1,9 @@
+looking:UserQuotaState.hasBypassGlobals
+public synchronized boolean hasBypassGlobals() {
+    return bypassGlobals;
+}
+
+public synchronized boolean hasBypassGlobals() {
+    return bypassGlobals;
+}
+possible Hot1

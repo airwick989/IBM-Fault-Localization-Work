@@ -1,0 +1,42 @@
+looking:closeLock
+synchronized (closeLock) {
+    for (byte[] column : columns) {
+        HStore store = this.stores.get(column);
+        if (store == null) {
+            throw new IllegalArgumentException("No column family : " + new String(column, StandardCharsets.UTF_8) + " available");
+        }
+        Collection<HStoreFile> storeFiles = store.getStorefiles();
+        if (storeFiles == null) {
+            continue;
+        }
+        for (HStoreFile storeFile : storeFiles) {
+            storeFileNames.add(storeFile.getPath().toString());
+        }
+        {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(getRegionInfo().getEncodedName() + " : Store files for region: ");
+                stores.values().stream().filter(s -> s.getStorefiles() != null).flatMap(s -> s.getStorefiles().stream()).forEachOrdered(sf -> LOG.trace(getRegionInfo().getEncodedName() + " : " + sf));
+            }
+        }
+    }
+}
+
+synchronized (closeLock) {
+    for (byte[] column : columns) {
+        HStore store = this.stores.get(column);
+        if (store == null) {
+            throw new IllegalArgumentException("No column family : " + new String(column, StandardCharsets.UTF_8) + " available");
+        }
+        Collection<HStoreFile> storeFiles = store.getStorefiles();
+        if (storeFiles == null) {
+            continue;
+        }
+        for (HStoreFile storeFile : storeFiles) {
+            storeFileNames.add(storeFile.getPath().toString());
+        }
+        logRegionFiles();
+    }
+}
+possible Hot2
+possible type Hot3_2
+2

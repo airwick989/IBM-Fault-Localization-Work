@@ -1,0 +1,19 @@
+looking:RegionReplicationFlushRequester.class
+synchronized (RegionReplicationFlushRequester.class) {
+    timer = TIMER;
+    if (timer != null) {
+        return timer;
+    }
+    timer = new HashedWheelTimer(new ThreadFactoryBuilder().setNameFormat("RegionReplicationFlushRequester-Timer-pool-%d").setDaemon(true).setUncaughtExceptionHandler(Threads.LOGGING_EXCEPTION_HANDLER).build(), 500, TimeUnit.MILLISECONDS);
+    TIMER = timer;
+}
+
+synchronized (RegionReplicationFlushRequester.class) {
+    timer = TIMER;
+    if (timer != null) {
+        return timer;
+    }
+    timer = new HashedWheelTimer(new ThreadFactoryBuilder().setNameFormat("RegionReplicationFlushRequester-Timer-pool-%d").setDaemon(true).setUncaughtExceptionHandler(Threads.LOGGING_EXCEPTION_HANDLER).build(), 500, TimeUnit.MILLISECONDS);
+    TIMER = timer;
+}
+possible Hot1

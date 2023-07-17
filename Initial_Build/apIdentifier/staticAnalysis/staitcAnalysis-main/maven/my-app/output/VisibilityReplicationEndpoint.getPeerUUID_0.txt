@@ -1,0 +1,13 @@
+looking:VisibilityReplicationEndpoint.getPeerUUID
+@Override
+public synchronized UUID getPeerUUID() {
+    {
+        return delegator.getPeerUUID();
+    }
+}
+
+@Override
+public synchronized UUID getPeerUUID() {
+    return delegator.getPeerUUID();
+}
+possible Hot1

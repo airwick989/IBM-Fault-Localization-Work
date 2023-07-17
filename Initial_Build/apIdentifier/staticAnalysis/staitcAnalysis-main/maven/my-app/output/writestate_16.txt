@@ -1,0 +1,13 @@
+looking:writestate
+// up the memstore.
+synchronized (writestate) {
+    writestate.flushing = false;
+}
+
+// do nothing, an abort flush means the source region server will crash itself, after
+// the primary region online, it will send us an open region marker, then we can clean
+// up the memstore.
+synchronized (writestate) {
+    writestate.flushing = false;
+}
+possible Hot2

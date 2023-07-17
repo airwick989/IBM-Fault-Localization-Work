@@ -1,0 +1,9 @@
+looking:concurrentTables
+synchronized (concurrentTables) {
+    assertTrue("unexpected concurrency on " + tableId, concurrentTables.add(tableId));
+}
+
+synchronized (concurrentTables) {
+    assertTrue("unexpected concurrency on " + tableId, concurrentTables.add(tableId));
+}
+possible Hot2

@@ -1,0 +1,79 @@
+looking:VisibilityController.getAuths
+@Override
+public synchronized void getAuths(RpcController controller, GetAuthsRequest request, RpcCallback<GetAuthsResponse> done) {
+    GetAuthsResponse.Builder response = GetAuthsResponse.newBuilder();
+    if (!initialized) {
+        controller.setFailed("VisibilityController not yet initialized");
+    } else {
+        byte[] user = request.getUser().toByteArray();
+        List<String> labels = null;
+        try {
+            // We do ACL check here as we create scanner directly on region. It will not make calls to
+            // AccessController CP methods.
+            if (authorizationEnabled && accessControllerAvailable && !isSystemOrSuperUser()) {
+                User requestingUser = VisibilityUtils.getActiveUser();
+                throw new AccessDeniedException("User '" + (requestingUser != null ? requestingUser.getShortName() : "null") + "' is not authorized to perform this action.");
+            }
+            if (AuthUtil.isGroupPrincipal(Bytes.toString(user))) {
+                String group = AuthUtil.getGroupName(Bytes.toString(user));
+                labels = this.visibilityLabelService.getGroupAuths(new String[] { group }, false);
+            } else {
+                labels = this.visibilityLabelService.getUserAuths(user, false);
+            }
+            logResult(true, "getAuths", "Get authorizations for user allowed", user, null, null);
+        } catch (AccessDeniedException e) {
+            logResult(false, "getAuths", e.getMessage(), user, null, null);
+            CoprocessorRpcUtils.setControllerException(controller, e);
+        } catch (IOException e) {
+            CoprocessorRpcUtils.setControllerException(controller, e);
+        }
+        response.setUser(request.getUser());
+        if (labels != null) {
+            for (String label : labels) {
+                response.addAuth(ByteString.copyFrom(Bytes.toBytes(label)));
+            }
+        }
+    }
+    done.run(response.build());
+}
+
+@Override
+public synchronized void getAuths(RpcController controller, GetAuthsRequest request, RpcCallback<GetAuthsResponse> done) {
+    GetAuthsResponse.Builder response = GetAuthsResponse.newBuilder();
+    if (!initialized) {
+        controller.setFailed("VisibilityController not yet initialized");
+    } else {
+        byte[] user = request.getUser().toByteArray();
+        List<String> labels = null;
+        try {
+            // We do ACL check here as we create scanner directly on region. It will not make calls to
+            // AccessController CP methods.
+            if (authorizationEnabled && accessControllerAvailable && !isSystemOrSuperUser()) {
+                User requestingUser = VisibilityUtils.getActiveUser();
+                throw new AccessDeniedException("User '" + (requestingUser != null ? requestingUser.getShortName() : "null") + "' is not authorized to perform this action.");
+            }
+            if (AuthUtil.isGroupPrincipal(Bytes.toString(user))) {
+                String group = AuthUtil.getGroupName(Bytes.toString(user));
+                labels = this.visibilityLabelService.getGroupAuths(new String[] { group }, false);
+            } else {
+                labels = this.visibilityLabelService.getUserAuths(user, false);
+            }
+            logResult(true, "getAuths", "Get authorizations for user allowed", user, null, null);
+        } catch (AccessDeniedException e) {
+            logResult(false, "getAuths", e.getMessage(), user, null, null);
+            CoprocessorRpcUtils.setControllerException(controller, e);
+        } catch (IOException e) {
+            CoprocessorRpcUtils.setControllerException(controller, e);
+        }
+        response.setUser(request.getUser());
+        if (labels != null) {
+            for (String label : labels) {
+                response.addAuth(ByteString.copyFrom(Bytes.toBytes(label)));
+            }
+        }
+    }
+    done.run(response.build());
+}
+possible Hot1
+possible type Hot3_2
+1

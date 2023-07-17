@@ -1,0 +1,15 @@
+looking:this.tieLock
+synchronized (this.tieLock) {
+    // Get a flattened -- only the oldest sequenceid -- copy of current flushing and unflushed
+    // data structures to use in tests below.
+    flushing = flattenToLowestSequenceId(this.flushingSequenceIds);
+    unflushed = flattenToLowestSequenceId(this.lowestUnflushedSequenceIds);
+}
+
+synchronized (this.tieLock) {
+    // Get a flattened -- only the oldest sequenceid -- copy of current flushing and unflushed
+    // data structures to use in tests below.
+    flushing = flattenToLowestSequenceId(this.flushingSequenceIds);
+    unflushed = flattenToLowestSequenceId(this.lowestUnflushedSequenceIds);
+}
+possible Hot2

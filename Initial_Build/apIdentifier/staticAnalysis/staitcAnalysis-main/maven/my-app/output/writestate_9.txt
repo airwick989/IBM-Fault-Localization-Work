@@ -1,0 +1,211 @@
+looking:writestate
+// we will use writestate as a coarse-grain lock for all the replay events
+synchronized (writestate) {
+    // Replication can deliver events out of order when primary region moves or the region
+    // server crashes, since there is no coordination between replication of different wal files
+    // belonging to different region servers. We have to safe guard against this case by using
+    // region open event's seqid. Since this is the first event that the region puts (after
+    // possibly flushing recovered.edits), after seeing this event, we can ignore every edit
+    // smaller than this seqId
+    if (this.lastReplayedOpenRegionSeqId <= regionEvent.getLogSequenceNumber()) {
+        this.lastReplayedOpenRegionSeqId = regionEvent.getLogSequenceNumber();
+    } else {
+        LOG.warn(getRegionInfo().getEncodedName() + " : " + "Skipping replaying region event :" + TextFormat.shortDebugString(regionEvent) + " because its sequence id is smaller than this regions lastReplayedOpenRegionSeqId " + " of " + lastReplayedOpenRegionSeqId);
+        return;
+    }
+    // region open lists all the files that the region has at the time of the opening. Just pick
+    // all the files and drop prepared flushes and empty memstores
+    for (StoreDescriptor storeDescriptor : regionEvent.getStoresList()) {
+        // stores of primary may be different now
+        byte[] family = storeDescriptor.getFamilyName().toByteArray();
+        HStore store = getStore(family);
+        if (store == null) {
+            LOG.warn(getRegionInfo().getEncodedName() + " : " + "Received a region open marker from primary, but the family is not found. " + "Ignoring. StoreDescriptor:" + storeDescriptor);
+            continue;
+        }
+        long storeSeqId = store.getMaxSequenceId().orElse(0L);
+        List<String> storeFiles = storeDescriptor.getStoreFileList();
+        try {
+            {
+                {
+                    {
+                        {
+                            {
+                                {
+                                    {
+                                        {
+                                            {
+                                                {
+                                                    return refreshStoreFiles(false);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            LOG.warn(getRegionInfo().getEncodedName() + " : " + "At least one of the store files: " + storeFiles + " doesn't exist any more. Skip loading the file(s)", ex);
+            continue;
+        }
+        if (store.getMaxSequenceId().orElse(0L) != storeSeqId) {
+            {
+                TraceUtil.trace(() -> {
+                    {
+                        // If catalog region, do not impose resource constraints or block updates.
+                        if (this.getRegionInfo().isMetaRegion()) {
+                            return;
+                        }
+                        MemStoreSize mss = this.memStoreSizing.getMemStoreSize();
+                        if (mss.getHeapSize() + mss.getOffHeapSize() > this.blockingMemStoreSize) {
+                            blockedRequestsCount.increment();
+                            requestFlush();
+                            // Don't print current limit because it will vary too much. The message is used as a key
+                            // over in RetriesExhaustedWithDetailsException processing.
+                            final String regionName = this.getRegionInfo() == null ? "unknown" : this.getRegionInfo().getEncodedName();
+                            final String serverName = this.getRegionServerServices() == null ? "unknown" : (this.getRegionServerServices().getServerName() == null ? "unknown" : this.getRegionServerServices().getServerName().toString());
+                            RegionTooBusyException rtbe = new RegionTooBusyException("Over memstore limit=" + org.apache.hadoop.hbase.procedure2.util.StringUtils.humanSize(this.blockingMemStoreSize) + ", regionName=" + regionName + ", server=" + serverName);
+                            LOG.warn("Region is too busy due to exceeding memstore size limit.", rtbe);
+                            throw rtbe;
+                        }
+                    }
+                    // Do a rough check that we have resources to accept a write. The check is
+                    // 'rough' in that between the resource check and the call to obtain a
+                    // read lock, resources may run out. For now, the thought is that this
+                    // will be extremely rare; we'll deal with it when it happens.
+                    checkResources();
+                    startRegionOperation(Operation.PUT);
+                    try {
+                        {
+                            {
+                                {
+                                    return mutate(mutation, false);
+                                }
+                            }
+                        }
+                    } finally {
+                        closeRegionOperation(Operation.PUT);
+                    }
+                }, () -> createRegionSpan("Region.put"));
+            }
+        }
+        if (writestate.flushing) {
+            // only drop memstore snapshots if they are smaller than last flush for the store
+            if (this.prepareFlushResult.flushOpSeqId <= regionEvent.getLogSequenceNumber()) {
+                StoreFlushContext ctx = this.prepareFlushResult.storeFlushCtxs == null ? null : this.prepareFlushResult.storeFlushCtxs.get(family);
+                if (ctx != null) {
+                    MemStoreSize mss = store.getFlushableSize();
+                    ctx.abort();
+                    {
+                        decrMemStoreSize(mss.getDataSize(), mss.getHeapSize(), mss.getOffHeapSize(), mss.getCellsCount());
+                    }
+                    this.prepareFlushResult.storeFlushCtxs.remove(family);
+                }
+            }
+        }
+        // Drop the memstore contents if they are now smaller than the latest seen flushed file
+        dropMemStoreContentsForSeqId(regionEvent.getLogSequenceNumber(), store);
+        if (storeSeqId > this.maxFlushedSeqId) {
+            this.maxFlushedSeqId = storeSeqId;
+        }
+    }
+    {
+        if (readsEnabled && !this.writestate.readsEnabled) {
+            LOG.info("Enabling reads for {}", getRegionInfo().getEncodedName());
+        }
+        this.writestate.setReadsEnabled(readsEnabled);
+    }
+    {
+        if (readsEnabled && !this.writestate.readsEnabled) {
+            LOG.info("Enabling reads for {}", getRegionInfo().getEncodedName());
+        }
+        this.writestate.setReadsEnabled(readsEnabled);
+    }
+    // if all stores ended up dropping their snapshots, we can safely drop the
+    // If we were waiting for observing a flush or region opening event for not showing partial
+    // data after a secondary region crash, we can allow reads now.
+    this.setReadsEnabled(true);
+    // C. Finally notify anyone waiting on memstore to clear:
+    // e.g. checkResources().
+    synchronized (this) {
+        // FindBugs NN_NAKED_NOTIFY
+        notifyAll();
+    }
+}
+
+// we will use writestate as a coarse-grain lock for all the replay events
+synchronized (writestate) {
+    // Replication can deliver events out of order when primary region moves or the region
+    // server crashes, since there is no coordination between replication of different wal files
+    // belonging to different region servers. We have to safe guard against this case by using
+    // region open event's seqid. Since this is the first event that the region puts (after
+    // possibly flushing recovered.edits), after seeing this event, we can ignore every edit
+    // smaller than this seqId
+    if (this.lastReplayedOpenRegionSeqId <= regionEvent.getLogSequenceNumber()) {
+        this.lastReplayedOpenRegionSeqId = regionEvent.getLogSequenceNumber();
+    } else {
+        LOG.warn(getRegionInfo().getEncodedName() + " : " + "Skipping replaying region event :" + TextFormat.shortDebugString(regionEvent) + " because its sequence id is smaller than this regions lastReplayedOpenRegionSeqId " + " of " + lastReplayedOpenRegionSeqId);
+        return;
+    }
+    // region open lists all the files that the region has at the time of the opening. Just pick
+    // all the files and drop prepared flushes and empty memstores
+    for (StoreDescriptor storeDescriptor : regionEvent.getStoresList()) {
+        // stores of primary may be different now
+        byte[] family = storeDescriptor.getFamilyName().toByteArray();
+        HStore store = getStore(family);
+        if (store == null) {
+            LOG.warn(getRegionInfo().getEncodedName() + " : " + "Received a region open marker from primary, but the family is not found. " + "Ignoring. StoreDescriptor:" + storeDescriptor);
+            continue;
+        }
+        long storeSeqId = store.getMaxSequenceId().orElse(0L);
+        List<String> storeFiles = storeDescriptor.getStoreFileList();
+        try {
+            // replace the files with the new ones
+            store.refreshStoreFiles(storeFiles);
+        } catch (FileNotFoundException ex) {
+            LOG.warn(getRegionInfo().getEncodedName() + " : " + "At least one of the store files: " + storeFiles + " doesn't exist any more. Skip loading the file(s)", ex);
+            continue;
+        }
+        if (store.getMaxSequenceId().orElse(0L) != storeSeqId) {
+            // Record latest flush time if we picked up new files
+            lastStoreFlushTimeMap.put(store, EnvironmentEdgeManager.currentTime());
+        }
+        if (writestate.flushing) {
+            // only drop memstore snapshots if they are smaller than last flush for the store
+            if (this.prepareFlushResult.flushOpSeqId <= regionEvent.getLogSequenceNumber()) {
+                StoreFlushContext ctx = this.prepareFlushResult.storeFlushCtxs == null ? null : this.prepareFlushResult.storeFlushCtxs.get(family);
+                if (ctx != null) {
+                    MemStoreSize mss = store.getFlushableSize();
+                    ctx.abort();
+                    this.decrMemStoreSize(mss);
+                    this.prepareFlushResult.storeFlushCtxs.remove(family);
+                }
+            }
+        }
+        // Drop the memstore contents if they are now smaller than the latest seen flushed file
+        dropMemStoreContentsForSeqId(regionEvent.getLogSequenceNumber(), store);
+        if (storeSeqId > this.maxFlushedSeqId) {
+            this.maxFlushedSeqId = storeSeqId;
+        }
+    }
+    // if all stores ended up dropping their snapshots, we can safely drop the
+    // prepareFlushResult
+    dropPrepareFlushIfPossible();
+    // advance the mvcc read point so that the new flushed file is visible.
+    mvcc.await();
+    // If we were waiting for observing a flush or region opening event for not showing partial
+    // data after a secondary region crash, we can allow reads now.
+    this.setReadsEnabled(true);
+    // C. Finally notify anyone waiting on memstore to clear:
+    // e.g. checkResources().
+    synchronized (this) {
+        // FindBugs NN_NAKED_NOTIFY
+        notifyAll();
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

@@ -1,0 +1,9 @@
+looking:rsReports
+synchronized (rsReports) {
+    rsReports.entrySet().forEach(e -> rsReportsSnapshot.put(e.getKey(), e.getValue()));
+}
+
+synchronized (rsReports) {
+    rsReports.entrySet().forEach(e -> rsReportsSnapshot.put(e.getKey(), e.getValue()));
+}
+possible Hot2

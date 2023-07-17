@@ -1,0 +1,11 @@
+looking:regionsMapLock
+synchronized (regionsMapLock) {
+    regionsMap.remove(regionInfo.getRegionName());
+    encodedRegionsMap.remove(regionInfo.getEncodedName());
+}
+
+synchronized (regionsMapLock) {
+    regionsMap.remove(regionInfo.getRegionName());
+    encodedRegionsMap.remove(regionInfo.getEncodedName());
+}
+possible Hot2

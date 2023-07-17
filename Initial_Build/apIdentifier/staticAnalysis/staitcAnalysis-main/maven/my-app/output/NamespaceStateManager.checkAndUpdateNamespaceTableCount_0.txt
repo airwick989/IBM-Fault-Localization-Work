@@ -1,0 +1,44 @@
+looking:NamespaceStateManager.checkAndUpdateNamespaceTableCount
+synchronized void checkAndUpdateNamespaceTableCount(TableName table, int numRegions) throws IOException {
+    String namespace = table.getNamespaceAsString();
+    NamespaceDescriptor nspdesc = getNamespaceDescriptor(namespace);
+    if (nspdesc != null) {
+        NamespaceTableAndRegionInfo currentStatus;
+        currentStatus = getState(nspdesc.getName());
+        if ((currentStatus.getTables().size()) >= TableNamespaceManager.getMaxTables(nspdesc)) {
+            throw new QuotaExceededException("The table " + table.getNameAsString() + " cannot be created as it would exceed maximum number of tables allowed " + " in the namespace.  The total number of tables permitted is " + TableNamespaceManager.getMaxTables(nspdesc));
+        }
+        if ((currentStatus.getRegionCount() + numRegions) > TableNamespaceManager.getMaxRegions(nspdesc)) {
+            throw new QuotaExceededException("The table " + table.getNameAsString() + " is not allowed to have " + numRegions + " regions. The total number of regions permitted is only " + TableNamespaceManager.getMaxRegions(nspdesc) + ", while current region count is " + currentStatus.getRegionCount() + ". This may be transient, please retry later if there are any" + " ongoing split operations in the namespace.");
+        }
+    } else {
+        throw new IOException("Namespace Descriptor found null for " + namespace + " This is unexpected.");
+    }
+    {
+        NamespaceTableAndRegionInfo info = nsStateCache.get(tableName.getNamespaceAsString());
+        if (info != null) {
+            info.addTable(tableName, regionCount);
+        } else {
+            throw new IOException("Bad state : Namespace quota information not found for namespace : " + tableName.getNamespaceAsString());
+        }
+    }
+}
+
+synchronized void checkAndUpdateNamespaceTableCount(TableName table, int numRegions) throws IOException {
+    String namespace = table.getNamespaceAsString();
+    NamespaceDescriptor nspdesc = getNamespaceDescriptor(namespace);
+    if (nspdesc != null) {
+        NamespaceTableAndRegionInfo currentStatus;
+        currentStatus = getState(nspdesc.getName());
+        if ((currentStatus.getTables().size()) >= TableNamespaceManager.getMaxTables(nspdesc)) {
+            throw new QuotaExceededException("The table " + table.getNameAsString() + " cannot be created as it would exceed maximum number of tables allowed " + " in the namespace.  The total number of tables permitted is " + TableNamespaceManager.getMaxTables(nspdesc));
+        }
+        if ((currentStatus.getRegionCount() + numRegions) > TableNamespaceManager.getMaxRegions(nspdesc)) {
+            throw new QuotaExceededException("The table " + table.getNameAsString() + " is not allowed to have " + numRegions + " regions. The total number of regions permitted is only " + TableNamespaceManager.getMaxRegions(nspdesc) + ", while current region count is " + currentStatus.getRegionCount() + ". This may be transient, please retry later if there are any" + " ongoing split operations in the namespace.");
+        }
+    } else {
+        throw new IOException("Namespace Descriptor found null for " + namespace + " This is unexpected.");
+    }
+    addTable(table, numRegions);
+}
+possible Hot1

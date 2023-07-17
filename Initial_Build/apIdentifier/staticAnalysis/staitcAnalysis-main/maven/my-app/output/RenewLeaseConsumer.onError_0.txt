@@ -1,0 +1,15 @@
+looking:RenewLeaseConsumer.onError
+@Override
+public synchronized void onError(Throwable error) {
+    this.finished = true;
+    this.error = error;
+    notifyAll();
+}
+
+@Override
+public synchronized void onError(Throwable error) {
+    this.finished = true;
+    this.error = error;
+    notifyAll();
+}
+possible Hot1

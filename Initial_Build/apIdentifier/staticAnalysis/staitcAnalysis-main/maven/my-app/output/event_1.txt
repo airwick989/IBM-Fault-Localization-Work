@@ -1,0 +1,19 @@
+looking:event
+// Maybe timeout already awakened the event and the procedure has finished.
+synchronized (event) {
+    if (!event.isReady() && suspended) {
+        setState(ProcedureProtos.ProcedureState.RUNNABLE);
+        event.wake(env.getProcedureScheduler());
+        suspended = false;
+    }
+}
+
+// Maybe timeout already awakened the event and the procedure has finished.
+synchronized (event) {
+    if (!event.isReady() && suspended) {
+        setState(ProcedureProtos.ProcedureState.RUNNABLE);
+        event.wake(env.getProcedureScheduler());
+        suspended = false;
+    }
+}
+possible Hot2

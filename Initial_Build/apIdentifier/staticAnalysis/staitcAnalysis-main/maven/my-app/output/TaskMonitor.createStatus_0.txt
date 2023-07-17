@@ -1,0 +1,43 @@
+looking:TaskMonitor.createStatus
+public synchronized MonitoredTask createStatus(String description, boolean ignore, boolean enableJournal) {
+    MonitoredTask stat = new MonitoredTaskImpl(enableJournal);
+    stat.setDescription(description);
+    MonitoredTask proxy = (MonitoredTask) Proxy.newProxyInstance(stat.getClass().getClassLoader(), new Class<?>[] { MonitoredTask.class }, new PassthroughInvocationHandler<>(stat));
+    TaskAndWeakRefPair pair = new TaskAndWeakRefPair(stat, proxy);
+    if (tasks.isFull()) {
+        {
+            for (Iterator<TaskAndWeakRefPair> it = tasks.iterator(); it.hasNext(); ) {
+                TaskAndWeakRefPair pair = it.next();
+                MonitoredTask stat = pair.get();
+                {
+                    long cts = stat.getCompletionTimestamp();
+                    return (cts > 0 && EnvironmentEdgeManager.currentTime() - cts > expirationTime);
+                }
+                if (canPurge(stat)) {
+                    it.remove();
+                }
+            }
+        }
+    }
+    if (!ignore) {
+        tasks.add(pair);
+    }
+    return proxy;
+}
+
+public synchronized MonitoredTask createStatus(String description, boolean ignore, boolean enableJournal) {
+    MonitoredTask stat = new MonitoredTaskImpl(enableJournal);
+    stat.setDescription(description);
+    MonitoredTask proxy = (MonitoredTask) Proxy.newProxyInstance(stat.getClass().getClassLoader(), new Class<?>[] { MonitoredTask.class }, new PassthroughInvocationHandler<>(stat));
+    TaskAndWeakRefPair pair = new TaskAndWeakRefPair(stat, proxy);
+    if (tasks.isFull()) {
+        purgeExpiredTasks();
+    }
+    if (!ignore) {
+        tasks.add(pair);
+    }
+    return proxy;
+}
+possible Hot1
+possible type Hot3_2
+1

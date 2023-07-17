@@ -1,0 +1,11 @@
+looking:this.walsById
+// now let's remove the files in the set
+synchronized (this.walsById) {
+    wals.removeAll(walsToRemove);
+}
+
+// now let's remove the files in the set
+synchronized (this.walsById) {
+    wals.removeAll(walsToRemove);
+}
+possible Hot2

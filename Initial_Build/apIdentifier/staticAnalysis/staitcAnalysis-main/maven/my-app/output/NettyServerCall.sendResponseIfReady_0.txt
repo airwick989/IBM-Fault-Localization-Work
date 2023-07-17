@@ -1,0 +1,23 @@
+looking:NettyServerCall.sendResponseIfReady
+/**
+ * If we have a response, and delay is not set, then respond immediately. Otherwise, do not
+ * respond to client. This is called by the RPC code in the context of the Handler thread.
+ */
+@Override
+public synchronized void sendResponseIfReady() throws IOException {
+    // set param null to reduce memory pressure
+    this.param = null;
+    connection.channel.writeAndFlush(this);
+}
+
+/**
+ * If we have a response, and delay is not set, then respond immediately. Otherwise, do not
+ * respond to client. This is called by the RPC code in the context of the Handler thread.
+ */
+@Override
+public synchronized void sendResponseIfReady() throws IOException {
+    // set param null to reduce memory pressure
+    this.param = null;
+    connection.channel.writeAndFlush(this);
+}
+possible Hot1

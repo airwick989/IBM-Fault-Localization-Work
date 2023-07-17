@@ -1,0 +1,9 @@
+looking:SpaceQuotaSnapshotNotifierForTest.clearSnapshots
+public synchronized void clearSnapshots() {
+    this.tableQuotaSnapshots.clear();
+}
+
+public synchronized void clearSnapshots() {
+    this.tableQuotaSnapshots.clear();
+}
+possible Hot1

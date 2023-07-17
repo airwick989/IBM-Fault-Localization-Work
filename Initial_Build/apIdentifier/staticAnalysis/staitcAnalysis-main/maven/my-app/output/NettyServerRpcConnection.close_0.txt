@@ -1,0 +1,13 @@
+looking:NettyServerRpcConnection.close
+@Override
+public synchronized void close() {
+    {
+        channel.close();
+    }
+}
+
+@Override
+public synchronized void close() {
+    channel.close();
+}
+possible Hot1

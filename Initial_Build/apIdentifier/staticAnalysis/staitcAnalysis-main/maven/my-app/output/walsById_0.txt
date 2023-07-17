@@ -1,0 +1,21 @@
+looking:walsById
+synchronized (walsById) {
+    Map<String, NavigableSet<String>> oldWals = walsById.get(peerId);
+    wals.forEach((k, v) -> {
+        NavigableSet<String> walsByGroup = oldWals.get(k);
+        if (walsByGroup != null) {
+            walsByGroup.removeAll(v);
+        }
+    });
+}
+
+synchronized (walsById) {
+    Map<String, NavigableSet<String>> oldWals = walsById.get(peerId);
+    wals.forEach((k, v) -> {
+        NavigableSet<String> walsByGroup = oldWals.get(k);
+        if (walsByGroup != null) {
+            walsByGroup.removeAll(v);
+        }
+    });
+}
+possible Hot1

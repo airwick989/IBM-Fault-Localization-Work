@@ -1,0 +1,17 @@
+looking:HBaseReplicationEndpoint.reportSinkSuccess
+/**
+ * Report that a {@code SinkPeer} successfully replicated a chunk of data. n * The SinkPeer that
+ * had a failed replication attempt on it
+ */
+protected synchronized void reportSinkSuccess(SinkPeer sinkPeer) {
+    badReportCounts.remove(sinkPeer.getServerName());
+}
+
+/**
+ * Report that a {@code SinkPeer} successfully replicated a chunk of data. n * The SinkPeer that
+ * had a failed replication attempt on it
+ */
+protected synchronized void reportSinkSuccess(SinkPeer sinkPeer) {
+    badReportCounts.remove(sinkPeer.getServerName());
+}
+possible Hot1

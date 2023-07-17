@@ -1,0 +1,11 @@
+looking:this.onlineRegions
+synchronized (this.onlineRegions) {
+    // Return a clone copy of the onlineRegions
+    allRegions = new ArrayList<>(onlineRegions.values());
+}
+
+synchronized (this.onlineRegions) {
+    // Return a clone copy of the onlineRegions
+    allRegions = new ArrayList<>(onlineRegions.values());
+}
+possible Hot2

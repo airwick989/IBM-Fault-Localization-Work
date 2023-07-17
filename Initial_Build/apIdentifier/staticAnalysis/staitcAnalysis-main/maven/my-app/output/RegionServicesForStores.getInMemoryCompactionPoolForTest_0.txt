@@ -1,0 +1,15 @@
+looking:RegionServicesForStores.getInMemoryCompactionPoolForTest
+private static synchronized ThreadPoolExecutor getInMemoryCompactionPoolForTest() {
+    if (INMEMORY_COMPACTION_POOL_FOR_TEST == null) {
+        INMEMORY_COMPACTION_POOL_FOR_TEST = new ThreadPoolExecutor(10, 10, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadFactoryBuilder().setDaemon(true).setNameFormat("InMemoryCompactionsForTest-%d").build());
+    }
+    return INMEMORY_COMPACTION_POOL_FOR_TEST;
+}
+
+private static synchronized ThreadPoolExecutor getInMemoryCompactionPoolForTest() {
+    if (INMEMORY_COMPACTION_POOL_FOR_TEST == null) {
+        INMEMORY_COMPACTION_POOL_FOR_TEST = new ThreadPoolExecutor(10, 10, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadFactoryBuilder().setDaemon(true).setNameFormat("InMemoryCompactionsForTest-%d").build());
+    }
+    return INMEMORY_COMPACTION_POOL_FOR_TEST;
+}
+possible Hot1

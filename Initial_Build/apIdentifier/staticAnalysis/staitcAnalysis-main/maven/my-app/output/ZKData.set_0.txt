@@ -1,0 +1,11 @@
+looking:ZKData.set
+synchronized void set(byte[] data) {
+    this.data = data;
+    notifyAll();
+}
+
+synchronized void set(byte[] data) {
+    this.data = data;
+    notifyAll();
+}
+possible Hot1

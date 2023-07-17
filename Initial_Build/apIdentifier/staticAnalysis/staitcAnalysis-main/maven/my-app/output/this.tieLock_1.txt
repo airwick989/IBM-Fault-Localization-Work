@@ -1,0 +1,35 @@
+looking:this.tieLock
+synchronized (this.tieLock) {
+    Map<ImmutableByteArray, Long> m = this.flushingSequenceIds.get(encodedRegionName);
+    if (m != null) {
+        Long lowest = m.get(familyNameWrapper);
+        if (lowest != null) {
+            return lowest;
+        }
+    }
+    m = this.lowestUnflushedSequenceIds.get(encodedRegionName);
+    if (m != null) {
+        Long lowest = m.get(familyNameWrapper);
+        if (lowest != null) {
+            return lowest;
+        }
+    }
+}
+
+synchronized (this.tieLock) {
+    Map<ImmutableByteArray, Long> m = this.flushingSequenceIds.get(encodedRegionName);
+    if (m != null) {
+        Long lowest = m.get(familyNameWrapper);
+        if (lowest != null) {
+            return lowest;
+        }
+    }
+    m = this.lowestUnflushedSequenceIds.get(encodedRegionName);
+    if (m != null) {
+        Long lowest = m.get(familyNameWrapper);
+        if (lowest != null) {
+            return lowest;
+        }
+    }
+}
+possible Hot2

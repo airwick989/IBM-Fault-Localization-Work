@@ -1,0 +1,11 @@
+looking:readWaiters
+synchronized (readWaiters) {
+    readPoint.set(nextReadValue);
+    readWaiters.notifyAll();
+}
+
+synchronized (readWaiters) {
+    readPoint.set(nextReadValue);
+    readWaiters.notifyAll();
+}
+possible Hot2

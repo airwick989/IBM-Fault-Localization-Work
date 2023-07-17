@@ -1,0 +1,31 @@
+looking:Listener.run
+synchronized (this) {
+    try {
+        acceptChannel.close();
+        selector.close();
+    } catch (IOException ignored) {
+        if (LOG.isTraceEnabled())
+            LOG.trace("ignored", ignored);
+    }
+    selector = null;
+    acceptChannel = null;
+    // close all connections
+    connectionManager.stopIdleScan();
+    connectionManager.closeAll();
+}
+
+synchronized (this) {
+    try {
+        acceptChannel.close();
+        selector.close();
+    } catch (IOException ignored) {
+        if (LOG.isTraceEnabled())
+            LOG.trace("ignored", ignored);
+    }
+    selector = null;
+    acceptChannel = null;
+    // close all connections
+    connectionManager.stopIdleScan();
+    connectionManager.closeAll();
+}
+possible Hot1

@@ -1,0 +1,9 @@
+looking:TestTransitPeerSyncReplicationStateProcedure.class
+synchronized (TestTransitPeerSyncReplicationStateProcedure.class) {
+    FAIL = false;
+}
+
+synchronized (TestTransitPeerSyncReplicationStateProcedure.class) {
+    FAIL = false;
+}
+possible Hot1

@@ -1,0 +1,17 @@
+looking:CompactSplit.requestSystemCompaction
+public synchronized void requestSystemCompaction(HRegion region, HStore store, String why, boolean giveUpIfRequestedOrCompacting) throws IOException {
+    if (giveUpIfRequestedOrCompacting && isUnderCompaction(store)) {
+        LOG.debug("Region {} store {} is under compaction now, skip to request compaction", region, store.getColumnFamilyName());
+        return;
+    }
+    requestCompactionInternal(region, store, why, NO_PRIORITY, false, CompactionLifeCycleTracker.DUMMY, DUMMY_COMPLETE_TRACKER, null);
+}
+
+public synchronized void requestSystemCompaction(HRegion region, HStore store, String why, boolean giveUpIfRequestedOrCompacting) throws IOException {
+    if (giveUpIfRequestedOrCompacting && isUnderCompaction(store)) {
+        LOG.debug("Region {} store {} is under compaction now, skip to request compaction", region, store.getColumnFamilyName());
+        return;
+    }
+    requestCompactionInternal(region, store, why, NO_PRIORITY, false, CompactionLifeCycleTracker.DUMMY, DUMMY_COMPLETE_TRACKER, null);
+}
+possible Hot2

@@ -1,0 +1,31 @@
+looking:regionsInQueue
+synchronized (regionsInQueue) {
+    if (!regionsInQueue.containsKey(r)) {
+        // This entry has some delay
+        FlushRegionEntry fqe = new FlushRegionEntry(r, null, FlushLifeCycleTracker.DUMMY);
+        {
+            this.whenToExpire = EnvironmentEdgeManager.currentTime() + when;
+            this.requeueCount++;
+            return this;
+        }
+        this.regionsInQueue.put(r, fqe);
+        this.flushQueue.add(fqe);
+        r.incrementFlushesQueuedCount();
+        return true;
+    }
+    return false;
+}
+
+synchronized (regionsInQueue) {
+    if (!regionsInQueue.containsKey(r)) {
+        // This entry has some delay
+        FlushRegionEntry fqe = new FlushRegionEntry(r, null, FlushLifeCycleTracker.DUMMY);
+        fqe.requeue(delay);
+        this.regionsInQueue.put(r, fqe);
+        this.flushQueue.add(fqe);
+        r.incrementFlushesQueuedCount();
+        return true;
+    }
+    return false;
+}
+possible Hot2

@@ -50,6 +50,7 @@ function Loading() {
         };
 
         fetchConfirmation();
+        // eslint-disable-next-line
     }, []);
   
     return ( 

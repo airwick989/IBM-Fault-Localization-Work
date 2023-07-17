@@ -1,0 +1,21 @@
+looking:this.onlineRegions
+synchronized (this.onlineRegions) {
+    for (HRegion region : this.onlineRegions.values()) {
+        RegionInfo regionInfo = region.getRegionInfo();
+        if (regionInfo.getTable().equals(tableName)) {
+            tableRegions.add(region);
+        }
+    }
+}
+
+synchronized (this.onlineRegions) {
+    for (HRegion region : this.onlineRegions.values()) {
+        RegionInfo regionInfo = region.getRegionInfo();
+        if (regionInfo.getTable().equals(tableName)) {
+            tableRegions.add(region);
+        }
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

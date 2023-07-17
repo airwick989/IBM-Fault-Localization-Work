@@ -1,0 +1,11 @@
+looking:RSRpcServices.fillInStackTrace
+@Override
+public synchronized Throwable fillInStackTrace() {
+    return this;
+}
+
+@Override
+public synchronized Throwable fillInStackTrace() {
+    return this;
+}
+possible Hot1

@@ -1,0 +1,37 @@
+looking:BucketAllocator.allocateBlock
+/**
+ * Allocate a block with specified size. Return the offset
+ * @param blockSize size of block nn * @return the offset in the IOEngine
+ */
+public synchronized long allocateBlock(int blockSize) throws CacheFullException, BucketAllocatorException {
+    assert blockSize > 0;
+    BucketSizeInfo bsi = roundUpToBucketSizeInfo(blockSize);
+    if (bsi == null) {
+        throw new BucketAllocatorException("Allocation too big size=" + blockSize + "; adjust BucketCache sizes " + BlockCacheFactory.BUCKET_CACHE_BUCKETS_KEY + " to accomodate if size seems reasonable and you want it cached.");
+    }
+    long offset = bsi.allocateBlock(blockSize);
+    // Ask caller to free up space and try again!
+    if (offset < 0)
+        throw new CacheFullException(blockSize, bsi.sizeIndex());
+    usedSize += bucketSizes[bsi.sizeIndex()];
+    return offset;
+}
+
+/**
+ * Allocate a block with specified size. Return the offset
+ * @param blockSize size of block nn * @return the offset in the IOEngine
+ */
+public synchronized long allocateBlock(int blockSize) throws CacheFullException, BucketAllocatorException {
+    assert blockSize > 0;
+    BucketSizeInfo bsi = roundUpToBucketSizeInfo(blockSize);
+    if (bsi == null) {
+        throw new BucketAllocatorException("Allocation too big size=" + blockSize + "; adjust BucketCache sizes " + BlockCacheFactory.BUCKET_CACHE_BUCKETS_KEY + " to accomodate if size seems reasonable and you want it cached.");
+    }
+    long offset = bsi.allocateBlock(blockSize);
+    // Ask caller to free up space and try again!
+    if (offset < 0)
+        throw new CacheFullException(blockSize, bsi.sizeIndex());
+    usedSize += bucketSizes[bsi.sizeIndex()];
+    return offset;
+}
+possible Hot1

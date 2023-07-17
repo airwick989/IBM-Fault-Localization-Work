@@ -1,0 +1,25 @@
+looking:writestate
+synchronized (writestate) {
+    if (!writestate.flushing && writestate.writesEnabled) {
+        this.writestate.flushing = true;
+    } else {
+        String msg = "NOT flushing " + this + " as " + (writestate.flushing ? "already flushing" : "writes are not enabled");
+        LOG.debug(msg);
+        status.abort(msg);
+        flushed = false;
+        return new FlushResultImpl(FlushResult.Result.CANNOT_FLUSH, msg, false);
+    }
+}
+
+synchronized (writestate) {
+    if (!writestate.flushing && writestate.writesEnabled) {
+        this.writestate.flushing = true;
+    } else {
+        String msg = "NOT flushing " + this + " as " + (writestate.flushing ? "already flushing" : "writes are not enabled");
+        LOG.debug(msg);
+        status.abort(msg);
+        flushed = false;
+        return new FlushResultImpl(FlushResult.Result.CANNOT_FLUSH, msg, false);
+    }
+}
+possible Hot2

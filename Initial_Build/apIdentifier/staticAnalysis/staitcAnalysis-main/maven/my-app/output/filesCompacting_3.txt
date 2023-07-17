@@ -1,0 +1,127 @@
+looking:filesCompacting
+synchronized (filesCompacting) {
+    // First, see if coprocessor would want to override selection.
+    if (this.getCoprocessorHost() != null) {
+        final List<HStoreFile> candidatesForCoproc = compaction.preSelect(this.filesCompacting);
+        boolean override = getCoprocessorHost().preCompactSelection(this, candidatesForCoproc, tracker, user);
+        if (override) {
+            // Coprocessor is overriding normal file selection.
+            compaction.forceSelect(new CompactionRequestImpl(candidatesForCoproc));
+        }
+    }
+    // Normal case - coprocessor is not overriding file selection.
+    if (!compaction.hasSelection()) {
+        boolean isUserCompaction = priority == Store.PRIORITY_USER;
+        boolean mayUseOffPeak = offPeakHours.isOffPeakHour() && offPeakCompactionTracker.compareAndSet(false, true);
+        try {
+            compaction.select(this.filesCompacting, isUserCompaction, mayUseOffPeak, forceMajor && filesCompacting.isEmpty());
+        } catch (IOException e) {
+            if (mayUseOffPeak) {
+                offPeakCompactionTracker.set(false);
+            }
+            throw e;
+        }
+        assert compaction.hasSelection();
+        if (mayUseOffPeak && !compaction.getRequest().isOffPeak()) {
+            // Compaction policy doesn't want to take advantage of off-peak.
+            offPeakCompactionTracker.set(false);
+        }
+    }
+    if (this.getCoprocessorHost() != null) {
+        {
+            return this.region.getCoprocessorHost();
+        }
+    }
+    // Finally, we have the resulting files list. Check if we have any files at all.
+    request = compaction.getRequest();
+    Collection<HStoreFile> selectedFiles = request.getFiles();
+    if (selectedFiles.isEmpty()) {
+        return Optional.empty();
+    }
+    {
+        if (CollectionUtils.isEmpty(filesToAdd)) {
+            return;
+        }
+        // Check that we do not try to compact the same StoreFile twice.
+        if (!Collections.disjoint(filesCompacting, filesToAdd)) {
+            Preconditions.checkArgument(false, "%s overlaps with %s", filesToAdd, filesCompacting);
+        }
+        filesCompacting.addAll(filesToAdd);
+        Collections.sort(filesCompacting, storeEngine.getStoreFileManager().getStoreFileComparator());
+    }
+    // If we're enqueuing a major, clear the force flag.
+    this.forceMajor = this.forceMajor && !request.isMajor();
+    // Set common request properties.
+    // Set priority, either override value supplied by caller or from store.
+    final int compactionPriority = (priority != Store.NO_PRIORITY) ? priority : getCompactPriority();
+    request.setPriority(compactionPriority);
+    if (request.isAfterSplit()) {
+        // If the store belongs to recently splitted daughter regions, better we consider
+        // them with the higher priority in the compaction queue.
+        // Override priority if it is lower (higher int value) than
+        // SPLIT_REGION_COMPACTION_PRIORITY
+        final int splitHousekeepingPriority = Math.min(compactionPriority, SPLIT_REGION_COMPACTION_PRIORITY);
+        request.setPriority(splitHousekeepingPriority);
+        LOG.info("Keeping/Overriding Compaction request priority to {} for CF {} since it" + " belongs to recently split daughter region {}", splitHousekeepingPriority, this.getColumnFamilyName(), getRegionInfo().getRegionNameAsString());
+    }
+    request.setDescription(getRegionInfo().getRegionNameAsString(), getColumnFamilyName());
+    request.setTracker(tracker);
+}
+
+synchronized (filesCompacting) {
+    // First, see if coprocessor would want to override selection.
+    if (this.getCoprocessorHost() != null) {
+        final List<HStoreFile> candidatesForCoproc = compaction.preSelect(this.filesCompacting);
+        boolean override = getCoprocessorHost().preCompactSelection(this, candidatesForCoproc, tracker, user);
+        if (override) {
+            // Coprocessor is overriding normal file selection.
+            compaction.forceSelect(new CompactionRequestImpl(candidatesForCoproc));
+        }
+    }
+    // Normal case - coprocessor is not overriding file selection.
+    if (!compaction.hasSelection()) {
+        boolean isUserCompaction = priority == Store.PRIORITY_USER;
+        boolean mayUseOffPeak = offPeakHours.isOffPeakHour() && offPeakCompactionTracker.compareAndSet(false, true);
+        try {
+            compaction.select(this.filesCompacting, isUserCompaction, mayUseOffPeak, forceMajor && filesCompacting.isEmpty());
+        } catch (IOException e) {
+            if (mayUseOffPeak) {
+                offPeakCompactionTracker.set(false);
+            }
+            throw e;
+        }
+        assert compaction.hasSelection();
+        if (mayUseOffPeak && !compaction.getRequest().isOffPeak()) {
+            // Compaction policy doesn't want to take advantage of off-peak.
+            offPeakCompactionTracker.set(false);
+        }
+    }
+    if (this.getCoprocessorHost() != null) {
+        this.getCoprocessorHost().postCompactSelection(this, ImmutableList.copyOf(compaction.getRequest().getFiles()), tracker, compaction.getRequest(), user);
+    }
+    // Finally, we have the resulting files list. Check if we have any files at all.
+    request = compaction.getRequest();
+    Collection<HStoreFile> selectedFiles = request.getFiles();
+    if (selectedFiles.isEmpty()) {
+        return Optional.empty();
+    }
+    addToCompactingFiles(selectedFiles);
+    // If we're enqueuing a major, clear the force flag.
+    this.forceMajor = this.forceMajor && !request.isMajor();
+    // Set common request properties.
+    // Set priority, either override value supplied by caller or from store.
+    final int compactionPriority = (priority != Store.NO_PRIORITY) ? priority : getCompactPriority();
+    request.setPriority(compactionPriority);
+    if (request.isAfterSplit()) {
+        // If the store belongs to recently splitted daughter regions, better we consider
+        // them with the higher priority in the compaction queue.
+        // Override priority if it is lower (higher int value) than
+        // SPLIT_REGION_COMPACTION_PRIORITY
+        final int splitHousekeepingPriority = Math.min(compactionPriority, SPLIT_REGION_COMPACTION_PRIORITY);
+        request.setPriority(splitHousekeepingPriority);
+        LOG.info("Keeping/Overriding Compaction request priority to {} for CF {} since it" + " belongs to recently split daughter region {}", splitHousekeepingPriority, this.getColumnFamilyName(), getRegionInfo().getRegionNameAsString());
+    }
+    request.setDescription(getRegionInfo().getRegionNameAsString(), getColumnFamilyName());
+    request.setTracker(tracker);
+}
+possible Hot2

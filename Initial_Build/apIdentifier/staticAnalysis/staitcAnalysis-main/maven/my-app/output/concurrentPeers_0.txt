@@ -1,0 +1,9 @@
+looking:concurrentPeers
+synchronized (concurrentPeers) {
+    assertTrue("unexpected concurrency on " + peerId, concurrentPeers.add(peerId));
+}
+
+synchronized (concurrentPeers) {
+    assertTrue("unexpected concurrency on " + peerId, concurrentPeers.add(peerId));
+}
+possible Hot2

@@ -1,0 +1,9 @@
+looking:HbckRegionInfo.getReplicaId
+public synchronized int getReplicaId() {
+    return metaEntry != null ? metaEntry.hri.getReplicaId() : deployedReplicaId;
+}
+
+public synchronized int getReplicaId() {
+    return metaEntry != null ? metaEntry.hri.getReplicaId() : deployedReplicaId;
+}
+possible Hot1

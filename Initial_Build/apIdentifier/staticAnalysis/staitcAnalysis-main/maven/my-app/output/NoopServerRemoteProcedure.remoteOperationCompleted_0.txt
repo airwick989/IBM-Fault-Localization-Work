@@ -1,0 +1,11 @@
+looking:NoopServerRemoteProcedure.remoteOperationCompleted
+@Override
+public synchronized void remoteOperationCompleted(MasterProcedureEnv env) {
+    complete(env, null);
+}
+
+@Override
+public synchronized void remoteOperationCompleted(MasterProcedureEnv env) {
+    complete(env, null);
+}
+possible Hot1

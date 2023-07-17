@@ -1,0 +1,11 @@
+looking:EvictionThread.shutdown
+synchronized void shutdown() {
+    this.go = false;
+    this.notifyAll();
+}
+
+synchronized void shutdown() {
+    this.go = false;
+    this.notifyAll();
+}
+possible Hot2

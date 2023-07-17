@@ -1,0 +1,9 @@
+looking:filesCompacting
+synchronized (filesCompacting) {
+    filesCompacting.removeAll(compactedFiles);
+}
+
+synchronized (filesCompacting) {
+    filesCompacting.removeAll(compactedFiles);
+}
+possible Hot2

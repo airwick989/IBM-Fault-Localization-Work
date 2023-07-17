@@ -1,0 +1,15 @@
+looking:onlineServers
+synchronized (onlineServers) {
+    if (remainingServers.size() == 1 && remainingServers.contains(sn)) {
+        // Master will delete itself later.
+        return;
+    }
+}
+
+synchronized (onlineServers) {
+    if (remainingServers.size() == 1 && remainingServers.contains(sn)) {
+        // Master will delete itself later.
+        return;
+    }
+}
+possible Hot2

@@ -1,0 +1,15 @@
+looking:TestTransitPeerSyncReplicationStateProcedureBackoff.class
+synchronized (TestTransitPeerSyncReplicationStateProcedureBackoff.class) {
+    if (FAIL) {
+        throw new ReplicationException("Inject error");
+    }
+    FAIL = true;
+}
+
+synchronized (TestTransitPeerSyncReplicationStateProcedureBackoff.class) {
+    if (FAIL) {
+        throw new ReplicationException("Inject error");
+    }
+    FAIL = true;
+}
+possible Hot1

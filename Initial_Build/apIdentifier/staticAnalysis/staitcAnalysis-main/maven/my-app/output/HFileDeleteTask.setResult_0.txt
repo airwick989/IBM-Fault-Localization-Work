@@ -1,0 +1,13 @@
+looking:HFileDeleteTask.setResult
+public synchronized void setResult(boolean result) {
+    this.done = true;
+    this.result = result;
+    notify();
+}
+
+public synchronized void setResult(boolean result) {
+    this.done = true;
+    this.result = result;
+    notify();
+}
+possible Hot1

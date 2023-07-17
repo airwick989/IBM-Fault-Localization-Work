@@ -1,0 +1,15 @@
+looking:StoreMockMaker.cancelCompaction
+@Override
+public synchronized void cancelCompaction(Object object) {
+    TestCompactionContext ctx = (TestCompactionContext) object;
+    compacting.removeAll(ctx.selectedFiles);
+    notCompacting.addAll(ctx.selectedFiles);
+}
+
+@Override
+public synchronized void cancelCompaction(Object object) {
+    TestCompactionContext ctx = (TestCompactionContext) object;
+    compacting.removeAll(ctx.selectedFiles);
+    notCompacting.addAll(ctx.selectedFiles);
+}
+possible Hot1

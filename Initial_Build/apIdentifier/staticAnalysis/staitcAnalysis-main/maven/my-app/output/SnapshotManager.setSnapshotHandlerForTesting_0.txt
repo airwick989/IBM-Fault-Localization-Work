@@ -1,0 +1,29 @@
+looking:SnapshotManager.setSnapshotHandlerForTesting
+/**
+ * Set the handler for the current snapshot
+ * <p>
+ * Exposed for TESTING n * @param handler handler the master should use TODO get rid of this if
+ * possible, repackaging, modify tests.
+ */
+public synchronized void setSnapshotHandlerForTesting(final TableName tableName, final SnapshotSentinel handler) {
+    if (handler != null) {
+        this.snapshotHandlers.put(tableName, handler);
+    } else {
+        this.snapshotHandlers.remove(tableName);
+    }
+}
+
+/**
+ * Set the handler for the current snapshot
+ * <p>
+ * Exposed for TESTING n * @param handler handler the master should use TODO get rid of this if
+ * possible, repackaging, modify tests.
+ */
+public synchronized void setSnapshotHandlerForTesting(final TableName tableName, final SnapshotSentinel handler) {
+    if (handler != null) {
+        this.snapshotHandlers.put(tableName, handler);
+    } else {
+        this.snapshotHandlers.remove(tableName);
+    }
+}
+possible Hot1

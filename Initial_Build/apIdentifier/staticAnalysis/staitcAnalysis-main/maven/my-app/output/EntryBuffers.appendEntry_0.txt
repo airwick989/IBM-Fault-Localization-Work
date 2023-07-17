@@ -1,0 +1,19 @@
+looking:EntryBuffers.appendEntry
+synchronized (this) {
+    buffer = buffers.get(key.getEncodedRegionName());
+    if (buffer == null) {
+        buffer = new RegionEntryBuffer(key.getTableName(), key.getEncodedRegionName());
+        buffers.put(key.getEncodedRegionName(), buffer);
+    }
+    incrHeap = buffer.appendEntry(entry);
+}
+
+synchronized (this) {
+    buffer = buffers.get(key.getEncodedRegionName());
+    if (buffer == null) {
+        buffer = new RegionEntryBuffer(key.getTableName(), key.getEncodedRegionName());
+        buffers.put(key.getEncodedRegionName(), buffer);
+    }
+    incrHeap = buffer.appendEntry(entry);
+}
+possible Hot1

@@ -1,0 +1,23 @@
+looking:SortedList.addAll
+@Override
+public synchronized boolean addAll(Collection<? extends E> c) {
+    ArrayList<E> newList = new ArrayList<>(list);
+    boolean changed = newList.addAll(c);
+    if (changed) {
+        Collections.sort(newList, comparator);
+    }
+    list = Collections.unmodifiableList(newList);
+    return changed;
+}
+
+@Override
+public synchronized boolean addAll(Collection<? extends E> c) {
+    ArrayList<E> newList = new ArrayList<>(list);
+    boolean changed = newList.addAll(c);
+    if (changed) {
+        Collections.sort(newList, comparator);
+    }
+    list = Collections.unmodifiableList(newList);
+    return changed;
+}
+possible Hot2

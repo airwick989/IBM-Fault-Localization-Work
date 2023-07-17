@@ -1,0 +1,19 @@
+looking:TaskMonitor.createRPCStatus
+public synchronized MonitoredRPCHandler createRPCStatus(String description) {
+    MonitoredRPCHandler stat = new MonitoredRPCHandlerImpl();
+    stat.setDescription(description);
+    MonitoredRPCHandler proxy = (MonitoredRPCHandler) Proxy.newProxyInstance(stat.getClass().getClassLoader(), new Class<?>[] { MonitoredRPCHandler.class }, new PassthroughInvocationHandler<>(stat));
+    TaskAndWeakRefPair pair = new TaskAndWeakRefPair(stat, proxy);
+    rpcTasks.add(pair);
+    return proxy;
+}
+
+public synchronized MonitoredRPCHandler createRPCStatus(String description) {
+    MonitoredRPCHandler stat = new MonitoredRPCHandlerImpl();
+    stat.setDescription(description);
+    MonitoredRPCHandler proxy = (MonitoredRPCHandler) Proxy.newProxyInstance(stat.getClass().getClassLoader(), new Class<?>[] { MonitoredRPCHandler.class }, new PassthroughInvocationHandler<>(stat));
+    TaskAndWeakRefPair pair = new TaskAndWeakRefPair(stat, proxy);
+    rpcTasks.add(pair);
+    return proxy;
+}
+possible Hot1

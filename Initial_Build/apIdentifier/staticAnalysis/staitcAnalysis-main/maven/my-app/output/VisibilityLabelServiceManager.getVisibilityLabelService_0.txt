@@ -1,0 +1,34 @@
+looking:VisibilityLabelServiceManager.getVisibilityLabelService
+synchronized (this) {
+    if (this.visibilityLabelService != null) {
+        {
+            assert this.vlsClazzName != null;
+            if (!this.vlsClazzName.equals(vlsClassName)) {
+                LOG.warn("Trying to use table specific value for config " + "'hbase.regionserver.visibility.label.service.class' which is not supported." + " Will use the cluster level VisibilityLabelService class " + this.vlsClazzName);
+            }
+        }
+        return this.visibilityLabelService;
+    }
+    this.vlsClazzName = vlsClassName;
+    try {
+        this.visibilityLabelService = (VisibilityLabelService) ReflectionUtils.newInstance(Class.forName(vlsClassName), conf);
+    } catch (ClassNotFoundException e) {
+        throw new IOException(e);
+    }
+    return this.visibilityLabelService;
+}
+
+synchronized (this) {
+    if (this.visibilityLabelService != null) {
+        checkForClusterLevelSingleConf(vlsClassName);
+        return this.visibilityLabelService;
+    }
+    this.vlsClazzName = vlsClassName;
+    try {
+        this.visibilityLabelService = (VisibilityLabelService) ReflectionUtils.newInstance(Class.forName(vlsClassName), conf);
+    } catch (ClassNotFoundException e) {
+        throw new IOException(e);
+    }
+    return this.visibilityLabelService;
+}
+possible Hot1

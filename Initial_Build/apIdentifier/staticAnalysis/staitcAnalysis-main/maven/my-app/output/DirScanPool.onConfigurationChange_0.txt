@@ -1,0 +1,33 @@
+looking:DirScanPool.onConfigurationChange
+/**
+ * Checks if pool can be updated. If so, mark for update later.
+ * @param conf configuration
+ */
+@Override
+public synchronized void onConfigurationChange(Configuration conf) {
+    int newSize = CleanerChore.calculatePoolSize(conf.get(dirScanPoolType.cleanerPoolSizeConfigName, dirScanPoolType.cleanerPoolSizeConfigDefault));
+    if (newSize == size) {
+        LOG.trace("{} Cleaner Size from configuration is same as previous={}, no need to update.", name, newSize);
+        return;
+    }
+    size = newSize;
+    // Chore is working, update it later.
+    reconfigNotification = true;
+}
+
+/**
+ * Checks if pool can be updated. If so, mark for update later.
+ * @param conf configuration
+ */
+@Override
+public synchronized void onConfigurationChange(Configuration conf) {
+    int newSize = CleanerChore.calculatePoolSize(conf.get(dirScanPoolType.cleanerPoolSizeConfigName, dirScanPoolType.cleanerPoolSizeConfigDefault));
+    if (newSize == size) {
+        LOG.trace("{} Cleaner Size from configuration is same as previous={}, no need to update.", name, newSize);
+        return;
+    }
+    size = newSize;
+    // Chore is working, update it later.
+    reconfigNotification = true;
+}
+possible Hot1

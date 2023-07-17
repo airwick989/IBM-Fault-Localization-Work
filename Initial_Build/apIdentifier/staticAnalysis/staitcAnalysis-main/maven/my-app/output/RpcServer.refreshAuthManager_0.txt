@@ -1,0 +1,23 @@
+looking:RpcServer.refreshAuthManager
+@Override
+public synchronized void refreshAuthManager(Configuration conf, PolicyProvider pp) {
+    // Ignore warnings that this should be accessed in a static way instead of via an instance;
+    // it'll break if you go via static route.
+    System.setProperty("hadoop.policy.file", "hbase-policy.xml");
+    this.authManager.refresh(conf, pp);
+    LOG.info("Refreshed hbase-policy.xml successfully");
+    ProxyUsers.refreshSuperUserGroupsConfiguration(conf);
+    LOG.info("Refreshed super and proxy users successfully");
+}
+
+@Override
+public synchronized void refreshAuthManager(Configuration conf, PolicyProvider pp) {
+    // Ignore warnings that this should be accessed in a static way instead of via an instance;
+    // it'll break if you go via static route.
+    System.setProperty("hadoop.policy.file", "hbase-policy.xml");
+    this.authManager.refresh(conf, pp);
+    LOG.info("Refreshed hbase-policy.xml successfully");
+    ProxyUsers.refreshSuperUserGroupsConfiguration(conf);
+    LOG.info("Refreshed super and proxy users successfully");
+}
+possible Hot1

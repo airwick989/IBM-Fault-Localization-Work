@@ -1,0 +1,63 @@
+looking:ClientZKSyncer.nodeDeleted
+@Override
+public synchronized void nodeDeleted(String path) {
+    if (validate(path)) {
+        try {
+            {
+                try {
+                    if (ZKUtil.watchAndCheckExists(watcher, node)) {
+                        byte[] data = ZKUtil.getDataAndWatch(watcher, node);
+                        if (data != null) {
+                            {
+                                ZKData zkData = queues.get(node);
+                                if (zkData != null) {
+                                    {
+                                        this.data = data;
+                                        notifyAll();
+                                    }
+                                }
+                            }
+                        } else {
+                            // It existed but now does not, should has been tracked by our watcher, ignore
+                            LOG.debug("Found no data from " + node);
+                            watchAndCheckExists(node);
+                        }
+                    } else {
+                        // cleanup stale ZNodes on client ZK to avoid invalid requests to server
+                        ZKUtil.deleteNodeFailSilent(clientZkWatcher, node);
+                    }
+                } catch (KeeperException e) {
+                    server.abort("Unexpected exception during initialization, aborting", e);
+                }
+            }
+        } catch (KeeperException e) {
+            LOG.warn("Unexpected exception handling nodeDeleted event for path: " + path, e);
+        }
+    } else {
+        {
+            ZKData zkData = queues.remove(path);
+            if (zkData != null) {
+                {
+                    this.delete = true;
+                    notifyAll();
+                }
+            }
+        }
+    }
+}
+
+@Override
+public synchronized void nodeDeleted(String path) {
+    if (validate(path)) {
+        try {
+            if (ZKUtil.watchAndCheckExists(watcher, path)) {
+                getDataAndWatch(path);
+            }
+        } catch (KeeperException e) {
+            LOG.warn("Unexpected exception handling nodeDeleted event for path: " + path, e);
+        }
+    } else {
+        removeQueue(path);
+    }
+}
+possible Hot1

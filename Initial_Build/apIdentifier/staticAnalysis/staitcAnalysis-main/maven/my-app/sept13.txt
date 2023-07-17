@@ -1,0 +1,204 @@
+{
+    synchronized (SimultaneousB) {
+        SimultaneousC = SimultaneousA + SimultaneousB;
+    }
+}
+
+
+synchronized (SimultaneousA) {
+    synchronized (SimultaneousB) {
+        SimultaneousC = SimultaneousA + SimultaneousB;
+    }
+}
+looking:{
+    synchronized (SimultaneousB) {
+        SimultaneousC = SimultaneousA + SimultaneousB;
+    }
+}
+{
+    synchronized (SimultaneousB) {
+        SimultaneousC = SimultaneousA + SimultaneousB;
+    }
+}
+{
+    SimultaneousC = SimultaneousA + SimultaneousB;
+}
+
+
+synchronized (SimultaneousB) {
+    SimultaneousC = SimultaneousA + SimultaneousB;
+}
+looking:{
+    SimultaneousC = SimultaneousA + SimultaneousB;
+}
+{
+    SimultaneousC = SimultaneousA + SimultaneousB;
+}
+{
+    while (true) {
+        System.out.println();
+    }
+}
+
+
+synchronized (Hot1) {
+    while (true) {
+        System.out.println();
+    }
+}
+looking:{
+    while (true) {
+        System.out.println();
+    }
+}
+{
+    while (true) {
+        System.out.println();
+    }
+}
+possible type Hot3_2
+1
+{
+    x = System.currentTimeMillis() == 123456789;
+}
+
+
+synchronized (Hot3_1) {
+    x = System.currentTimeMillis() == 123456789;
+}
+looking:{
+    x = System.currentTimeMillis() == 123456789;
+}
+{
+    x = System.currentTimeMillis() == 123456789;
+}
+possible type Hot3_1
+{
+    if (Unpredictable) {
+        x += 1;
+    }
+}
+
+
+synchronized (Unpredictable) {
+    if (Unpredictable) {
+        x += 1;
+    }
+}
+looking:{
+    if (Unpredictable) {
+        x += 1;
+    }
+}
+{
+    if (Unpredictable) {
+        x += 1;
+    }
+}
+{
+    System.out.println(Hot2.toString());
+}
+
+
+synchronized (Hot2) {
+    System.out.println(Hot2.toString());
+}
+looking:{
+    System.out.println(Hot2.toString());
+}
+{
+    System.out.println(Hot2.toString());
+}
+possible Hot2
+{
+    Hot2 += 1;
+}
+
+
+synchronized (Hot2) {
+    Hot2 += 1;
+}
+looking:{
+    Hot2 += 1;
+}
+{
+    Hot2 += 1;
+}
+possible Hot2
+{
+    int x = 0;
+    while (A.get(x) != 15) {
+        x++;
+    }
+    return x;
+}
+
+
+synchronized (Hot3_2) {
+    int x = 0;
+    while (A.get(x) != 15) {
+        x++;
+    }
+    return x;
+}
+looking:{
+    int x = 0;
+    while (A.get(x) != 15) {
+        x++;
+    }
+    return x;
+}
+{
+    int x = 0;
+    while (A.get(x) != 15) {
+        x++;
+    }
+    return x;
+}
+possible type Hot3_2
+1
+{
+    OverlySplit_1 = new Scanner(System.in);
+}
+
+
+synchronized (OverlySplit_1A) {
+    OverlySplit_1 = new Scanner(System.in);
+}
+looking:{
+    OverlySplit_1 = new Scanner(System.in);
+}
+{
+    OverlySplit_1 = new Scanner(System.in);
+}
+possible Hot2
+{
+    name = myObj.nextLine();
+}
+
+
+synchronized (OverlySplit_1A) {
+    name = myObj.nextLine();
+}
+looking:{
+    name = myObj.nextLine();
+}
+{
+    name = myObj.nextLine();
+}
+possible Hot2
+{
+    name = null;
+}
+
+
+synchronized (OverlySplit_1A) {
+    name = null;
+}
+looking:{
+    name = null;
+}
+{
+    name = null;
+}
+possible Hot2

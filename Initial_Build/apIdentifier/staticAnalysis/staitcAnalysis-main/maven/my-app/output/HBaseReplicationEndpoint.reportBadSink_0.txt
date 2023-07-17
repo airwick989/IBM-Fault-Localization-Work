@@ -1,0 +1,44 @@
+looking:HBaseReplicationEndpoint.reportBadSink
+/**
+ * Report a {@code SinkPeer} as being bad (i.e. an attempt to replicate to it failed). If a single
+ * SinkPeer is reported as bad more than replication.bad.sink.threshold times, it will be removed
+ * from the pool of potential replication targets.
+ * @param sinkPeer The SinkPeer that had a failed replication attempt on it
+ */
+protected synchronized void reportBadSink(SinkPeer sinkPeer) {
+    ServerName serverName = sinkPeer.getServerName();
+    int badReportCount = badReportCounts.compute(serverName, (k, v) -> v == null ? 1 : v + 1);
+    if (badReportCount > badSinkThreshold) {
+        this.sinkServers.remove(serverName);
+        if (sinkServers.isEmpty()) {
+            {
+                List<ServerName> slaveAddresses = fetchSlavesAddresses();
+                if (slaveAddresses.isEmpty()) {
+                    LOG.warn("No sinks available at peer. Will not be able to replicate");
+                }
+                Collections.shuffle(slaveAddresses, ThreadLocalRandom.current());
+                int numSinks = (int) Math.ceil(slaveAddresses.size() * ratio);
+                this.sinkServers = slaveAddresses.subList(0, numSinks);
+                badReportCounts.clear();
+            }
+        }
+    }
+}
+
+/**
+ * Report a {@code SinkPeer} as being bad (i.e. an attempt to replicate to it failed). If a single
+ * SinkPeer is reported as bad more than replication.bad.sink.threshold times, it will be removed
+ * from the pool of potential replication targets.
+ * @param sinkPeer The SinkPeer that had a failed replication attempt on it
+ */
+protected synchronized void reportBadSink(SinkPeer sinkPeer) {
+    ServerName serverName = sinkPeer.getServerName();
+    int badReportCount = badReportCounts.compute(serverName, (k, v) -> v == null ? 1 : v + 1);
+    if (badReportCount > badSinkThreshold) {
+        this.sinkServers.remove(serverName);
+        if (sinkServers.isEmpty()) {
+            chooseSinks();
+        }
+    }
+}
+possible Hot1

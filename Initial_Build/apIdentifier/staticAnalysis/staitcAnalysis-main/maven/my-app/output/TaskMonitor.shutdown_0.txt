@@ -1,0 +1,13 @@
+looking:TaskMonitor.shutdown
+public synchronized void shutdown() {
+    if (this.monitorThread != null) {
+        monitorThread.interrupt();
+    }
+}
+
+public synchronized void shutdown() {
+    if (this.monitorThread != null) {
+        monitorThread.interrupt();
+    }
+}
+possible Hot1

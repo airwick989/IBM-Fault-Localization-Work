@@ -1,0 +1,33 @@
+looking:RegionReplicationFlushRequester.recordFlush
+/**
+ * Record that we have already finished a flush with the given {@code sequenceId}.
+ * <p/>
+ * We can cancel the pending flush request if the failed sequence id is less than the given
+ * {@code sequenceId}.
+ */
+synchronized void recordFlush(long sequenceId) {
+    this.lastFlushedSequenceId = sequenceId;
+    // cancel the pending flush request if it is necessary, i.e, we have already finished a flush
+    // with higher sequence id.
+    if (sequenceId > pendingFlushRequestSequenceId && pendingFlushRequest != null) {
+        pendingFlushRequest.cancel();
+        pendingFlushRequest = null;
+    }
+}
+
+/**
+ * Record that we have already finished a flush with the given {@code sequenceId}.
+ * <p/>
+ * We can cancel the pending flush request if the failed sequence id is less than the given
+ * {@code sequenceId}.
+ */
+synchronized void recordFlush(long sequenceId) {
+    this.lastFlushedSequenceId = sequenceId;
+    // cancel the pending flush request if it is necessary, i.e, we have already finished a flush
+    // with higher sequence id.
+    if (sequenceId > pendingFlushRequestSequenceId && pendingFlushRequest != null) {
+        pendingFlushRequest.cancel();
+        pendingFlushRequest = null;
+    }
+}
+possible Hot1

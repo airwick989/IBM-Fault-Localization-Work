@@ -1,0 +1,11 @@
+looking:SortedList.clear
+@Override
+public synchronized void clear() {
+    list = Collections.emptyList();
+}
+
+@Override
+public synchronized void clear() {
+    list = Collections.emptyList();
+}
+possible Hot1

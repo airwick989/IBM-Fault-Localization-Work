@@ -1,0 +1,16 @@
+looking:UserQuotaState.setQuotas
+@Override
+public synchronized void setQuotas(final Quotas quotas) {
+    {
+        super.setQuotas(quotas);
+        bypassGlobals = quotas.getBypassGlobals();
+    }
+    bypassGlobals = quotas.getBypassGlobals();
+}
+
+@Override
+public synchronized void setQuotas(final Quotas quotas) {
+    super.setQuotas(quotas);
+    bypassGlobals = quotas.getBypassGlobals();
+}
+possible Hot2

@@ -1,0 +1,9 @@
+looking:RateLimiter.getAvailable
+public synchronized long getAvailable() {
+    return avail;
+}
+
+public synchronized long getAvailable() {
+    return avail;
+}
+possible Hot1

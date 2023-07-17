@@ -1,0 +1,9 @@
+looking:filesCompacting
+synchronized (filesCompacting) {
+    filesCompactingClone = Lists.newArrayList(filesCompacting);
+}
+
+synchronized (filesCompacting) {
+    filesCompactingClone = Lists.newArrayList(filesCompacting);
+}
+possible Hot2

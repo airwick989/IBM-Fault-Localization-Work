@@ -1,0 +1,282 @@
+looking:scanner
+synchronized (scanner) {
+    boolean stale = (region.getRegionInfo().getReplicaId() != 0);
+    boolean clientHandlesPartials = request.hasClientHandlesPartials() && request.getClientHandlesPartials();
+    boolean clientHandlesHeartbeats = request.hasClientHandlesHeartbeats() && request.getClientHandlesHeartbeats();
+    // On the server side we must ensure that the correct ordering of partial results is
+    // returned to the client to allow them to properly reconstruct the partial results.
+    // If the coprocessor host is adding to the result list, we cannot guarantee the
+    // correct ordering of partial results and so we prevent partial results from being
+    // formed.
+    boolean serverGuaranteesOrderOfPartials = results.isEmpty();
+    boolean allowPartialResults = clientHandlesPartials && serverGuaranteesOrderOfPartials;
+    boolean moreRows = false;
+    // Heartbeat messages occur when the processing of the ScanRequest is exceeds a
+    // certain time threshold on the server. When the time threshold is exceeded, the
+    // server stops the scan and sends back whatever Results it has accumulated within
+    // that time period (may be empty). Since heartbeat messages have the potential to
+    // create partial Results (in the event that the timeout occurs in the middle of a
+    // row), we must only generate heartbeat messages when the client can handle both
+    // heartbeats AND partials
+    boolean allowHeartbeatMessages = clientHandlesHeartbeats && allowPartialResults;
+    long timeLimit = getTimeLimit(rpcCall, controller, allowHeartbeatMessages);
+    final LimitScope sizeScope = allowPartialResults ? LimitScope.BETWEEN_CELLS : LimitScope.BETWEEN_ROWS;
+    final LimitScope timeScope = allowHeartbeatMessages ? LimitScope.BETWEEN_CELLS : LimitScope.BETWEEN_ROWS;
+    boolean trackMetrics = request.hasTrackScanMetrics() && request.getTrackScanMetrics();
+    // Configure with limits for this RPC. Set keep progress true since size progress
+    // towards size limit should be kept between calls to nextRaw
+    ScannerContext.Builder contextBuilder = ScannerContext.newBuilder(true);
+    // maxResultSize - either we can reach this much size for all cells(being read) data or sum
+    // of heap size occupied by cells(being read). Cell data means its key and value parts.
+    contextBuilder.setSizeLimit(sizeScope, maxResultSize, maxResultSize);
+    contextBuilder.setBatchLimit(scanner.getBatch());
+    contextBuilder.setTimeLimit(timeScope, timeLimit);
+    contextBuilder.setTrackMetrics(trackMetrics);
+    ScannerContext scannerContext = contextBuilder.build();
+    boolean limitReached = false;
+    while (numOfResults < maxResults) {
+        // Reset the batch progress to 0 before every call to RegionScanner#nextRaw. The
+        // batch limit is a limit on the number of cells per Result. Thus, if progress is
+        // being tracked (i.e. scannerContext.keepProgress() is true) then we need to
+        // reset the batch progress between nextRaw invocations since we don't want the
+        // batch progress from previous calls to affect future calls
+        scannerContext.setBatchProgress(0);
+        assert values.isEmpty();
+        // Collect values to be returned here
+        moreRows = scanner.nextRaw(values, scannerContext);
+        if (rpcCall == null) {
+            // When there is no RpcCallContext,copy EC to heap, then the scanner would close,
+            // This can be an EXPENSIVE call. It may make an extra copy from offheap to onheap
+            // buffers.See more details in HBASE-26036.
+            CellUtil.cloneIfNecessary(values);
+        }
+        numOfNextRawCalls++;
+        if (!values.isEmpty()) {
+            if (limitOfRows > 0) {
+                // First we need to check if the last result is partial and we have a row change. If
+                // so then we need to increase the numOfCompleteRows.
+                if (results.isEmpty()) {
+                    if (rsh.rowOfLastPartialResult != null && !CellUtil.matchingRows(values.get(0), rsh.rowOfLastPartialResult)) {
+                        numOfCompleteRows++;
+                        checkLimitOfRows(numOfCompleteRows, limitOfRows, moreRows, scannerContext, builder);
+                    }
+                } else {
+                    Result lastResult = results.get(results.size() - 1);
+                    if (lastResult.mayHaveMoreCellsInRow() && !CellUtil.matchingRows(values.get(0), lastResult.getRow())) {
+                        numOfCompleteRows++;
+                        checkLimitOfRows(numOfCompleteRows, limitOfRows, moreRows, scannerContext, builder);
+                    }
+                }
+                if (builder.hasMoreResults() && !builder.getMoreResults()) {
+                    break;
+                }
+            }
+            boolean mayHaveMoreCellsInRow = scannerContext.mayHaveMoreCellsInRow();
+            Result r = Result.create(values, null, stale, mayHaveMoreCellsInRow);
+            lastBlock.setValue(addSize(rpcCall, r, lastBlock.getValue()));
+            results.add(r);
+            numOfResults++;
+            if (!mayHaveMoreCellsInRow && limitOfRows > 0) {
+                numOfCompleteRows++;
+                {
+                    if (numOfCompleteRows >= limitOfRows) {
+                        if (LOG.isTraceEnabled()) {
+                            LOG.trace("Done scanning, limit of rows reached, moreRows: " + moreRows + " scannerContext: " + scannerContext);
+                        }
+                        builder.setMoreResults(false);
+                    }
+                }
+                if (builder.hasMoreResults() && !builder.getMoreResults()) {
+                    break;
+                }
+            }
+        } else if (!moreRows && !results.isEmpty()) {
+            // No more cells for the scan here, we need to ensure that the mayHaveMoreCellsInRow of
+            // last result is false. Otherwise it's possible that: the first nextRaw returned
+            // because BATCH_LIMIT_REACHED (BTW it happen to exhaust all cells of the scan),so the
+            // last result's mayHaveMoreCellsInRow will be true. while the following nextRaw will
+            // return with moreRows=false, which means moreResultsInRegion would be false, it will
+            // be a contradictory state (HBASE-21206).
+            int lastIdx = results.size() - 1;
+            Result r = results.get(lastIdx);
+            if (r.mayHaveMoreCellsInRow()) {
+                results.set(lastIdx, Result.create(r.rawCells(), r.getExists(), r.isStale(), false));
+            }
+        }
+        boolean sizeLimitReached = scannerContext.checkSizeLimit(LimitScope.BETWEEN_ROWS);
+        boolean timeLimitReached = scannerContext.checkTimeLimit(LimitScope.BETWEEN_ROWS);
+        boolean resultsLimitReached = numOfResults >= maxResults;
+        limitReached = sizeLimitReached || timeLimitReached || resultsLimitReached;
+        if (limitReached || !moreRows) {
+            // We only want to mark a ScanResponse as a heartbeat message in the event that
+            // there are more values to be read server side. If there aren't more values,
+            // marking it as a heartbeat is wasteful because the client will need to issue
+            // another ScanRequest only to realize that they already have all the values
+            if (moreRows && timeLimitReached) {
+                // Heartbeat messages occur when the time limit has been reached.
+                builder.setHeartbeatMessage(true);
+                if (rsh.needCursor) {
+                    Cell cursorCell = scannerContext.getLastPeekedCell();
+                    if (cursorCell != null) {
+                        builder.setCursor(ProtobufUtil.toCursor(cursorCell));
+                    }
+                }
+            }
+            break;
+        }
+        values.clear();
+    }
+    builder.setMoreResultsInRegion(moreRows);
+    // Check to see if the client requested that we track metrics server side. If the
+    // client requested metrics, retrieve the metrics from the scanner context.
+    if (trackMetrics) {
+        Map<String, Long> metrics = scannerContext.getMetrics().getMetricsMap();
+        ScanMetrics.Builder metricBuilder = ScanMetrics.newBuilder();
+        NameInt64Pair.Builder pairBuilder = NameInt64Pair.newBuilder();
+        for (Entry<String, Long> entry : metrics.entrySet()) {
+            pairBuilder.setName(entry.getKey());
+            pairBuilder.setValue(entry.getValue());
+            metricBuilder.addMetrics(pairBuilder.build());
+        }
+        builder.setScanMetrics(metricBuilder.build());
+    }
+}
+
+synchronized (scanner) {
+    boolean stale = (region.getRegionInfo().getReplicaId() != 0);
+    boolean clientHandlesPartials = request.hasClientHandlesPartials() && request.getClientHandlesPartials();
+    boolean clientHandlesHeartbeats = request.hasClientHandlesHeartbeats() && request.getClientHandlesHeartbeats();
+    // On the server side we must ensure that the correct ordering of partial results is
+    // returned to the client to allow them to properly reconstruct the partial results.
+    // If the coprocessor host is adding to the result list, we cannot guarantee the
+    // correct ordering of partial results and so we prevent partial results from being
+    // formed.
+    boolean serverGuaranteesOrderOfPartials = results.isEmpty();
+    boolean allowPartialResults = clientHandlesPartials && serverGuaranteesOrderOfPartials;
+    boolean moreRows = false;
+    // Heartbeat messages occur when the processing of the ScanRequest is exceeds a
+    // certain time threshold on the server. When the time threshold is exceeded, the
+    // server stops the scan and sends back whatever Results it has accumulated within
+    // that time period (may be empty). Since heartbeat messages have the potential to
+    // create partial Results (in the event that the timeout occurs in the middle of a
+    // row), we must only generate heartbeat messages when the client can handle both
+    // heartbeats AND partials
+    boolean allowHeartbeatMessages = clientHandlesHeartbeats && allowPartialResults;
+    long timeLimit = getTimeLimit(rpcCall, controller, allowHeartbeatMessages);
+    final LimitScope sizeScope = allowPartialResults ? LimitScope.BETWEEN_CELLS : LimitScope.BETWEEN_ROWS;
+    final LimitScope timeScope = allowHeartbeatMessages ? LimitScope.BETWEEN_CELLS : LimitScope.BETWEEN_ROWS;
+    boolean trackMetrics = request.hasTrackScanMetrics() && request.getTrackScanMetrics();
+    // Configure with limits for this RPC. Set keep progress true since size progress
+    // towards size limit should be kept between calls to nextRaw
+    ScannerContext.Builder contextBuilder = ScannerContext.newBuilder(true);
+    // maxResultSize - either we can reach this much size for all cells(being read) data or sum
+    // of heap size occupied by cells(being read). Cell data means its key and value parts.
+    contextBuilder.setSizeLimit(sizeScope, maxResultSize, maxResultSize);
+    contextBuilder.setBatchLimit(scanner.getBatch());
+    contextBuilder.setTimeLimit(timeScope, timeLimit);
+    contextBuilder.setTrackMetrics(trackMetrics);
+    ScannerContext scannerContext = contextBuilder.build();
+    boolean limitReached = false;
+    while (numOfResults < maxResults) {
+        // Reset the batch progress to 0 before every call to RegionScanner#nextRaw. The
+        // batch limit is a limit on the number of cells per Result. Thus, if progress is
+        // being tracked (i.e. scannerContext.keepProgress() is true) then we need to
+        // reset the batch progress between nextRaw invocations since we don't want the
+        // batch progress from previous calls to affect future calls
+        scannerContext.setBatchProgress(0);
+        assert values.isEmpty();
+        // Collect values to be returned here
+        moreRows = scanner.nextRaw(values, scannerContext);
+        if (rpcCall == null) {
+            // When there is no RpcCallContext,copy EC to heap, then the scanner would close,
+            // This can be an EXPENSIVE call. It may make an extra copy from offheap to onheap
+            // buffers.See more details in HBASE-26036.
+            CellUtil.cloneIfNecessary(values);
+        }
+        numOfNextRawCalls++;
+        if (!values.isEmpty()) {
+            if (limitOfRows > 0) {
+                // First we need to check if the last result is partial and we have a row change. If
+                // so then we need to increase the numOfCompleteRows.
+                if (results.isEmpty()) {
+                    if (rsh.rowOfLastPartialResult != null && !CellUtil.matchingRows(values.get(0), rsh.rowOfLastPartialResult)) {
+                        numOfCompleteRows++;
+                        checkLimitOfRows(numOfCompleteRows, limitOfRows, moreRows, scannerContext, builder);
+                    }
+                } else {
+                    Result lastResult = results.get(results.size() - 1);
+                    if (lastResult.mayHaveMoreCellsInRow() && !CellUtil.matchingRows(values.get(0), lastResult.getRow())) {
+                        numOfCompleteRows++;
+                        checkLimitOfRows(numOfCompleteRows, limitOfRows, moreRows, scannerContext, builder);
+                    }
+                }
+                if (builder.hasMoreResults() && !builder.getMoreResults()) {
+                    break;
+                }
+            }
+            boolean mayHaveMoreCellsInRow = scannerContext.mayHaveMoreCellsInRow();
+            Result r = Result.create(values, null, stale, mayHaveMoreCellsInRow);
+            lastBlock.setValue(addSize(rpcCall, r, lastBlock.getValue()));
+            results.add(r);
+            numOfResults++;
+            if (!mayHaveMoreCellsInRow && limitOfRows > 0) {
+                numOfCompleteRows++;
+                checkLimitOfRows(numOfCompleteRows, limitOfRows, moreRows, scannerContext, builder);
+                if (builder.hasMoreResults() && !builder.getMoreResults()) {
+                    break;
+                }
+            }
+        } else if (!moreRows && !results.isEmpty()) {
+            // No more cells for the scan here, we need to ensure that the mayHaveMoreCellsInRow of
+            // last result is false. Otherwise it's possible that: the first nextRaw returned
+            // because BATCH_LIMIT_REACHED (BTW it happen to exhaust all cells of the scan),so the
+            // last result's mayHaveMoreCellsInRow will be true. while the following nextRaw will
+            // return with moreRows=false, which means moreResultsInRegion would be false, it will
+            // be a contradictory state (HBASE-21206).
+            int lastIdx = results.size() - 1;
+            Result r = results.get(lastIdx);
+            if (r.mayHaveMoreCellsInRow()) {
+                results.set(lastIdx, Result.create(r.rawCells(), r.getExists(), r.isStale(), false));
+            }
+        }
+        boolean sizeLimitReached = scannerContext.checkSizeLimit(LimitScope.BETWEEN_ROWS);
+        boolean timeLimitReached = scannerContext.checkTimeLimit(LimitScope.BETWEEN_ROWS);
+        boolean resultsLimitReached = numOfResults >= maxResults;
+        limitReached = sizeLimitReached || timeLimitReached || resultsLimitReached;
+        if (limitReached || !moreRows) {
+            // We only want to mark a ScanResponse as a heartbeat message in the event that
+            // there are more values to be read server side. If there aren't more values,
+            // marking it as a heartbeat is wasteful because the client will need to issue
+            // another ScanRequest only to realize that they already have all the values
+            if (moreRows && timeLimitReached) {
+                // Heartbeat messages occur when the time limit has been reached.
+                builder.setHeartbeatMessage(true);
+                if (rsh.needCursor) {
+                    Cell cursorCell = scannerContext.getLastPeekedCell();
+                    if (cursorCell != null) {
+                        builder.setCursor(ProtobufUtil.toCursor(cursorCell));
+                    }
+                }
+            }
+            break;
+        }
+        values.clear();
+    }
+    builder.setMoreResultsInRegion(moreRows);
+    // Check to see if the client requested that we track metrics server side. If the
+    // client requested metrics, retrieve the metrics from the scanner context.
+    if (trackMetrics) {
+        Map<String, Long> metrics = scannerContext.getMetrics().getMetricsMap();
+        ScanMetrics.Builder metricBuilder = ScanMetrics.newBuilder();
+        NameInt64Pair.Builder pairBuilder = NameInt64Pair.newBuilder();
+        for (Entry<String, Long> entry : metrics.entrySet()) {
+            pairBuilder.setName(entry.getKey());
+            pairBuilder.setValue(entry.getValue());
+            metricBuilder.addMetrics(pairBuilder.build());
+        }
+        builder.setScanMetrics(metricBuilder.build());
+    }
+}
+possible Hot1
+possible type Hot3_2
+1

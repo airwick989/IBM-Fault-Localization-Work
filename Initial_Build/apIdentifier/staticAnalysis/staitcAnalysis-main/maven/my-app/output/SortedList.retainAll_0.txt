@@ -1,0 +1,19 @@
+looking:SortedList.retainAll
+@Override
+public synchronized boolean retainAll(Collection<?> c) {
+    ArrayList<E> newList = new ArrayList<>(list);
+    // Removals in ArrayList won't break sorting
+    boolean changed = newList.retainAll(c);
+    list = Collections.unmodifiableList(newList);
+    return changed;
+}
+
+@Override
+public synchronized boolean retainAll(Collection<?> c) {
+    ArrayList<E> newList = new ArrayList<>(list);
+    // Removals in ArrayList won't break sorting
+    boolean changed = newList.retainAll(c);
+    list = Collections.unmodifiableList(newList);
+    return changed;
+}
+possible Hot1

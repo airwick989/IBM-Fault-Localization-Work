@@ -1,0 +1,15 @@
+looking:oldsources
+synchronized (oldsources) {
+    for (ReplicationSourceInterface source : this.oldsources) {
+        source.terminate("Region server is closing");
+    }
+}
+
+synchronized (oldsources) {
+    for (ReplicationSourceInterface source : this.oldsources) {
+        source.terminate("Region server is closing");
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

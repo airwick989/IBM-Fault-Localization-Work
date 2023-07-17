@@ -1,0 +1,11 @@
+looking:rsReports
+// Track the regionserver reported online regions in memory.
+synchronized (rsReports) {
+    rsReports.put(serverName, regionNames);
+}
+
+// Track the regionserver reported online regions in memory.
+synchronized (rsReports) {
+    rsReports.put(serverName, regionNames);
+}
+possible Hot2

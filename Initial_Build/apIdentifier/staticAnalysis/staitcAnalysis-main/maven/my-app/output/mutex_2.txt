@@ -1,0 +1,17 @@
+looking:mutex
+synchronized (mutex) {
+    for (Map.Entry<String, Set<T>> entry : cache.entrySet()) {
+        entry.getValue().clear();
+    }
+    cache.clear();
+}
+
+synchronized (mutex) {
+    for (Map.Entry<String, Set<T>> entry : cache.entrySet()) {
+        entry.getValue().clear();
+    }
+    cache.clear();
+}
+possible Hot2
+possible type Hot3_2
+1

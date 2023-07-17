@@ -1,0 +1,31 @@
+looking:MasterFlushTableProcedureManager.isProcedureDone
+@Override
+public synchronized boolean isProcedureDone(ProcedureDescription desc) throws IOException {
+    // Procedure instance name is the table name.
+    TableName tableName = TableName.valueOf(desc.getInstance());
+    Procedure proc = procMap.get(tableName);
+    if (proc == null) {
+        // The procedure has not even been started yet.
+        // The client would request the procedure and call isProcedureDone().
+        // The HBaseAdmin.execProcedure() wraps both request and isProcedureDone().
+        return false;
+    }
+    // We reply on the existing Distributed Procedure framework to give us the status.
+    return proc.isCompleted();
+}
+
+@Override
+public synchronized boolean isProcedureDone(ProcedureDescription desc) throws IOException {
+    // Procedure instance name is the table name.
+    TableName tableName = TableName.valueOf(desc.getInstance());
+    Procedure proc = procMap.get(tableName);
+    if (proc == null) {
+        // The procedure has not even been started yet.
+        // The client would request the procedure and call isProcedureDone().
+        // The HBaseAdmin.execProcedure() wraps both request and isProcedureDone().
+        return false;
+    }
+    // We reply on the existing Distributed Procedure framework to give us the status.
+    return proc.isCompleted();
+}
+possible Hot1

@@ -1,0 +1,31 @@
+looking:SimpleRpcServer.getListenerAddress
+/**
+ * Return the socket (ip+port) on which the RPC server is listening to. May return null if the
+ * listener channel is closed.
+ * @return the socket (ip+port) on which the RPC server is listening to, or null if this
+ *         information cannot be determined
+ */
+@Override
+public synchronized InetSocketAddress getListenerAddress() {
+    if (listener == null) {
+        return null;
+    }
+    {
+        return address;
+    }
+}
+
+/**
+ * Return the socket (ip+port) on which the RPC server is listening to. May return null if the
+ * listener channel is closed.
+ * @return the socket (ip+port) on which the RPC server is listening to, or null if this
+ *         information cannot be determined
+ */
+@Override
+public synchronized InetSocketAddress getListenerAddress() {
+    if (listener == null) {
+        return null;
+    }
+    return listener.getAddress();
+}
+possible Hot1

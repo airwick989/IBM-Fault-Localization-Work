@@ -1,0 +1,15 @@
+looking:this.onlineRegions
+synchronized (this.onlineRegions) {
+    for (Region region : this.onlineRegions.values()) {
+        tables.add(region.getTableDescriptor().getTableName());
+    }
+}
+
+synchronized (this.onlineRegions) {
+    for (Region region : this.onlineRegions.values()) {
+        tables.add(region.getTableDescriptor().getTableName());
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

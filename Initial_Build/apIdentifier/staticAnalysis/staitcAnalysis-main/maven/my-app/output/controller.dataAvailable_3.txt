@@ -1,0 +1,29 @@
+looking:controller.dataAvailable
+// No data currently available, wait on some more to show up
+synchronized (controller.dataAvailable) {
+    if (shouldStop) {
+        return;
+    }
+    try {
+        controller.dataAvailable.wait(500);
+    } catch (InterruptedException ie) {
+        if (!shouldStop) {
+            throw new RuntimeException(ie);
+        }
+    }
+}
+
+// No data currently available, wait on some more to show up
+synchronized (controller.dataAvailable) {
+    if (shouldStop) {
+        return;
+    }
+    try {
+        controller.dataAvailable.wait(500);
+    } catch (InterruptedException ie) {
+        if (!shouldStop) {
+            throw new RuntimeException(ie);
+        }
+    }
+}
+possible Hot2

@@ -1,0 +1,9 @@
+looking:HFileArchiveTableMonitor.removeTable
+public synchronized void removeTable(String table) {
+    archivedTables.remove(table);
+}
+
+public synchronized void removeTable(String table) {
+    archivedTables.remove(table);
+}
+possible Hot1

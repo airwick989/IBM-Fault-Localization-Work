@@ -1,0 +1,17 @@
+looking:RegionRemoteProcedureBase.setTimeoutFailure
+@Override
+protected synchronized boolean setTimeoutFailure(MasterProcedureEnv env) {
+    setState(ProcedureProtos.ProcedureState.RUNNABLE);
+    env.getProcedureScheduler().addFront(this);
+    // 'false' means that this procedure handled the timeout
+    return false;
+}
+
+@Override
+protected synchronized boolean setTimeoutFailure(MasterProcedureEnv env) {
+    setState(ProcedureProtos.ProcedureState.RUNNABLE);
+    env.getProcedureScheduler().addFront(this);
+    // 'false' means that this procedure handled the timeout
+    return false;
+}
+possible Hot1

@@ -1,0 +1,34 @@
+looking:RSGroupInfoManagerImpl.updateDefaultServers
+private synchronized void updateDefaultServers() {
+    LOG.info("Updating default servers.");
+    Map<String, RSGroupInfo> newGroupMap = Maps.newHashMap(holder.groupName2Group);
+    RSGroupInfo oldDefaultGroupInfo = getRSGroup(RSGroupInfo.DEFAULT_GROUP);
+    assert oldDefaultGroupInfo != null;
+    RSGroupInfo newDefaultGroupInfo = new RSGroupInfo(RSGroupInfo.DEFAULT_GROUP, getDefaultServers());
+    newDefaultGroupInfo.addAllTables(oldDefaultGroupInfo.getTables());
+    newGroupMap.put(RSGroupInfo.DEFAULT_GROUP, newDefaultGroupInfo);
+    {
+        this.holder = new RSGroupInfoHolder(newRSGroupMap);
+    }
+    LOG.info("Updated default servers, {} servers", newDefaultGroupInfo.getServers().size());
+    if (LOG.isDebugEnabled()) {
+        LOG.debug("New default servers list: {}", newDefaultGroupInfo.getServers());
+    }
+}
+
+private synchronized void updateDefaultServers() {
+    LOG.info("Updating default servers.");
+    Map<String, RSGroupInfo> newGroupMap = Maps.newHashMap(holder.groupName2Group);
+    RSGroupInfo oldDefaultGroupInfo = getRSGroup(RSGroupInfo.DEFAULT_GROUP);
+    assert oldDefaultGroupInfo != null;
+    RSGroupInfo newDefaultGroupInfo = new RSGroupInfo(RSGroupInfo.DEFAULT_GROUP, getDefaultServers());
+    newDefaultGroupInfo.addAllTables(oldDefaultGroupInfo.getTables());
+    newGroupMap.put(RSGroupInfo.DEFAULT_GROUP, newDefaultGroupInfo);
+    // do not need to persist, as we do not persist default group.
+    resetRSGroupMap(newGroupMap);
+    LOG.info("Updated default servers, {} servers", newDefaultGroupInfo.getServers().size());
+    if (LOG.isDebugEnabled()) {
+        LOG.debug("New default servers list: {}", newDefaultGroupInfo.getServers());
+    }
+}
+possible Hot1

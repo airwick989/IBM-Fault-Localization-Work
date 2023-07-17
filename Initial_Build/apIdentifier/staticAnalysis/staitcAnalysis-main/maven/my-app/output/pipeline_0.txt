@@ -1,0 +1,13 @@
+looking:pipeline
+synchronized (pipeline) {
+    boolean res = addFirst(immutableSegment);
+    readOnlyCopy = new LinkedList<>(pipeline);
+    return res;
+}
+
+synchronized (pipeline) {
+    boolean res = addFirst(immutableSegment);
+    readOnlyCopy = new LinkedList<>(pipeline);
+    return res;
+}
+possible Hot2

@@ -1,0 +1,19 @@
+looking:lock
+synchronized (lock) {
+    if (count.get() <= 0 && usable.get()) {
+        // Don't attempt to remove row if already removed
+        usable.set(false);
+        RowLockContext removed = lockedRows.remove(row);
+        assert removed == this : "we should never remove a different context";
+    }
+}
+
+synchronized (lock) {
+    if (count.get() <= 0 && usable.get()) {
+        // Don't attempt to remove row if already removed
+        usable.set(false);
+        RowLockContext removed = lockedRows.remove(row);
+        assert removed == this : "we should never remove a different context";
+    }
+}
+possible Hot2

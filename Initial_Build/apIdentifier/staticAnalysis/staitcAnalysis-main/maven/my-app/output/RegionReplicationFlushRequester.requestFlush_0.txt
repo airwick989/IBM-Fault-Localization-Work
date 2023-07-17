@@ -1,0 +1,52 @@
+looking:RegionReplicationFlushRequester.requestFlush
+/**
+ * Request a flush for the given region.
+ * <p/>
+ * The sequence id of the edit which we fail to replicate. A flush must happen after this sequence
+ * id to recover the failure.
+ */
+synchronized void requestFlush(long sequenceId) {
+    // if there is already a flush task, just reuse it.
+    if (pendingFlushRequest != null) {
+        pendingFlushRequestSequenceId = Math.max(sequenceId, pendingFlushRequestSequenceId);
+        return;
+    }
+    // check last flush time
+    long elapsedSecs = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - lastRequestNanos);
+    if (elapsedSecs >= minIntervalSecs) {
+        {
+            flushRequester.run();
+            lastRequestNanos = System.nanoTime();
+        }
+        return;
+    }
+    // schedule a timer task
+    HashedWheelTimer timer = getTimer();
+    pendingFlushRequestSequenceId = sequenceId;
+    pendingFlushRequest = timer.newTimeout(this::flush, minIntervalSecs - elapsedSecs, TimeUnit.SECONDS);
+}
+
+/**
+ * Request a flush for the given region.
+ * <p/>
+ * The sequence id of the edit which we fail to replicate. A flush must happen after this sequence
+ * id to recover the failure.
+ */
+synchronized void requestFlush(long sequenceId) {
+    // if there is already a flush task, just reuse it.
+    if (pendingFlushRequest != null) {
+        pendingFlushRequestSequenceId = Math.max(sequenceId, pendingFlushRequestSequenceId);
+        return;
+    }
+    // check last flush time
+    long elapsedSecs = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - lastRequestNanos);
+    if (elapsedSecs >= minIntervalSecs) {
+        request();
+        return;
+    }
+    // schedule a timer task
+    HashedWheelTimer timer = getTimer();
+    pendingFlushRequestSequenceId = sequenceId;
+    pendingFlushRequest = timer.newTimeout(this::flush, minIntervalSecs - elapsedSecs, TimeUnit.SECONDS);
+}
+possible Hot1

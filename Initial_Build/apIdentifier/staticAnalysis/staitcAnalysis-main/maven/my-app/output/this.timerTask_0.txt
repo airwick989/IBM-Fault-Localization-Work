@@ -1,0 +1,23 @@
+looking:this.timerTask
+synchronized (this.timerTask) {
+    if (this.complete) {
+        LOG.warn("Timer already marked completed, ignoring!");
+        return;
+    }
+    if (LOG.isDebugEnabled()) {
+        LOG.debug("Marking timer as complete - no error notifications will be received for " + "this timer.");
+    }
+    this.complete = true;
+}
+
+synchronized (this.timerTask) {
+    if (this.complete) {
+        LOG.warn("Timer already marked completed, ignoring!");
+        return;
+    }
+    if (LOG.isDebugEnabled()) {
+        LOG.debug("Marking timer as complete - no error notifications will be received for " + "this timer.");
+    }
+    this.complete = true;
+}
+possible Hot1

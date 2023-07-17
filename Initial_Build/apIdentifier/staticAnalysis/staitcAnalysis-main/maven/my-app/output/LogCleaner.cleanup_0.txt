@@ -1,0 +1,21 @@
+looking:LogCleaner.cleanup
+@Override
+public synchronized void cleanup() {
+    {
+        for (Thread cleaner : oldWALsCleaner) {
+            LOG.trace("Interrupting thread: {}", cleaner);
+            cleaner.interrupt();
+        }
+        oldWALsCleaner.clear();
+    }
+    interruptOldWALsCleaner();
+}
+
+@Override
+public synchronized void cleanup() {
+    super.cleanup();
+    interruptOldWALsCleaner();
+}
+possible Hot1
+possible type Hot3_2
+1

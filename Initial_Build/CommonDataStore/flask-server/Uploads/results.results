@@ -1,2 +1,2 @@
 Type 2
-00266357_unknown_thread, 00266358_unknown_thread, org/dacapo/lusearch/Search.main([Ljava/lang/String;)V, org/dacapo/lusearch/Search$QueryProcessor.run()V, org/apache/lucene/store/FSDirectory.getDirectory(Ljava/io/File;Lorg/apache/lucene/store/LockFactory;)Lorg/apache/lucene/store/FSDirectory;, 
+org/apache/lucene/store/FSDirectory.getDirectory(Ljava/io/File;Lorg/apache/lucene/store/LockFactory;)Lorg/apache/lucene/store/FSDirectory;, 00024aa5_unknown_thread, org/dacapo/lusearch/Search$QueryProcessor.run()V, org/dacapo/lusearch/Search.main([Ljava/lang/String;)V, 00024aa4_unknown_thread, 

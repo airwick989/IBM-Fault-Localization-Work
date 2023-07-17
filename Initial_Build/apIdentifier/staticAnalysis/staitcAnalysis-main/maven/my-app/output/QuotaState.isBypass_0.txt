@@ -1,0 +1,15 @@
+looking:QuotaState.isBypass
+/**
+ * Returns true if there is no quota information associated to this object
+ */
+public synchronized boolean isBypass() {
+    return globalLimiter == NoopQuotaLimiter.get();
+}
+
+/**
+ * Returns true if there is no quota information associated to this object
+ */
+public synchronized boolean isBypass() {
+    return globalLimiter == NoopQuotaLimiter.get();
+}
+possible Hot1

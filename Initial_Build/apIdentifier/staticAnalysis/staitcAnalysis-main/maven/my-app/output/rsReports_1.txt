@@ -1,0 +1,11 @@
+looking:rsReports
+// Remove the in-memory rsReports result
+synchronized (rsReports) {
+    rsReports.remove(serverName);
+}
+
+// Remove the in-memory rsReports result
+synchronized (rsReports) {
+    rsReports.remove(serverName);
+}
+possible Hot2

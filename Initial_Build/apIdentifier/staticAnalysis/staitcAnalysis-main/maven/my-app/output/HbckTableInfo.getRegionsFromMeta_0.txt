@@ -1,0 +1,35 @@
+looking:HbckTableInfo.getRegionsFromMeta
+public synchronized ImmutableList<RegionInfo> getRegionsFromMeta(TreeMap<String, HbckRegionInfo> regionInfoMap) {
+    // lazy loaded, synchronized to ensure a single load
+    if (regionsFromMeta == null) {
+        List<RegionInfo> regions = new ArrayList<>();
+        for (HbckRegionInfo h : regionInfoMap.values()) {
+            if (tableName.equals(h.getTableName())) {
+                if (h.getMetaEntry() != null) {
+                    regions.add(h.getMetaEntry().getRegionInfo());
+                }
+            }
+        }
+        regionsFromMeta = Ordering.from(RegionInfo.COMPARATOR).immutableSortedCopy(regions);
+    }
+    return regionsFromMeta;
+}
+
+public synchronized ImmutableList<RegionInfo> getRegionsFromMeta(TreeMap<String, HbckRegionInfo> regionInfoMap) {
+    // lazy loaded, synchronized to ensure a single load
+    if (regionsFromMeta == null) {
+        List<RegionInfo> regions = new ArrayList<>();
+        for (HbckRegionInfo h : regionInfoMap.values()) {
+            if (tableName.equals(h.getTableName())) {
+                if (h.getMetaEntry() != null) {
+                    regions.add(h.getMetaEntry().getRegionInfo());
+                }
+            }
+        }
+        regionsFromMeta = Ordering.from(RegionInfo.COMPARATOR).immutableSortedCopy(regions);
+    }
+    return regionsFromMeta;
+}
+possible Hot1
+possible type Hot3_2
+1

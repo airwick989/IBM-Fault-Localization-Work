@@ -1,0 +1,45 @@
+looking:DeadServer.toString
+@Override
+public synchronized String toString() {
+    // Display unified set of servers from both maps
+    Set<ServerName> servers = new HashSet<>();
+    servers.addAll(deadServers.keySet());
+    StringBuilder sb = new StringBuilder();
+    for (ServerName sn : servers) {
+        if (sb.length() > 0) {
+            sb.append(", ");
+        }
+        sb.append(sn.toString());
+    }
+    {
+        // Display unified set of servers from both maps
+        Set<ServerName> servers = new HashSet<>();
+        servers.addAll(deadServers.keySet());
+        StringBuilder sb = new StringBuilder();
+        for (ServerName sn : servers) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(sn.toString());
+        }
+        return sb.toString();
+    }
+}
+
+@Override
+public synchronized String toString() {
+    // Display unified set of servers from both maps
+    Set<ServerName> servers = new HashSet<>();
+    servers.addAll(deadServers.keySet());
+    StringBuilder sb = new StringBuilder();
+    for (ServerName sn : servers) {
+        if (sb.length() > 0) {
+            sb.append(", ");
+        }
+        sb.append(sn.toString());
+    }
+    return sb.toString();
+}
+possible Hot1
+possible type Hot3_2
+1

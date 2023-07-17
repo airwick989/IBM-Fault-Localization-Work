@@ -1,0 +1,17 @@
+looking:UserQuotaState.isBypass
+/**
+ * Returns true if there is no quota information associated to this object
+ */
+@Override
+public synchronized boolean isBypass() {
+    return !bypassGlobals && getGlobalLimiterWithoutUpdatingLastQuery() == NoopQuotaLimiter.get() && (tableLimiters == null || tableLimiters.isEmpty()) && (namespaceLimiters == null || namespaceLimiters.isEmpty());
+}
+
+/**
+ * Returns true if there is no quota information associated to this object
+ */
+@Override
+public synchronized boolean isBypass() {
+    return !bypassGlobals && getGlobalLimiterWithoutUpdatingLastQuery() == NoopQuotaLimiter.get() && (tableLimiters == null || tableLimiters.isEmpty()) && (namespaceLimiters == null || namespaceLimiters.isEmpty());
+}
+possible Hot1

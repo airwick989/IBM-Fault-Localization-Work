@@ -1,0 +1,14 @@
+looking:HRegion.replayWALRegionEventMarker
+// e.g. checkResources().
+synchronized (this) {
+    // FindBugs NN_NAKED_NOTIFY
+    notifyAll();
+}
+
+// C. Finally notify anyone waiting on memstore to clear:
+// e.g. checkResources().
+synchronized (this) {
+    // FindBugs NN_NAKED_NOTIFY
+    notifyAll();
+}
+possible Hot1

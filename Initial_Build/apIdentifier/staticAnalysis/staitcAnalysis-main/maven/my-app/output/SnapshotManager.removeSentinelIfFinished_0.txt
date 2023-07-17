@@ -1,0 +1,55 @@
+looking:SnapshotManager.removeSentinelIfFinished
+/**
+ * Return the handler if it is currently live and has the same snapshot target name. The handler
+ * is removed from the sentinels map if completed.
+ * @param sentinels live handlers
+ * @param snapshot  snapshot description
+ * @return null if doesn't match, else a live handler.
+ */
+private synchronized SnapshotSentinel removeSentinelIfFinished(final Map<TableName, SnapshotSentinel> sentinels, final SnapshotDescription snapshot) {
+    if (!snapshot.hasTable()) {
+        return null;
+    }
+    TableName snapshotTable = TableName.valueOf(snapshot.getTable());
+    SnapshotSentinel h = sentinels.get(snapshotTable);
+    if (h == null) {
+        return null;
+    }
+    if (!h.getSnapshot().getName().equals(snapshot.getName())) {
+        // specified snapshot is to the one currently running
+        return null;
+    }
+    // Remove from the "in-progress" list once completed
+    if (h.isFinished()) {
+        sentinels.remove(snapshotTable);
+    }
+    return h;
+}
+
+/**
+ * Return the handler if it is currently live and has the same snapshot target name. The handler
+ * is removed from the sentinels map if completed.
+ * @param sentinels live handlers
+ * @param snapshot  snapshot description
+ * @return null if doesn't match, else a live handler.
+ */
+private synchronized SnapshotSentinel removeSentinelIfFinished(final Map<TableName, SnapshotSentinel> sentinels, final SnapshotDescription snapshot) {
+    if (!snapshot.hasTable()) {
+        return null;
+    }
+    TableName snapshotTable = TableName.valueOf(snapshot.getTable());
+    SnapshotSentinel h = sentinels.get(snapshotTable);
+    if (h == null) {
+        return null;
+    }
+    if (!h.getSnapshot().getName().equals(snapshot.getName())) {
+        // specified snapshot is to the one currently running
+        return null;
+    }
+    // Remove from the "in-progress" list once completed
+    if (h.isFinished()) {
+        sentinels.remove(snapshotTable);
+    }
+    return h;
+}
+possible Hot1

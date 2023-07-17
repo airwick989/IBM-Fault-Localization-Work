@@ -1,0 +1,17 @@
+looking:CPMasterObserver.preMergeRegionsAction
+@Override
+public synchronized void preMergeRegionsAction(final ObserverContext<MasterCoprocessorEnvironment> ctx, final RegionInfo[] regionsToMerge) throws IOException {
+    notifyAll();
+    if (shouldFailMerge) {
+        throw new IOException("fail merge");
+    }
+}
+
+@Override
+public synchronized void preMergeRegionsAction(final ObserverContext<MasterCoprocessorEnvironment> ctx, final RegionInfo[] regionsToMerge) throws IOException {
+    notifyAll();
+    if (shouldFailMerge) {
+        throw new IOException("fail merge");
+    }
+}
+possible Hot1

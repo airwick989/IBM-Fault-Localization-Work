@@ -1,0 +1,43 @@
+looking:this.latestPaths
+// synchronized on latestPaths to avoid missing the new log
+synchronized (this.latestPaths) {
+    this.sources.put(peerId, src);
+    Map<String, NavigableSet<String>> walsByGroup = new HashMap<>();
+    this.walsById.put(peerId, walsByGroup);
+    // Add the latest wal to that source's queue
+    if (!latestPaths.isEmpty()) {
+        for (Map.Entry<String, Path> walPrefixAndPath : latestPaths.entrySet()) {
+            Path walPath = walPrefixAndPath.getValue();
+            NavigableSet<String> wals = new TreeSet<>();
+            wals.add(walPath.getName());
+            walsByGroup.put(walPrefixAndPath.getKey(), wals);
+            // Abort RS and throw exception to make add peer failed
+            abortAndThrowIOExceptionWhenFail(() -> this.queueStorage.addWAL(server.getServerName(), peerId, walPath.getName()));
+            src.enqueueLog(walPath);
+            LOG.trace("Enqueued {} to source {} during source creation.", walPath, src.getQueueId());
+        }
+    }
+}
+
+// synchronized on latestPaths to avoid missing the new log
+synchronized (this.latestPaths) {
+    this.sources.put(peerId, src);
+    Map<String, NavigableSet<String>> walsByGroup = new HashMap<>();
+    this.walsById.put(peerId, walsByGroup);
+    // Add the latest wal to that source's queue
+    if (!latestPaths.isEmpty()) {
+        for (Map.Entry<String, Path> walPrefixAndPath : latestPaths.entrySet()) {
+            Path walPath = walPrefixAndPath.getValue();
+            NavigableSet<String> wals = new TreeSet<>();
+            wals.add(walPath.getName());
+            walsByGroup.put(walPrefixAndPath.getKey(), wals);
+            // Abort RS and throw exception to make add peer failed
+            abortAndThrowIOExceptionWhenFail(() -> this.queueStorage.addWAL(server.getServerName(), peerId, walPath.getName()));
+            src.enqueueLog(walPath);
+            LOG.trace("Enqueued {} to source {} during source creation.", walPath, src.getQueueId());
+        }
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

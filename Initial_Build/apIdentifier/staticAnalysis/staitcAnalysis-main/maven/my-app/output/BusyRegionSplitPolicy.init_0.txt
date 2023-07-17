@@ -1,0 +1,15 @@
+looking:BusyRegionSplitPolicy.init
+private synchronized void init() {
+    startTime = EnvironmentEdgeManager.currentTime();
+    prevTime = startTime;
+    blockedRequestCount = region.getBlockedRequestsCount();
+    writeRequestCount = region.getWriteRequestsCount();
+}
+
+private synchronized void init() {
+    startTime = EnvironmentEdgeManager.currentTime();
+    prevTime = startTime;
+    blockedRequestCount = region.getBlockedRequestsCount();
+    writeRequestCount = region.getWriteRequestsCount();
+}
+possible Hot1

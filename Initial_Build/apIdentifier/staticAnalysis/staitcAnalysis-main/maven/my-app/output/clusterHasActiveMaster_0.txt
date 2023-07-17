@@ -1,0 +1,35 @@
+looking:clusterHasActiveMaster
+synchronized (clusterHasActiveMaster) {
+    if (ZKUtil.watchAndCheckExists(watcher, watcher.getZNodePaths().masterAddressZNode)) {
+        // A master node exists, there is an active master
+        LOG.trace("A master is now available");
+        clusterHasActiveMaster.set(true);
+    } else {
+        // Node is no longer there, cluster does not have an active master
+        LOG.debug("No master available. Notifying waiting threads");
+        clusterHasActiveMaster.set(false);
+        // Notify any thread waiting to become the active master
+        clusterHasActiveMaster.notifyAll();
+    }
+    // Reset the active master sn. Will be re-fetched later if needed.
+    // We don't want to make a synchronous RPC under a monitor.
+    activeMasterServerName = null;
+}
+
+synchronized (clusterHasActiveMaster) {
+    if (ZKUtil.watchAndCheckExists(watcher, watcher.getZNodePaths().masterAddressZNode)) {
+        // A master node exists, there is an active master
+        LOG.trace("A master is now available");
+        clusterHasActiveMaster.set(true);
+    } else {
+        // Node is no longer there, cluster does not have an active master
+        LOG.debug("No master available. Notifying waiting threads");
+        clusterHasActiveMaster.set(false);
+        // Notify any thread waiting to become the active master
+        clusterHasActiveMaster.notifyAll();
+    }
+    // Reset the active master sn. Will be re-fetched later if needed.
+    // We don't want to make a synchronous RPC under a monitor.
+    activeMasterServerName = null;
+}
+possible Hot2

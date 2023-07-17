@@ -1,0 +1,357 @@
+looking:entries
+synchronized (entries) {
+    if (stopping) {
+        return;
+    }
+    if (edit.isMetaEdit()) {
+        // check whether we flushed all stores, which means we could drop all the previous edits,
+        // and also, recover from the previous failure of some replicas
+        for (Cell metaCell : edit.getCells()) {
+            getStartFlushAllDescriptor(metaCell).ifPresent(flushDesc -> {
+                long flushSequenceNumber = flushDesc.getFlushSequenceNumber();
+                lastFlushedSequenceId = flushSequenceNumber;
+                long clearedCount = entries.size();
+                long clearedSize = clearAllEntries();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Got a flush all request with sequence id {}, clear {} pending" + " entries with size {}, clear failed replicas {}", flushSequenceNumber, clearedCount, StringUtils.TraditionalBinaryPrefix.long2String(clearedSize, "", 1), failedReplicas);
+                }
+                failedReplicas.clear();
+                flushRequester.recordFlush(flushSequenceNumber);
+            });
+        }
+    }
+    if (failedReplicas.size() == regionReplication - 1) {
+        // this means we have marked all the replicas as failed, so just give up here
+        return;
+    }
+    SinkEntry entry = new SinkEntry(key, edit, rpcCall);
+    {
+        if (!tableDesc.hasRegionMemStoreReplication() && !edit.isMetaEdit()) {
+            // only replicate meta edit if region memstore replication is not enabled
+            return;
+        }
+        synchronized (entries) {
+            if (stopping) {
+                return;
+            }
+            if (edit.isMetaEdit()) {
+                // check whether we flushed all stores, which means we could drop all the previous edits,
+                // and also, recover from the previous failure of some replicas
+                for (Cell metaCell : edit.getCells()) {
+                    getStartFlushAllDescriptor(metaCell).ifPresent(flushDesc -> {
+                        long flushSequenceNumber = flushDesc.getFlushSequenceNumber();
+                        lastFlushedSequenceId = flushSequenceNumber;
+                        long clearedCount = entries.size();
+                        long clearedSize = clearAllEntries();
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Got a flush all request with sequence id {}, clear {} pending" + " entries with size {}, clear failed replicas {}", flushSequenceNumber, clearedCount, StringUtils.TraditionalBinaryPrefix.long2String(clearedSize, "", 1), failedReplicas);
+                        }
+                        failedReplicas.clear();
+                        flushRequester.recordFlush(flushSequenceNumber);
+                    });
+                }
+            }
+            if (failedReplicas.size() == regionReplication - 1) {
+                // this means we have marked all the replicas as failed, so just give up here
+                return;
+            }
+            SinkEntry entry = new SinkEntry(key, edit, rpcCall);
+            entries.add(entry);
+            pendingSize += entry.size;
+            if (manager.increase(entry.size)) {
+                if (!sending) {
+                    {
+                        List<SinkEntry> toSend = new ArrayList<>();
+                        long totalSize = 0L;
+                        boolean hasMetaEdit = false;
+                        for (SinkEntry entry; ; ) {
+                            entry = entries.poll();
+                            if (entry == null) {
+                                break;
+                            }
+                            toSend.add(entry);
+                            totalSize += entry.size;
+                            hasMetaEdit |= entry.edit.isMetaEdit();
+                            if (toSend.size() >= batchCountCapacity || totalSize >= batchSizeCapacity) {
+                                break;
+                            }
+                        }
+                        int toSendReplicaCount = regionReplication - 1 - failedReplicas.size();
+                        if (toSendReplicaCount <= 0) {
+                            return;
+                        }
+                        long rpcTimeoutNsToUse;
+                        long operationTimeoutNsToUse;
+                        if (!hasMetaEdit) {
+                            rpcTimeoutNsToUse = rpcTimeoutNs;
+                            operationTimeoutNsToUse = operationTimeoutNs;
+                        } else {
+                            rpcTimeoutNsToUse = metaEditRpcTimeoutNs;
+                            operationTimeoutNsToUse = metaEditOperationTimeoutNs;
+                        }
+                        sending = true;
+                        List<WAL.Entry> walEntries = toSend.stream().map(e -> new WAL.Entry(e.key, e.edit)).collect(Collectors.toList());
+                        AtomicInteger remaining = new AtomicInteger(toSendReplicaCount);
+                        Map<Integer, MutableObject<Throwable>> replica2Error = new HashMap<>();
+                        for (int replicaId = 1; replicaId < regionReplication; replicaId++) {
+                            if (failedReplicas.contains(replicaId)) {
+                                continue;
+                            }
+                            MutableObject<Throwable> error = new MutableObject<>();
+                            replica2Error.put(replicaId, error);
+                            RegionInfo replica = RegionReplicaUtil.getRegionInfoForReplica(primary, replicaId);
+                            FutureUtils.addListener(conn.replicate(replica, walEntries, retries, rpcTimeoutNsToUse, operationTimeoutNsToUse), (r, e) -> {
+                                error.setValue(e);
+                                if (remaining.decrementAndGet() == 0) {
+                                    {
+                                        long maxSequenceId = Long.MIN_VALUE;
+                                        long toReleaseSize = 0;
+                                        for (SinkEntry entry : sent) {
+                                            maxSequenceId = Math.max(maxSequenceId, entry.key.getSequenceId());
+                                            entry.replicated();
+                                            toReleaseSize += entry.size;
+                                        }
+                                        manager.decrease(toReleaseSize);
+                                        synchronized (entries) {
+                                            pendingSize -= toReleaseSize;
+                                            boolean addFailedReplicas = false;
+                                            for (Map.Entry<Integer, MutableObject<Throwable>> entry : replica2Error.entrySet()) {
+                                                Integer replicaId = entry.getKey();
+                                                Throwable error = entry.getValue().getValue();
+                                                if (error != null) {
+                                                    if (maxSequenceId > lastFlushedSequenceId) {
+                                                        LOG.warn("Failed to replicate to secondary replica {} for {}, since the max sequence" + " id of sunk entris is {}, which is greater than the last flush SN {}," + " we will stop replicating for a while and trigger a flush", replicaId, primary, maxSequenceId, lastFlushedSequenceId, error);
+                                                        failedReplicas.add(replicaId);
+                                                        addFailedReplicas = true;
+                                                    } else {
+                                                        LOG.warn("Failed to replicate to secondary replica {} for {}, since the max sequence" + " id of sunk entris is {}, which is less than or equal to the last flush SN {}," + " we will not stop replicating", replicaId, primary, maxSequenceId, lastFlushedSequenceId, error);
+                                                    }
+                                                }
+                                            }
+                                            if (addFailedReplicas) {
+                                                flushRequester.requestFlush(maxSequenceId);
+                                            }
+                                            sending = false;
+                                            if (stopping) {
+                                                stopped = true;
+                                                entries.notifyAll();
+                                                return;
+                                            }
+                                            if (!entries.isEmpty()) {
+                                                send();
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            } else {
+                // we have run out of the max pending size, drop all the edits, and mark all replicas as
+                // failed
+                clearAllEntries();
+                for (int replicaId = 1; replicaId < regionReplication; replicaId++) {
+                    failedReplicas.add(replicaId);
+                }
+                flushRequester.requestFlush(entry.key.getSequenceId());
+            }
+        }
+    }
+    pendingSize += entry.size;
+    if (manager.increase(entry.size)) {
+        if (!sending) {
+            {
+                List<SinkEntry> toSend = new ArrayList<>();
+                long totalSize = 0L;
+                boolean hasMetaEdit = false;
+                for (SinkEntry entry; ; ) {
+                    entry = entries.poll();
+                    if (entry == null) {
+                        break;
+                    }
+                    toSend.add(entry);
+                    totalSize += entry.size;
+                    hasMetaEdit |= entry.edit.isMetaEdit();
+                    if (toSend.size() >= batchCountCapacity || totalSize >= batchSizeCapacity) {
+                        break;
+                    }
+                }
+                int toSendReplicaCount = regionReplication - 1 - failedReplicas.size();
+                if (toSendReplicaCount <= 0) {
+                    return;
+                }
+                long rpcTimeoutNsToUse;
+                long operationTimeoutNsToUse;
+                if (!hasMetaEdit) {
+                    rpcTimeoutNsToUse = rpcTimeoutNs;
+                    operationTimeoutNsToUse = operationTimeoutNs;
+                } else {
+                    rpcTimeoutNsToUse = metaEditRpcTimeoutNs;
+                    operationTimeoutNsToUse = metaEditOperationTimeoutNs;
+                }
+                sending = true;
+                List<WAL.Entry> walEntries = toSend.stream().map(e -> new WAL.Entry(e.key, e.edit)).collect(Collectors.toList());
+                AtomicInteger remaining = new AtomicInteger(toSendReplicaCount);
+                Map<Integer, MutableObject<Throwable>> replica2Error = new HashMap<>();
+                for (int replicaId = 1; replicaId < regionReplication; replicaId++) {
+                    if (failedReplicas.contains(replicaId)) {
+                        continue;
+                    }
+                    MutableObject<Throwable> error = new MutableObject<>();
+                    replica2Error.put(replicaId, error);
+                    RegionInfo replica = RegionReplicaUtil.getRegionInfoForReplica(primary, replicaId);
+                    FutureUtils.addListener(conn.replicate(replica, walEntries, retries, rpcTimeoutNsToUse, operationTimeoutNsToUse), (r, e) -> {
+                        error.setValue(e);
+                        if (remaining.decrementAndGet() == 0) {
+                            {
+                                long maxSequenceId = Long.MIN_VALUE;
+                                long toReleaseSize = 0;
+                                for (SinkEntry entry : sent) {
+                                    maxSequenceId = Math.max(maxSequenceId, entry.key.getSequenceId());
+                                    {
+                                        if (rpcCall != null) {
+                                            rpcCall.releaseByWAL();
+                                        }
+                                    }
+                                    toReleaseSize += entry.size;
+                                }
+                                manager.decrease(toReleaseSize);
+                                synchronized (entries) {
+                                    pendingSize -= toReleaseSize;
+                                    boolean addFailedReplicas = false;
+                                    for (Map.Entry<Integer, MutableObject<Throwable>> entry : replica2Error.entrySet()) {
+                                        Integer replicaId = entry.getKey();
+                                        Throwable error = entry.getValue().getValue();
+                                        if (error != null) {
+                                            if (maxSequenceId > lastFlushedSequenceId) {
+                                                LOG.warn("Failed to replicate to secondary replica {} for {}, since the max sequence" + " id of sunk entris is {}, which is greater than the last flush SN {}," + " we will stop replicating for a while and trigger a flush", replicaId, primary, maxSequenceId, lastFlushedSequenceId, error);
+                                                failedReplicas.add(replicaId);
+                                                addFailedReplicas = true;
+                                            } else {
+                                                LOG.warn("Failed to replicate to secondary replica {} for {}, since the max sequence" + " id of sunk entris is {}, which is less than or equal to the last flush SN {}," + " we will not stop replicating", replicaId, primary, maxSequenceId, lastFlushedSequenceId, error);
+                                            }
+                                        }
+                                    }
+                                    if (addFailedReplicas) {
+                                        flushRequester.requestFlush(maxSequenceId);
+                                    }
+                                    sending = false;
+                                    if (stopping) {
+                                        stopped = true;
+                                        entries.notifyAll();
+                                        return;
+                                    }
+                                    if (!entries.isEmpty()) {
+                                        {
+                                            List<SinkEntry> toSend = new ArrayList<>();
+                                            long totalSize = 0L;
+                                            boolean hasMetaEdit = false;
+                                            for (SinkEntry entry; ; ) {
+                                                entry = entries.poll();
+                                                if (entry == null) {
+                                                    break;
+                                                }
+                                                toSend.add(entry);
+                                                totalSize += entry.size;
+                                                hasMetaEdit |= entry.edit.isMetaEdit();
+                                                if (toSend.size() >= batchCountCapacity || totalSize >= batchSizeCapacity) {
+                                                    break;
+                                                }
+                                            }
+                                            int toSendReplicaCount = regionReplication - 1 - failedReplicas.size();
+                                            if (toSendReplicaCount <= 0) {
+                                                return;
+                                            }
+                                            long rpcTimeoutNsToUse;
+                                            long operationTimeoutNsToUse;
+                                            if (!hasMetaEdit) {
+                                                rpcTimeoutNsToUse = rpcTimeoutNs;
+                                                operationTimeoutNsToUse = operationTimeoutNs;
+                                            } else {
+                                                rpcTimeoutNsToUse = metaEditRpcTimeoutNs;
+                                                operationTimeoutNsToUse = metaEditOperationTimeoutNs;
+                                            }
+                                            sending = true;
+                                            List<WAL.Entry> walEntries = toSend.stream().map(e -> new WAL.Entry(e.key, e.edit)).collect(Collectors.toList());
+                                            AtomicInteger remaining = new AtomicInteger(toSendReplicaCount);
+                                            Map<Integer, MutableObject<Throwable>> replica2Error = new HashMap<>();
+                                            for (int replicaId = 1; replicaId < regionReplication; replicaId++) {
+                                                if (failedReplicas.contains(replicaId)) {
+                                                    continue;
+                                                }
+                                                MutableObject<Throwable> error = new MutableObject<>();
+                                                replica2Error.put(replicaId, error);
+                                                RegionInfo replica = RegionReplicaUtil.getRegionInfoForReplica(primary, replicaId);
+                                                FutureUtils.addListener(conn.replicate(replica, walEntries, retries, rpcTimeoutNsToUse, operationTimeoutNsToUse), (r, e) -> {
+                                                    error.setValue(e);
+                                                    if (remaining.decrementAndGet() == 0) {
+                                                        onComplete(toSend, replica2Error);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    } else {
+        // we have run out of the max pending size, drop all the edits, and mark all replicas as
+        // failed
+        clearAllEntries();
+        for (int replicaId = 1; replicaId < regionReplication; replicaId++) {
+            failedReplicas.add(replicaId);
+        }
+        flushRequester.requestFlush(entry.key.getSequenceId());
+    }
+}
+
+synchronized (entries) {
+    if (stopping) {
+        return;
+    }
+    if (edit.isMetaEdit()) {
+        // check whether we flushed all stores, which means we could drop all the previous edits,
+        // and also, recover from the previous failure of some replicas
+        for (Cell metaCell : edit.getCells()) {
+            getStartFlushAllDescriptor(metaCell).ifPresent(flushDesc -> {
+                long flushSequenceNumber = flushDesc.getFlushSequenceNumber();
+                lastFlushedSequenceId = flushSequenceNumber;
+                long clearedCount = entries.size();
+                long clearedSize = clearAllEntries();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Got a flush all request with sequence id {}, clear {} pending" + " entries with size {}, clear failed replicas {}", flushSequenceNumber, clearedCount, StringUtils.TraditionalBinaryPrefix.long2String(clearedSize, "", 1), failedReplicas);
+                }
+                failedReplicas.clear();
+                flushRequester.recordFlush(flushSequenceNumber);
+            });
+        }
+    }
+    if (failedReplicas.size() == regionReplication - 1) {
+        // this means we have marked all the replicas as failed, so just give up here
+        return;
+    }
+    SinkEntry entry = new SinkEntry(key, edit, rpcCall);
+    entries.add(entry);
+    pendingSize += entry.size;
+    if (manager.increase(entry.size)) {
+        if (!sending) {
+            send();
+        }
+    } else {
+        // we have run out of the max pending size, drop all the edits, and mark all replicas as
+        // failed
+        clearAllEntries();
+        for (int replicaId = 1; replicaId < regionReplication; replicaId++) {
+            failedReplicas.add(replicaId);
+        }
+        flushRequester.requestFlush(entry.key.getSequenceId());
+    }
+}
+possible Hot2
+possible type Hot3_2
+2

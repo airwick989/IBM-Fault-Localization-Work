@@ -1,0 +1,51 @@
+looking:UserQuotaState.update
+/**
+ * Perform an update of the quota state based on the other quota state object. (This operation is
+ * executed by the QuotaCache)
+ */
+@Override
+public synchronized void update(final QuotaState other) {
+    {
+        super.update(other);
+        if (other instanceof UserQuotaState) {
+            UserQuotaState uOther = (UserQuotaState) other;
+            tableLimiters = updateLimiters(tableLimiters, uOther.tableLimiters);
+            namespaceLimiters = updateLimiters(namespaceLimiters, uOther.namespaceLimiters);
+            bypassGlobals = uOther.bypassGlobals;
+        } else {
+            tableLimiters = null;
+            namespaceLimiters = null;
+            bypassGlobals = false;
+        }
+    }
+    if (other instanceof UserQuotaState) {
+        UserQuotaState uOther = (UserQuotaState) other;
+        tableLimiters = updateLimiters(tableLimiters, uOther.tableLimiters);
+        namespaceLimiters = updateLimiters(namespaceLimiters, uOther.namespaceLimiters);
+        bypassGlobals = uOther.bypassGlobals;
+    } else {
+        tableLimiters = null;
+        namespaceLimiters = null;
+        bypassGlobals = false;
+    }
+}
+
+/**
+ * Perform an update of the quota state based on the other quota state object. (This operation is
+ * executed by the QuotaCache)
+ */
+@Override
+public synchronized void update(final QuotaState other) {
+    super.update(other);
+    if (other instanceof UserQuotaState) {
+        UserQuotaState uOther = (UserQuotaState) other;
+        tableLimiters = updateLimiters(tableLimiters, uOther.tableLimiters);
+        namespaceLimiters = updateLimiters(namespaceLimiters, uOther.namespaceLimiters);
+        bypassGlobals = uOther.bypassGlobals;
+    } else {
+        tableLimiters = null;
+        namespaceLimiters = null;
+        bypassGlobals = false;
+    }
+}
+possible Hot1

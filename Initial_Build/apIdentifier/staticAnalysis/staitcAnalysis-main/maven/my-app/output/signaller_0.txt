@@ -1,0 +1,23 @@
+looking:signaller
+synchronized (signaller) {
+    try {
+        // Wait for 10 seconds, so that server shutdown
+        // won't take too long if this thread happens to run.
+        if (!signaller.get())
+            signaller.wait(10000);
+    } catch (InterruptedException e) {
+        // Go to the loop check.
+    }
+}
+
+synchronized (signaller) {
+    try {
+        // Wait for 10 seconds, so that server shutdown
+        // won't take too long if this thread happens to run.
+        if (!signaller.get())
+            signaller.wait(10000);
+    } catch (InterruptedException e) {
+        // Go to the loop check.
+    }
+}
+possible Hot1

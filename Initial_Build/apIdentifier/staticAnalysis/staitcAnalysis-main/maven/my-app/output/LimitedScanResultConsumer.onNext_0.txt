@@ -1,0 +1,11 @@
+looking:LimitedScanResultConsumer.onNext
+@Override
+public synchronized boolean onNext(Result result) {
+    return super.onNext(result) && results.size() < limit;
+}
+
+@Override
+public synchronized boolean onNext(Result result) {
+    return super.onNext(result) && results.size() < limit;
+}
+possible Hot1

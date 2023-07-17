@@ -1,0 +1,15 @@
+looking:sharedConnLock
+synchronized (sharedConnLock) {
+    if (this.sharedConn != null) {
+        this.sharedConn.close();
+        this.sharedConn = null;
+    }
+}
+
+synchronized (sharedConnLock) {
+    if (this.sharedConn != null) {
+        this.sharedConn.close();
+        this.sharedConn = null;
+    }
+}
+possible Hot2

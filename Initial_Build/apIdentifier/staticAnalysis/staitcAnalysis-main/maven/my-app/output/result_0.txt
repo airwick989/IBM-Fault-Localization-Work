@@ -1,0 +1,11 @@
+looking:result
+synchronized (result) {
+    {
+        this.mvcc = mvcc;
+    }
+}
+
+synchronized (result) {
+    result.setMvcc(mvcc);
+}
+possible Hot1

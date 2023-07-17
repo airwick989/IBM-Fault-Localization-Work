@@ -1,0 +1,11 @@
+looking:TestContext.waitFor
+synchronized (this) {
+    checkException();
+    wait(left);
+}
+
+synchronized (this) {
+    checkException();
+    wait(left);
+}
+possible Hot1

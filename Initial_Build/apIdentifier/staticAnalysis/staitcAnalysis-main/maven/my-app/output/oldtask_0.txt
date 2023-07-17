@@ -1,0 +1,56 @@
+looking:oldtask
+// new task was not used.
+synchronized (oldtask) {
+    {
+        return (batch == null || batch.isDead);
+    }
+    LOG.warn("Failure because two threads can't wait for the same task; path=" + path);
+    return oldtask;
+}
+
+// new task was not used.
+synchronized (oldtask) {
+    if (oldtask.isOrphan()) {
+        if (oldtask.status == SUCCESS) {
+            // The task is already done. Do not install the batch for this
+            // task because it might be too late for setDone() to update
+            // batch.done. There is no need for the batch creator to wait for
+            // this task to complete.
+            return (null);
+        }
+        if (oldtask.status == IN_PROGRESS) {
+            oldtask.batch = batch;
+            batch.installed++;
+            LOG.debug("Previously orphan task " + path + " is now being waited upon");
+            return null;
+        }
+        while (oldtask.status == FAILURE) {
+            LOG.debug("wait for status of task " + path + " to change to DELETED");
+            SplitLogCounters.tot_mgr_wait_for_zk_delete.increment();
+            try {
+                oldtask.wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                LOG.warn("Interrupted when waiting for znode delete callback");
+                // fall through to return failure
+                break;
+            }
+        }
+        if (oldtask.status != DELETED) {
+            LOG.warn("Failure because previously failed task" + " state still present. Waiting for znode delete callback" + " path=" + path);
+            return oldtask;
+        }
+        // reinsert the newTask and it must succeed this time
+        Task t = tasks.putIfAbsent(path, newtask);
+        if (t == null) {
+            batch.installed++;
+            return null;
+        }
+        LOG.error(HBaseMarkers.FATAL, "Logic error. Deleted task still present in tasks map");
+        assert false : "Deleted task still present in tasks map";
+        return t;
+    }
+    LOG.warn("Failure because two threads can't wait for the same task; path=" + path);
+    return oldtask;
+}
+possible Hot1

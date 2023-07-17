@@ -1,0 +1,9 @@
+looking:latestPaths
+synchronized (latestPaths) {
+    return latestPaths.size();
+}
+
+synchronized (latestPaths) {
+    return latestPaths.size();
+}
+possible Hot2

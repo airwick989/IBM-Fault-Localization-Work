@@ -1,0 +1,13 @@
+looking:SimpleScanResultConsumerImpl.onNext
+@Override
+public synchronized boolean onNext(Result result) {
+    results.add(result);
+    return true;
+}
+
+@Override
+public synchronized boolean onNext(Result result) {
+    results.add(result);
+    return true;
+}
+possible Hot1

@@ -1,0 +1,45 @@
+looking:MyRegionServer.createRegionServerStatusStub
+@Override
+protected synchronized ServerName createRegionServerStatusStub(boolean refresh) {
+    sn = super.createRegionServerStatusStub(refresh);
+    rpcStubCreatedFlag = true;
+    // Wait for master switch over. Only do this for the second region server.
+    while (!masterChanged) {
+        ServerName newSn = super.getMasterAddressTracker().getMasterAddress(true);
+        if (newSn != null && !newSn.equals(sn)) {
+            masterChanged = true;
+            break;
+        }
+        try {
+            Thread.sleep(SLEEP_INTERVAL);
+        } catch (InterruptedException e) {
+            return null;
+        }
+        LOG.debug("Waiting for master switch over ... ");
+    }
+    return sn;
+}
+
+@Override
+protected synchronized ServerName createRegionServerStatusStub(boolean refresh) {
+    sn = super.createRegionServerStatusStub(refresh);
+    rpcStubCreatedFlag = true;
+    // Wait for master switch over. Only do this for the second region server.
+    while (!masterChanged) {
+        ServerName newSn = super.getMasterAddressTracker().getMasterAddress(true);
+        if (newSn != null && !newSn.equals(sn)) {
+            masterChanged = true;
+            break;
+        }
+        try {
+            Thread.sleep(SLEEP_INTERVAL);
+        } catch (InterruptedException e) {
+            return null;
+        }
+        LOG.debug("Waiting for master switch over ... ");
+    }
+    return sn;
+}
+possible Hot1
+possible type Hot3_2
+1

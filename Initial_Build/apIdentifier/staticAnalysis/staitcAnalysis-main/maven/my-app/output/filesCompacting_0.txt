@@ -1,0 +1,9 @@
+looking:filesCompacting
+synchronized (filesCompacting) {
+    filesCompacting.removeAll(cr.getFiles());
+}
+
+synchronized (filesCompacting) {
+    filesCompacting.removeAll(cr.getFiles());
+}
+possible Hot2

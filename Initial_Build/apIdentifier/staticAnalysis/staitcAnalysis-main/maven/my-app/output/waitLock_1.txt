@@ -1,0 +1,9 @@
+looking:waitLock
+synchronized (waitLock) {
+    waitLock.wait();
+}
+
+synchronized (waitLock) {
+    waitLock.wait();
+}
+possible Hot2

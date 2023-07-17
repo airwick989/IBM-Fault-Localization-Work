@@ -1,0 +1,29 @@
+looking:tieLock
+synchronized (tieLock) {
+    this.flushingSequenceIds.remove(encodedRegionName);
+    Map<ImmutableByteArray, Long> unflushed = lowestUnflushedSequenceIds.get(encodedRegionName);
+    if (unflushed == null) {
+        return;
+    }
+    for (Map.Entry<ImmutableByteArray, Long> e : unflushed.entrySet()) {
+        if (e.getValue().longValue() <= maxFlushedSeqId) {
+            e.setValue(wrappedSeqId);
+        }
+    }
+}
+
+synchronized (tieLock) {
+    this.flushingSequenceIds.remove(encodedRegionName);
+    Map<ImmutableByteArray, Long> unflushed = lowestUnflushedSequenceIds.get(encodedRegionName);
+    if (unflushed == null) {
+        return;
+    }
+    for (Map.Entry<ImmutableByteArray, Long> e : unflushed.entrySet()) {
+        if (e.getValue().longValue() <= maxFlushedSeqId) {
+            e.setValue(wrappedSeqId);
+        }
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

@@ -1,0 +1,9 @@
+looking:EntryBuffers.isRegionCurrentlyWriting
+synchronized boolean isRegionCurrentlyWriting(byte[] region) {
+    return currentlyWriting.contains(region);
+}
+
+synchronized boolean isRegionCurrentlyWriting(byte[] region) {
+    return currentlyWriting.contains(region);
+}
+possible Hot1

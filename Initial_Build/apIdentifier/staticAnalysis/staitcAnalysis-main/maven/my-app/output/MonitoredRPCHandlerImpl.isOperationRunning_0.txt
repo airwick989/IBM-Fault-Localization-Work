@@ -1,0 +1,39 @@
+looking:MonitoredRPCHandlerImpl.isOperationRunning
+/**
+ * Indicates to the client whether this task is monitoring a currently active RPC call to a
+ * database command. (as defined by o.a.h.h.client.Operation)
+ * @return true if the monitored handler is currently servicing an RPC call to a database command.
+ */
+@Override
+public synchronized boolean isOperationRunning() {
+    if (!isRPCRunning()) {
+        return false;
+    }
+    for (Object param : params) {
+        if (param instanceof Operation) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Indicates to the client whether this task is monitoring a currently active RPC call to a
+ * database command. (as defined by o.a.h.h.client.Operation)
+ * @return true if the monitored handler is currently servicing an RPC call to a database command.
+ */
+@Override
+public synchronized boolean isOperationRunning() {
+    if (!isRPCRunning()) {
+        return false;
+    }
+    for (Object param : params) {
+        if (param instanceof Operation) {
+            return true;
+        }
+    }
+    return false;
+}
+possible Hot1
+possible type Hot3_2
+1

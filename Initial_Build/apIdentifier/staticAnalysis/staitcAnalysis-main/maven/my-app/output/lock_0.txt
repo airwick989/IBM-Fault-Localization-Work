@@ -1,0 +1,13 @@
+looking:lock
+// Now interrupt the running Executor
+synchronized (lock) {
+    lock.set(false);
+    lock.notifyAll();
+}
+
+// Now interrupt the running Executor
+synchronized (lock) {
+    lock.set(false);
+    lock.notifyAll();
+}
+possible Hot2

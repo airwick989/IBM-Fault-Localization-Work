@@ -1,0 +1,9 @@
+looking:latch
+synchronized (latch) {
+    latch.wait();
+}
+
+synchronized (latch) {
+    latch.wait();
+}
+possible Hot2

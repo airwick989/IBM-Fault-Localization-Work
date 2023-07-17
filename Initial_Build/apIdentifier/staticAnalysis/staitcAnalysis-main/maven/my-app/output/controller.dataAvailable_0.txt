@@ -1,0 +1,23 @@
+looking:controller.dataAvailable
+// If we crossed the chunk threshold, wait for more space to be available
+synchronized (controller.dataAvailable) {
+    totalBuffered += incrHeap;
+    while (totalBuffered > maxHeapUsage && controller.thrown.get() == null) {
+        LOG.debug("Used {} bytes of buffered edits, waiting for IO threads", totalBuffered);
+        controller.dataAvailable.wait(2000);
+    }
+    controller.dataAvailable.notifyAll();
+}
+
+// If we crossed the chunk threshold, wait for more space to be available
+synchronized (controller.dataAvailable) {
+    totalBuffered += incrHeap;
+    while (totalBuffered > maxHeapUsage && controller.thrown.get() == null) {
+        LOG.debug("Used {} bytes of buffered edits, waiting for IO threads", totalBuffered);
+        controller.dataAvailable.wait(2000);
+    }
+    controller.dataAvailable.notifyAll();
+}
+possible Hot2
+possible type Hot3_2
+1

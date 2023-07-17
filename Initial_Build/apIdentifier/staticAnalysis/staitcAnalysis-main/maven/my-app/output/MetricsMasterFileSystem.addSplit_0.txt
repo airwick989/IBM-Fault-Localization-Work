@@ -1,0 +1,21 @@
+looking:MetricsMasterFileSystem.addSplit
+/**
+ * Record a single instance of a split
+ * @param time time that the split took
+ * @param size length of original WALs that were split
+ */
+public synchronized void addSplit(long time, long size) {
+    source.updateSplitTime(time);
+    source.updateSplitSize(size);
+}
+
+/**
+ * Record a single instance of a split
+ * @param time time that the split took
+ * @param size length of original WALs that were split
+ */
+public synchronized void addSplit(long time, long size) {
+    source.updateSplitTime(time);
+    source.updateSplitSize(size);
+}
+possible Hot1

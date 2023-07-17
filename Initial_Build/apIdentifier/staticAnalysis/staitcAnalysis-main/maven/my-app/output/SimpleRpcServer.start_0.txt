@@ -1,0 +1,70 @@
+looking:SimpleRpcServer.start
+/**
+ * Starts the service. Must be called before any calls will be handled.
+ */
+@Override
+public synchronized void start() {
+    if (started) {
+        return;
+    }
+    authTokenSecretMgr = createSecretManager();
+    if (authTokenSecretMgr != null) {
+        // Start AuthenticationTokenSecretManager in synchronized way to avoid race conditions in
+        // LeaderElector start. See HBASE-25875
+        synchronized (authTokenSecretMgr) {
+            setSecretManager(authTokenSecretMgr);
+            authTokenSecretMgr.start();
+        }
+    }
+    this.authManager = new ServiceAuthorizationManager();
+    HBasePolicyProvider.init(conf, authManager);
+    {
+        if (started) {
+            return;
+        }
+        authTokenSecretMgr = createSecretManager();
+        if (authTokenSecretMgr != null) {
+            // Start AuthenticationTokenSecretManager in synchronized way to avoid race conditions in
+            // LeaderElector start. See HBASE-25875
+            synchronized (authTokenSecretMgr) {
+                setSecretManager(authTokenSecretMgr);
+                authTokenSecretMgr.start();
+            }
+        }
+        this.authManager = new ServiceAuthorizationManager();
+        HBasePolicyProvider.init(conf, authManager);
+        responder.start();
+        listener.start();
+        scheduler.start();
+        started = true;
+    }
+    listener.start();
+    scheduler.start();
+    started = true;
+}
+
+/**
+ * Starts the service. Must be called before any calls will be handled.
+ */
+@Override
+public synchronized void start() {
+    if (started) {
+        return;
+    }
+    authTokenSecretMgr = createSecretManager();
+    if (authTokenSecretMgr != null) {
+        // Start AuthenticationTokenSecretManager in synchronized way to avoid race conditions in
+        // LeaderElector start. See HBASE-25875
+        synchronized (authTokenSecretMgr) {
+            setSecretManager(authTokenSecretMgr);
+            authTokenSecretMgr.start();
+        }
+    }
+    this.authManager = new ServiceAuthorizationManager();
+    HBasePolicyProvider.init(conf, authManager);
+    responder.start();
+    listener.start();
+    scheduler.start();
+    started = true;
+}
+possible Hot1

@@ -1,0 +1,15 @@
+looking:grabTaskLock
+synchronized (grabTaskLock) {
+    workerInGrabTask = false;
+    // clear the interrupt from stopTask() otherwise the next task will
+    // suffer
+    Thread.interrupted();
+}
+
+synchronized (grabTaskLock) {
+    workerInGrabTask = false;
+    // clear the interrupt from stopTask() otherwise the next task will
+    // suffer
+    Thread.interrupted();
+}
+possible Hot2

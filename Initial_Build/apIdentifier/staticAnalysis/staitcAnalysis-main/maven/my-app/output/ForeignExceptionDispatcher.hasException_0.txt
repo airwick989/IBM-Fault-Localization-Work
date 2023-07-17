@@ -1,0 +1,11 @@
+looking:ForeignExceptionDispatcher.hasException
+@Override
+public synchronized boolean hasException() {
+    return exception != null;
+}
+
+@Override
+public synchronized boolean hasException() {
+    return exception != null;
+}
+possible Hot1

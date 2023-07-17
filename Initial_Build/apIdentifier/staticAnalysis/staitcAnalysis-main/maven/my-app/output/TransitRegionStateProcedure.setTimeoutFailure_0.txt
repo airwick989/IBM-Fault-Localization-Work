@@ -1,0 +1,23 @@
+looking:TransitRegionStateProcedure.setTimeoutFailure
+/**
+ * At end of timeout, wake ourselves up so we run again.
+ */
+@Override
+protected synchronized boolean setTimeoutFailure(MasterProcedureEnv env) {
+    setState(ProcedureProtos.ProcedureState.RUNNABLE);
+    env.getProcedureScheduler().addFront(this);
+    // 'false' means that this procedure handled the timeout
+    return false;
+}
+
+/**
+ * At end of timeout, wake ourselves up so we run again.
+ */
+@Override
+protected synchronized boolean setTimeoutFailure(MasterProcedureEnv env) {
+    setState(ProcedureProtos.ProcedureState.RUNNABLE);
+    env.getProcedureScheduler().addFront(this);
+    // 'false' means that this procedure handled the timeout
+    return false;
+}
+possible Hot1

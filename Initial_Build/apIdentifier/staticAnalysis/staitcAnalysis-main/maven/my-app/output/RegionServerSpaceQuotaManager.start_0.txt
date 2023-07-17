@@ -1,0 +1,39 @@
+looking:RegionServerSpaceQuotaManager.start
+public synchronized void start() throws IOException {
+    if (!QuotaUtil.isQuotaEnabled(rsServices.getConfiguration())) {
+        LOG.info("Quota support disabled, not starting space quota manager.");
+        return;
+    }
+    if (started) {
+        LOG.warn("RegionServerSpaceQuotaManager has already been started!");
+        return;
+    }
+    // Start the chores
+    this.spaceQuotaRefresher = new SpaceQuotaRefresherChore(this, rsServices.getConnection());
+    rsServices.getChoreService().scheduleChore(spaceQuotaRefresher);
+    this.regionSizeReporter = new RegionSizeReportingChore(rsServices);
+    rsServices.getChoreService().scheduleChore(regionSizeReporter);
+    // Instantiate the real RegionSizeStore
+    this.regionSizeStore = RegionSizeStoreFactory.getInstance().createStore();
+    started = true;
+}
+
+public synchronized void start() throws IOException {
+    if (!QuotaUtil.isQuotaEnabled(rsServices.getConfiguration())) {
+        LOG.info("Quota support disabled, not starting space quota manager.");
+        return;
+    }
+    if (started) {
+        LOG.warn("RegionServerSpaceQuotaManager has already been started!");
+        return;
+    }
+    // Start the chores
+    this.spaceQuotaRefresher = new SpaceQuotaRefresherChore(this, rsServices.getConnection());
+    rsServices.getChoreService().scheduleChore(spaceQuotaRefresher);
+    this.regionSizeReporter = new RegionSizeReportingChore(rsServices);
+    rsServices.getChoreService().scheduleChore(regionSizeReporter);
+    // Instantiate the real RegionSizeStore
+    this.regionSizeStore = RegionSizeStoreFactory.getInstance().createStore();
+    started = true;
+}
+possible Hot1

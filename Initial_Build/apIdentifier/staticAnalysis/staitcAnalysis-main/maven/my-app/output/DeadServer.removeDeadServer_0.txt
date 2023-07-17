@@ -1,0 +1,19 @@
+looking:DeadServer.removeDeadServer
+/**
+ * Called from rpc by operator cleaning up deadserver list.
+ * @param deadServerName the dead server name
+ * @return true if this server was removed
+ */
+public synchronized boolean removeDeadServer(final ServerName deadServerName) {
+    return this.deadServers.remove(deadServerName) != null;
+}
+
+/**
+ * Called from rpc by operator cleaning up deadserver list.
+ * @param deadServerName the dead server name
+ * @return true if this server was removed
+ */
+public synchronized boolean removeDeadServer(final ServerName deadServerName) {
+    return this.deadServers.remove(deadServerName) != null;
+}
+possible Hot1

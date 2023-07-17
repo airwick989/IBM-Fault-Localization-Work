@@ -1,0 +1,40 @@
+looking:startStopLock
+synchronized (startStopLock) {
+    if (!started) {
+        throw new IllegalStateException("calling `stop` without first calling `start`.");
+    }
+    if (stopped) {
+        return;
+    }
+    // shutdownNow to interrupt the worker thread sitting on `take()`
+    pool.shutdownNow();
+    {
+        synchronized (startStopLock) {
+            if (!started) {
+                throw new IllegalStateException("calling `stop` without first calling `start`.");
+            }
+            if (stopped) {
+                return;
+            }
+            // shutdownNow to interrupt the worker thread sitting on `take()`
+            pool.shutdownNow();
+            regionNormalizerTracker.stop();
+            stopped = true;
+        }
+    }
+    stopped = true;
+}
+
+synchronized (startStopLock) {
+    if (!started) {
+        throw new IllegalStateException("calling `stop` without first calling `start`.");
+    }
+    if (stopped) {
+        return;
+    }
+    // shutdownNow to interrupt the worker thread sitting on `take()`
+    pool.shutdownNow();
+    regionNormalizerTracker.stop();
+    stopped = true;
+}
+possible Hot2

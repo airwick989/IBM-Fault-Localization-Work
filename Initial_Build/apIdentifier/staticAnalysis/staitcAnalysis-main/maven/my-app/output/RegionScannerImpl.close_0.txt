@@ -1,0 +1,11 @@
+looking:RegionScannerImpl.close
+@Override
+public synchronized void close() {
+    TraceUtil.trace(this::closeInternal, () -> region.createRegionSpan("RegionScanner.close"));
+}
+
+@Override
+public synchronized void close() {
+    TraceUtil.trace(this::closeInternal, () -> region.createRegionSpan("RegionScanner.close"));
+}
+possible Hot1

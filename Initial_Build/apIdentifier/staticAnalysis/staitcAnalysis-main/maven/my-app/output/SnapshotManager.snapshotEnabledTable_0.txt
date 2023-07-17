@@ -1,0 +1,62 @@
+looking:SnapshotManager.snapshotEnabledTable
+/**
+ * Take a snapshot of an enabled table.
+ * @param snapshot description of the snapshot to take.
+ * @throws IOException if the snapshot could not be started or filesystem for snapshot temporary
+ *                     directory could not be determined
+ */
+private synchronized void snapshotEnabledTable(SnapshotDescription snapshot) throws IOException {
+    {
+        Path workingDir = SnapshotDescriptionUtils.getWorkingSnapshotDir(snapshot, rootDir, master.getConfiguration());
+        try {
+            FileSystem workingDirFS = workingDir.getFileSystem(master.getConfiguration());
+            // delete the working directory, since we aren't running the snapshot. Likely leftovers
+            // from a failed attempt.
+            workingDirFS.delete(workingDir, true);
+            // recreate the working directory for the snapshot
+            if (!workingDirFS.mkdirs(workingDir)) {
+                throw new SnapshotCreationException("Couldn't create working directory (" + workingDir + ") for snapshot", ProtobufUtil.createSnapshotDesc(snapshot));
+            }
+        } catch (HBaseSnapshotException e) {
+            throw e;
+        } catch (IOException e) {
+            throw new SnapshotCreationException("Exception while checking to see if snapshot could be started.", e, ProtobufUtil.createSnapshotDesc(snapshot));
+        }
+    }
+    {
+        try {
+            handler.prepare();
+            this.executorService.submit(handler);
+            this.snapshotHandlers.put(TableName.valueOf(snapshot.getTable()), handler);
+        } catch (Exception e) {
+            // cleanup the working directory by trying to delete it from the fs.
+            Path workingDir = SnapshotDescriptionUtils.getWorkingSnapshotDir(snapshot, rootDir, master.getConfiguration());
+            FileSystem workingDirFs = workingDir.getFileSystem(master.getConfiguration());
+            try {
+                if (!workingDirFs.delete(workingDir, true)) {
+                    LOG.error("Couldn't delete working directory (" + workingDir + " for snapshot:" + ClientSnapshotDescriptionUtils.toString(snapshot));
+                }
+            } catch (IOException e1) {
+                LOG.error("Couldn't delete working directory (" + workingDir + " for snapshot:" + ClientSnapshotDescriptionUtils.toString(snapshot));
+            }
+            // fail the snapshot
+            throw new SnapshotCreationException("Could not build snapshot handler", e, ProtobufUtil.createSnapshotDesc(snapshot));
+        }
+    }
+    snapshotTable(snapshot, handler);
+}
+
+/**
+ * Take a snapshot of an enabled table.
+ * @param snapshot description of the snapshot to take.
+ * @throws IOException if the snapshot could not be started or filesystem for snapshot temporary
+ *                     directory could not be determined
+ */
+private synchronized void snapshotEnabledTable(SnapshotDescription snapshot) throws IOException {
+    // setup the snapshot
+    prepareWorkingDirectory(snapshot);
+    // Take the snapshot of the enabled table
+    EnabledTableSnapshotHandler handler = new EnabledTableSnapshotHandler(snapshot, master, this);
+    snapshotTable(snapshot, handler);
+}
+possible Hot1

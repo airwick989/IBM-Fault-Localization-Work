@@ -1,0 +1,17 @@
+looking:pipeline
+synchronized (pipeline) {
+    List<ImmutableSegment> segmentList = new ArrayList<>();
+    if (!pipeline.isEmpty()) {
+        segmentList.add(0, pipeline.getLast());
+    }
+    return new VersionedSegmentsList(segmentList, version);
+}
+
+synchronized (pipeline) {
+    List<ImmutableSegment> segmentList = new ArrayList<>();
+    if (!pipeline.isEmpty()) {
+        segmentList.add(0, pipeline.getLast());
+    }
+    return new VersionedSegmentsList(segmentList, version);
+}
+possible Hot2

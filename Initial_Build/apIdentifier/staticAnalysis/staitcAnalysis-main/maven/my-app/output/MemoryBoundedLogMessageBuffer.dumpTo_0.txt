@@ -1,0 +1,27 @@
+looking:MemoryBoundedLogMessageBuffer.dumpTo
+/**
+ * Dump the contents of the buffer to the given stream.
+ */
+public synchronized void dumpTo(PrintWriter out) {
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    for (LogMessage msg : messages) {
+        out.write(df.format(new Date(msg.timestamp)));
+        out.write(" ");
+        out.println(new String(msg.message, Charsets.UTF_8));
+    }
+}
+
+/**
+ * Dump the contents of the buffer to the given stream.
+ */
+public synchronized void dumpTo(PrintWriter out) {
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    for (LogMessage msg : messages) {
+        out.write(df.format(new Date(msg.timestamp)));
+        out.write(" ");
+        out.println(new String(msg.message, Charsets.UTF_8));
+    }
+}
+possible Hot1
+possible type Hot3_2
+1

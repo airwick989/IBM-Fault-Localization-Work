@@ -1,0 +1,23 @@
+looking:storefiles
+// for safety, let's still keep the synchronized here.
+synchronized (storefiles) {
+    for (StoreFileInfo info : infos) {
+        storefiles.put(info.getPath().getName(), info);
+    }
+}
+
+// In general, for primary replica, the load method should only be called once when
+// initialization, so we do not need synchronized here. And for secondary replicas, though the
+// load method could be called multiple times, we will never call other methods so no
+// synchronized is also fine.
+// But we have a refreshStoreFiles method in the Region interface, which can be called by CPs,
+// and we have a RefreshHFilesEndpoint example to expose the refreshStoreFiles method as RPC, so
+// for safety, let's still keep the synchronized here.
+synchronized (storefiles) {
+    for (StoreFileInfo info : infos) {
+        storefiles.put(info.getPath().getName(), info);
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

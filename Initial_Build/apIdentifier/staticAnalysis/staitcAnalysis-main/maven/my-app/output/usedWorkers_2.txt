@@ -1,0 +1,13 @@
+looking:usedWorkers
+synchronized (usedWorkers) {
+    {
+        if (!event.isReady()) {
+            event.wake(scheduler);
+        }
+    }
+}
+
+synchronized (usedWorkers) {
+    usedWorkers.wake(scheduler);
+}
+possible Hot2

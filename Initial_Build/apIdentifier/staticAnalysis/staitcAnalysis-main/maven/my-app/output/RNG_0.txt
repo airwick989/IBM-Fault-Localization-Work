@@ -1,0 +1,13 @@
+looking:RNG
+// Synchronized to ensure one user of random instance at a time.
+synchronized (RNG) {
+    RNG.setSeed(seed.getAsInt());
+    return period + jitter - Math.round(2L * jitter * RNG.nextDouble());
+}
+
+// Synchronized to ensure one user of random instance at a time.
+synchronized (RNG) {
+    RNG.setSeed(seed.getAsInt());
+    return period + jitter - Math.round(2L * jitter * RNG.nextDouble());
+}
+possible Hot1

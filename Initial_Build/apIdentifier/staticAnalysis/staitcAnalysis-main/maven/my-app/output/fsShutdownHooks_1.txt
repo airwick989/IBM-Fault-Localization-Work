@@ -1,0 +1,27 @@
+looking:fsShutdownHooks
+synchronized (fsShutdownHooks) {
+    int refs = fsShutdownHooks.get(fsShutdownHook);
+    if (refs == 1) {
+        LOG.info("Starting fs shutdown hook thread.");
+        Thread fsShutdownHookThread = (fsShutdownHook instanceof Thread) ? (Thread) fsShutdownHook : new Thread(fsShutdownHook, fsShutdownHook.getClass().getSimpleName() + "-shutdown-hook");
+        fsShutdownHookThread.start();
+        Threads.shutdown(fsShutdownHookThread, this.conf.getLong(FS_SHUTDOWN_HOOK_WAIT, 30000));
+    }
+    if (refs > 0) {
+        fsShutdownHooks.put(fsShutdownHook, refs - 1);
+    }
+}
+
+synchronized (fsShutdownHooks) {
+    int refs = fsShutdownHooks.get(fsShutdownHook);
+    if (refs == 1) {
+        LOG.info("Starting fs shutdown hook thread.");
+        Thread fsShutdownHookThread = (fsShutdownHook instanceof Thread) ? (Thread) fsShutdownHook : new Thread(fsShutdownHook, fsShutdownHook.getClass().getSimpleName() + "-shutdown-hook");
+        fsShutdownHookThread.start();
+        Threads.shutdown(fsShutdownHookThread, this.conf.getLong(FS_SHUTDOWN_HOOK_WAIT, 30000));
+    }
+    if (refs > 0) {
+        fsShutdownHooks.put(fsShutdownHook, refs - 1);
+    }
+}
+possible Hot2

@@ -1,0 +1,17 @@
+looking:NamespaceTableAndRegionInfo.getRegionCountOfTable
+synchronized int getRegionCountOfTable(TableName tableName) {
+    if (tableAndRegionInfo.containsKey(tableName)) {
+        return this.tableAndRegionInfo.get(tableName).get();
+    } else {
+        return -1;
+    }
+}
+
+synchronized int getRegionCountOfTable(TableName tableName) {
+    if (tableAndRegionInfo.containsKey(tableName)) {
+        return this.tableAndRegionInfo.get(tableName).get();
+    } else {
+        return -1;
+    }
+}
+possible Hot1

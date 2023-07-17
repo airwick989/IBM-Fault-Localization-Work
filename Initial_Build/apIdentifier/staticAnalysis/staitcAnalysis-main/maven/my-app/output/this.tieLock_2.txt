@@ -1,0 +1,47 @@
+looking:this.tieLock
+synchronized (this.tieLock) {
+    ConcurrentMap<ImmutableByteArray, Long> m = getOrCreateLowestSequenceIds(encodedRegionName);
+    boolean replaced = false;
+    while (!replaced) {
+        Long oldSeqId = m.get(familyNameWrapper);
+        if (oldSeqId == null) {
+            m.put(familyNameWrapper, sequenceId);
+            replaced = true;
+        } else if (onlyIfGreater) {
+            if (sequenceId > oldSeqId) {
+                replaced = m.replace(familyNameWrapper, oldSeqId, sequenceId);
+            } else {
+                return;
+            }
+        } else {
+            // replace even if sequence id is not greater than oldSeqId
+            m.put(familyNameWrapper, sequenceId);
+            return;
+        }
+    }
+}
+
+synchronized (this.tieLock) {
+    ConcurrentMap<ImmutableByteArray, Long> m = getOrCreateLowestSequenceIds(encodedRegionName);
+    boolean replaced = false;
+    while (!replaced) {
+        Long oldSeqId = m.get(familyNameWrapper);
+        if (oldSeqId == null) {
+            m.put(familyNameWrapper, sequenceId);
+            replaced = true;
+        } else if (onlyIfGreater) {
+            if (sequenceId > oldSeqId) {
+                replaced = m.replace(familyNameWrapper, oldSeqId, sequenceId);
+            } else {
+                return;
+            }
+        } else {
+            // replace even if sequence id is not greater than oldSeqId
+            m.put(familyNameWrapper, sequenceId);
+            return;
+        }
+    }
+}
+possible Hot2
+possible type Hot3_2
+1

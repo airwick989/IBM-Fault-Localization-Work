@@ -1,0 +1,33 @@
+looking:progressSet
+synchronized (progressSet) {
+    long totalCompactingKVs = 0;
+    long currentCompactedKVs = 0;
+    long totalCompactedSize = 0;
+    for (CompactionProgress progress : progressSet) {
+        totalCompactingKVs += progress.totalCompactingKVs;
+        currentCompactedKVs += progress.currentCompactedKVs;
+        totalCompactedSize += progress.totalCompactedSize;
+    }
+    CompactionProgress result = new CompactionProgress(totalCompactingKVs);
+    result.currentCompactedKVs = currentCompactedKVs;
+    result.totalCompactedSize = totalCompactedSize;
+    return result;
+}
+
+synchronized (progressSet) {
+    long totalCompactingKVs = 0;
+    long currentCompactedKVs = 0;
+    long totalCompactedSize = 0;
+    for (CompactionProgress progress : progressSet) {
+        totalCompactingKVs += progress.totalCompactingKVs;
+        currentCompactedKVs += progress.currentCompactedKVs;
+        totalCompactedSize += progress.totalCompactedSize;
+    }
+    CompactionProgress result = new CompactionProgress(totalCompactingKVs);
+    result.currentCompactedKVs = currentCompactedKVs;
+    result.totalCompactedSize = totalCompactedSize;
+    return result;
+}
+possible Hot1
+possible type Hot3_2
+1

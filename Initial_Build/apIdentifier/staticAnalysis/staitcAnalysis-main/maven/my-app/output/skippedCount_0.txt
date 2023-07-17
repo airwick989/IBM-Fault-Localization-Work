@@ -1,0 +1,11 @@
+looking:skippedCount
+synchronized (skippedCount) {
+    // updates come here via procedure threads, so synchronize access to this counter.
+    skippedCount[type.ordinal()]++;
+}
+
+synchronized (skippedCount) {
+    // updates come here via procedure threads, so synchronize access to this counter.
+    skippedCount[type.ordinal()]++;
+}
+possible Hot1

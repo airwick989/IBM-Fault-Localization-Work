@@ -1,0 +1,23 @@
+looking:ScanPerNextResultScanner.close
+@Override
+public synchronized void close() {
+    closed = true;
+    queue.clear();
+    if (resumer != null) {
+        resumer.resume();
+        resumer = null;
+    }
+    notifyAll();
+}
+
+@Override
+public synchronized void close() {
+    closed = true;
+    queue.clear();
+    if (resumer != null) {
+        resumer.resume();
+        resumer = null;
+    }
+    notifyAll();
+}
+possible Hot1

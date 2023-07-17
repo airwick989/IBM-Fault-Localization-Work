@@ -1,0 +1,9 @@
+looking:results
+synchronized (results) {
+    results.add(value);
+}
+
+synchronized (results) {
+    results.add(value);
+}
+possible Hot2

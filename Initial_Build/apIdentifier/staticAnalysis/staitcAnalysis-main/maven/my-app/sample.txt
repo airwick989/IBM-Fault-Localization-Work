@@ -1,0 +1,193 @@
+
+
+TableRecordReaderImpl.maybeRenewLease
+[{
+    if (scanner != null && Instant.now().isAfter(lastScannerRpcAt.plus(renewLeasePeriod))) {
+        try {
+            scanner.renewLease();
+            lastScannerRpcAt = Instant.now();
+        } catch (Exception e) {
+            LOG.warn("Failed to renew lease, scanner lease may timeout", e);
+        }
+    }
+}]
+class com.github.javaparser.ast.expr.MethodCallExpr
+Instant.now().isAfter(lastScannerRpcAt.plus(renewLeasePeriod))
+class com.github.javaparser.ast.expr.MethodCallExpr
+Instant.now()
+class com.github.javaparser.ast.expr.MethodCallExpr
+lastScannerRpcAt.plus(renewLeasePeriod)
+class com.github.javaparser.ast.expr.MethodCallExpr
+scanner.renewLease()
+class com.github.javaparser.ast.expr.MethodCallExpr
+Instant.now()
+class com.github.javaparser.ast.expr.MethodCallExpr
+LOG.warn("Failed to renew lease, scanner lease may timeout", e)
+
+
+TableRecordReaderImpl.restart
+[{
+    // Update counter metrics based on current scan before reinitializing it
+    if (currentScan != null) {
+        updateCounters();
+    }
+    currentScan = new Scan(scan);
+    currentScan.withStartRow(firstRow);
+    currentScan.setScanMetricsEnabled(true);
+    if (this.scanner != null) {
+        if (logScannerActivity) {
+            LOG.info("Closing the previously opened scanner object.");
+        }
+        this.scanner.close();
+    }
+    this.scanner = this.htable.getScanner(currentScan);
+    lastScannerRpcAt = Instant.now();
+    ensureRenewTaskSchedule();
+    if (logScannerActivity) {
+        LOG.info("Current scan=" + currentScan.toString());
+        timestamp = EnvironmentEdgeManager.currentTime();
+        rowcount = 0;
+    }
+}]
+class com.github.javaparser.ast.expr.MethodCallExpr
+currentScan.withStartRow(firstRow)
+class com.github.javaparser.ast.expr.MethodCallExpr
+currentScan.setScanMetricsEnabled(true)
+class com.github.javaparser.ast.expr.MethodCallExpr
+ensureRenewTaskSchedule()
+class com.github.javaparser.ast.expr.MethodCallExpr
+this.htable.getScanner(currentScan)
+class com.github.javaparser.ast.expr.MethodCallExpr
+Instant.now()
+class com.github.javaparser.ast.expr.MethodCallExpr
+updateCounters()
+class com.github.javaparser.ast.expr.MethodCallExpr
+this.scanner.close()
+class com.github.javaparser.ast.expr.MethodCallExpr
+LOG.info("Current scan=" + currentScan.toString())
+class com.github.javaparser.ast.expr.MethodCallExpr
+EnvironmentEdgeManager.currentTime()
+class com.github.javaparser.ast.expr.MethodCallExpr
+LOG.info("Closing the previously opened scanner object.")
+class com.github.javaparser.ast.expr.MethodCallExpr
+currentScan.toString()
+
+
+TableRecordReaderImpl.scannerNext
+[{
+    long numRpcCallsBefore = scanner.getScanMetrics().countOfRPCcalls.get();
+    Result result = scanner.next();
+    long numRpcCallsAfter = scanner.getScanMetrics().countOfRPCcalls.get();
+    // we can avoid an unnecessary renewLease if a next call triggers an RPC
+    if (numRpcCallsAfter > numRpcCallsBefore) {
+        lastScannerRpcAt = Instant.now();
+    }
+    return result;
+}]
+class com.github.javaparser.ast.expr.MethodCallExpr
+scanner.getScanMetrics().countOfRPCcalls.get()
+class com.github.javaparser.ast.expr.MethodCallExpr
+scanner.next()
+class com.github.javaparser.ast.expr.MethodCallExpr
+scanner.getScanMetrics().countOfRPCcalls.get()
+class com.github.javaparser.ast.expr.MethodCallExpr
+Instant.now()
+class com.github.javaparser.ast.expr.MethodCallExpr
+scanner.getScanMetrics()
+class com.github.javaparser.ast.expr.MethodCallExpr
+scanner.getScanMetrics()
+
+
+function
+[{
+    a A = new a();
+    A.A();
+}]
+class com.github.javaparser.ast.expr.MethodCallExpr
+A.A()
+
+
+lock_2
+[{
+    synchronized (lock_3) {
+        System.out.println(x);
+    }
+    synchronized (lock_3) {
+        System.out.println("abc");
+    }
+}]
+class com.github.javaparser.ast.expr.MethodCallExpr
+System.out.println(x)
+class com.github.javaparser.ast.expr.MethodCallExpr
+System.out.println("abc")
+
+
+test.class
+[{
+    System.out.println("hi");
+}]
+class com.github.javaparser.ast.expr.MethodCallExpr
+System.out.println("hi")
+
+
+lock_3
+[{
+    System.out.println(x);
+}, {
+    System.out.println("abc");
+}]
+class com.github.javaparser.ast.expr.MethodCallExpr
+System.out.println(x)
+class com.github.javaparser.ast.expr.MethodCallExpr
+System.out.println("abc")
+
+
+test_2.class
+[{
+    System.out.println("hi");
+}]
+class com.github.javaparser.ast.expr.MethodCallExpr
+System.out.println("hi")
+
+
+lock_1
+[{
+    synchronized (lock_2) {
+        synchronized (lock_3) {
+            System.out.println(x);
+        }
+        synchronized (lock_3) {
+            System.out.println("abc");
+        }
+    }
+}]
+class com.github.javaparser.ast.expr.MethodCallExpr
+System.out.println(x)
+class com.github.javaparser.ast.expr.MethodCallExpr
+System.out.println("abc")
+
+
+other.B
+[{
+    for (int x = 0; x < 100; x++) {
+        // A.update();
+        // Thread.sleep(20);
+    }
+}]
+class com.github.javaparser.ast.stmt.ForStmt
+for (int x = 0; x < 100; x++) {
+    // A.update();
+    // Thread.sleep(20);
+}
+
+
+more.C
+[{
+    while (true) {
+        // things
+    }
+}]
+class com.github.javaparser.ast.stmt.WhileStmt
+while (true) {
+    // things
+}

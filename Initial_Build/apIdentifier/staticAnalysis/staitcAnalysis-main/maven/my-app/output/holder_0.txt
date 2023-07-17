@@ -1,0 +1,9 @@
+looking:holder
+synchronized (holder) {
+    holder.set(null);
+}
+
+synchronized (holder) {
+    holder.set(null);
+}
+possible Hot2

@@ -1,0 +1,11 @@
+looking:CompactSplit.requestCompaction
+@Override
+public synchronized void requestCompaction(HRegion region, String why, int priority, CompactionLifeCycleTracker tracker, User user) throws IOException {
+    requestCompactionInternal(region, why, priority, true, tracker, getCompleteTracker(tracker, () -> region.getTableDescriptor().getColumnFamilyCount()), user);
+}
+
+@Override
+public synchronized void requestCompaction(HRegion region, String why, int priority, CompactionLifeCycleTracker tracker, User user) throws IOException {
+    requestCompactionInternal(region, why, priority, true, tracker, getCompleteTracker(tracker, () -> region.getTableDescriptor().getColumnFamilyCount()), user);
+}
+possible Hot2

@@ -1,0 +1,12 @@
+looking:saslServer
+// threads using saslServer or Crypto AES to wrap responses.
+synchronized (saslServer) {
+    token = saslServer.wrap(responseBytes, 0, responseBytes.length);
+}
+
+// synchronization may be needed since there can be multiple Handler
+// threads using saslServer or Crypto AES to wrap responses.
+synchronized (saslServer) {
+    token = saslServer.wrap(responseBytes, 0, responseBytes.length);
+}
+possible Hot1
