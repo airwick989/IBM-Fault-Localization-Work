@@ -1,0 +1,17 @@
+looking:Hot1
+Hot1	doSomething
+-----------------------
+synchronized (Hot1) {
+    while (true) {
+        System.out.println();
+    }
+}
+-----------------------
+synchronized (Hot1) {
+    while (true) {
+        System.out.println();
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

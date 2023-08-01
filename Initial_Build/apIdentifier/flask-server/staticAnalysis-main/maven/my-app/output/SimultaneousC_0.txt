@@ -1,0 +1,11 @@
+looking:SimultaneousC
+Simultaneous	doSomething
+-----------------------
+synchronized (SimultaneousC) {
+    System.out.println(SimultaneousC);
+}
+-----------------------
+synchronized (SimultaneousC) {
+    System.out.println(SimultaneousC);
+}-----------------------
+possible Hot1

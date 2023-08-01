@@ -1,0 +1,11 @@
+looking:Hot3_1
+Hot3_1	doSomething
+-----------------------
+synchronized (Hot3_1) {
+    x = System.currentTimeMillis() == 123456789;
+}
+-----------------------
+synchronized (Hot3_1) {
+    x = System.currentTimeMillis() == 123456789;
+}-----------------------
+possible Hot1

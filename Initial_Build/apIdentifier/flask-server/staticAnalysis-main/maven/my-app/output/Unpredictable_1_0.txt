@@ -1,0 +1,15 @@
+looking:Unpredictable_1
+Unpredictable	doSomething
+-----------------------
+synchronized (Unpredictable_1) {
+    if (Unpredictable_1) {
+        x += 1;
+    }
+}
+-----------------------
+synchronized (Unpredictable_1) {
+    if (Unpredictable_1) {
+        x += 1;
+    }
+}-----------------------
+possible Hot1

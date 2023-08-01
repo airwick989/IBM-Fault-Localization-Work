@@ -1,0 +1,11 @@
+looking:OverlySplit_1A
+OverlySplit_1	doSomething
+-----------------------
+synchronized (OverlySplit_1A) {
+    OverlySplit_1 = new Scanner(System.in);
+}
+-----------------------
+synchronized (OverlySplit_1A) {
+    OverlySplit_1 = new Scanner(System.in);
+}-----------------------
+possible Hot2

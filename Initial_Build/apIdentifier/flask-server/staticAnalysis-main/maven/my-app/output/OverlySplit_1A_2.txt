@@ -1,0 +1,11 @@
+looking:OverlySplit_1A
+OverlySplit_1	doSomething
+-----------------------
+synchronized (OverlySplit_1A) {
+    name = null;
+}
+-----------------------
+synchronized (OverlySplit_1A) {
+    name = null;
+}-----------------------
+possible Hot2

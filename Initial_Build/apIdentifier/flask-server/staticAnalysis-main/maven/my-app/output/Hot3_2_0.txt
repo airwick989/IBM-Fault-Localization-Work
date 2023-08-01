@@ -1,0 +1,21 @@
+looking:Hot3_2
+Hot3_2	doSomething
+-----------------------
+synchronized (Hot3_2) {
+    int x = 0;
+    while (A.get(x) != 15) {
+        x++;
+    }
+    return x;
+}
+-----------------------
+synchronized (Hot3_2) {
+    int x = 0;
+    while (A.get(x) != 15) {
+        x++;
+    }
+    return x;
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

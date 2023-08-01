@@ -1,0 +1,15 @@
+looking:SimultaneousA
+Simultaneous	doSomething
+-----------------------
+synchronized (SimultaneousA) {
+    synchronized (SimultaneousB) {
+        SimultaneousC = SimultaneousA + SimultaneousB;
+    }
+}
+-----------------------
+synchronized (SimultaneousA) {
+    synchronized (SimultaneousB) {
+        SimultaneousC = SimultaneousA + SimultaneousB;
+    }
+}-----------------------
+possible Hot1

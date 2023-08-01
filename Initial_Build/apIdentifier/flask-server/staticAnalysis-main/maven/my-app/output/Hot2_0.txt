@@ -1,0 +1,11 @@
+looking:Hot2
+Hot2	task1
+-----------------------
+synchronized (Hot2) {
+    System.out.println(Hot2.toString());
+}
+-----------------------
+synchronized (Hot2) {
+    System.out.println(Hot2.toString());
+}-----------------------
+possible Hot2
