@@ -3,7 +3,7 @@ import axios from 'axios';
 import './styles.css';
 import PatternMatcherUploader from "../PatternMatcherUploader/PatternMatcherUploader";
 
-function LocalizationResults() {
+function LocalizationResults(props) {
     const [lctype, setLctype] = useState("");
     const [methods, setMethods] = useState([]);
     var lcDescription = "";
@@ -61,7 +61,7 @@ function LocalizationResults() {
     
     return ( 
         <div className="container" style={{overflowY: 'scroll'}}>
-            <h1 class="text-5xl font-bold">Results Until Fault Localization</h1>
+            <h1 class="text-5xl font-bold">{props.title}</h1>
 
             <div className="stats bg-primary text-primary-content" style={{margin: 50}}>
   
@@ -88,7 +88,7 @@ function LocalizationResults() {
             
             </div>
 
-            <PatternMatcherUploader/>
+            {props.hasUploader ? <PatternMatcherUploader/> : null}
 
         </div>
     );

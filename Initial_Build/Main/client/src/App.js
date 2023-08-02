@@ -43,7 +43,7 @@ function App(){
               {/* Loading page */}
               <Route path="/loading" element={<Loading/>}/>
               {/* Localization Results page */}
-              <Route path="/localizationResults" element={<LocalizationResults/>}/>
+              <Route path="/localizationResults" element={<LocalizationResults title="Results Until Fault Localization" hasUploader={true}/>}/>
               {/* End Results page */}
               <Route path="/endResults" element={<EndResults/>}/>
           </Routes>
