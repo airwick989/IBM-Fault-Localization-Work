@@ -1,9 +1,10 @@
 import { useState } from "react";
 import './styles.css';
 import axios from 'axios';
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function PatternMatcherUploader() {
+    const navigate = useNavigate();
 
     //the reason the initial state is '[]' instead of 'null' is because its an array of files, not just one
     const [files, setFiles] = useState([]);
@@ -23,13 +24,13 @@ function PatternMatcherUploader() {
             //console.log(files[i])
         }
 
-        alert('Pattern Matcher started')
+        alert('Pattern Matcher started, please wait to be redirected')
 
         axios.post('http://localhost:5000/startPatternMatcher', data)
             .then( (e) => {
                 if(e.data === "ok"){
                     console.log('nice')
-                    //navigate("/loading");
+                    navigate("/endResults");
                 }
                 else if(e.data === "FileNameError"){
                     console.error('FileNameError: Please ensure you upload only CSV files and a Jar file with the correct names.')

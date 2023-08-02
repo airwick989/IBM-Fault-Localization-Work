@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes,Route } from 'react-router-dom';
 import Home from './Home';
 import Loading from './components/Loading/Loading';
 import LocalizationResults from './components/LocalizationResults/LocalizationResults';
+import EndResults from './components/EndResults/EndResults';
 
 
 
@@ -43,6 +44,8 @@ function App(){
               <Route path="/loading" element={<Loading/>}/>
               {/* Localization Results page */}
               <Route path="/localizationResults" element={<LocalizationResults/>}/>
+              {/* End Results page */}
+              <Route path="/endResults" element={<EndResults/>}/>
           </Routes>
         </div>
       </div>

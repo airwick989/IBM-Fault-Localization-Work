@@ -216,7 +216,7 @@ def startPatternMatcher():
         files.append(('file', open(f"{sourceFilePath}{file}", 'rb')))
 
     saveSourceFiles = requests.post('http://localhost:5001/cds/storeData', files=files)
-    produce('coordinatorToPatternMatcher', {'fromCoordinator': 'startPatternMatching'})
+    produce('coordinatorToPatternMatcher', {'fromCoordinator': 'startPatternMatcher'})
 
     return "ok"
 

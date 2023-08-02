@@ -128,9 +128,26 @@ def identifyAP():
 
         r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('pattern_matcher.ap', open(f"{filesPath}pattern_matcher.ap", 'rb'))})
 
+        produce('patternMatcherBackToCoordinator', {'fromPatternMatcher': 'PatternMatcherComplete'})
+        produce('middlewareNotifier', {'fromPatternMatcher': 'PatternMatcherComplete'})
+
 """---- PATTERN MATCHER FUNCTIONS ------------------------------------------------------------------------------------------------------------------"""
 
 
 
 
-identifyAP()
+#identifyAP()
+while True:
+    msg=consumerPatternMatcher.poll(1.0) #timeout
+    if msg is None:
+        continue
+    if msg.error():
+        print('Error: {}'.format(msg.error()))
+        continue
+    if msg.topic() == "coordinatorToPatternMatcher":
+        try:
+            identifyAP()
+        except Exception:
+            produce('patternMatcherBackToCoordinator', {'fromPatternMatcher': 'PatternMatcherError'})
+            produce('middlewareNotifier', {'fromPatternMatcher': 'PatternMatcherError'})
+consumerPatternMatcher.close()
