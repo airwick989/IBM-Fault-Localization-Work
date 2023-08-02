@@ -1,0 +1,18 @@
+{
+    "files": [
+        "Search.java"
+    ],
+    "synch_regions": [
+        "\nSearch.main\n0\t1\nsynchronized (this) {\n    while (completed != totalQueries) {\n        try {\n            this.wait();\n        } catch (InterruptedException e) {\n        }\n    }\n}\nmethod this.wait not found\n\n",
+        "\nparent\n0\t1\nsynchronized (parent) {\n    parent.completed++;\n    if (parent.completed % 4 == 0) {\n        System.out.println(parent.completed + \" query batches completed\");\n    }\n    parent.notify();\n}\nmethod parent.notify not found\n\nmethod System.out.println not found\n\n"
+    ],
+    "anti_patterns": {
+        "Hot1": "2",
+        "Hot2": "0",
+        "Hot3_1": "0",
+        "Hot3_2": "1",
+        "Overly Split": "0",
+        "Simultaneous": "0",
+        "Unpredictable": "0"
+    }
+}

@@ -1,0 +1,23 @@
+looking:Search.main
+Search	main
+-----------------------
+synchronized (this) {
+    while (completed != totalQueries) {
+        try {
+            this.wait();
+        } catch (InterruptedException e) {
+        }
+    }
+}
+-----------------------
+synchronized (this) {
+    while (completed != totalQueries) {
+        try {
+            this.wait();
+        } catch (InterruptedException e) {
+        }
+    }
+}-----------------------
+possible Hot1
+possible type Hot3_2
+1

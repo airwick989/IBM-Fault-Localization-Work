@@ -1,14 +1,15 @@
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS;
 from json import loads, dumps
 import os
 from threading import Thread
 from confluent_kafka import Consumer, Producer
-import requests
-import zipfile
 import shutil
+import zipfile
 import subprocess
 import re
+import json
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -57,58 +58,75 @@ def produce(topic, message):
 
 def identifyAP():
     
-    # #Clear Uploads directory
-    # if len(os.listdir(filesPath)) > 0:
-    #     for file in os.listdir(filesPath):
-    #         #Checks for uploads directory in the directory and clears it
-    #         if os.path.isdir(f"{filesPath}{file}"):
-    #             shutil.rmtree(uploadsPath)
-    #         else:
-    #             os.remove(f'{filesPath}{file}')
+    #Clear Uploads directory
+    if len(os.listdir(filesPath)) > 0:
+        for file in os.listdir(filesPath):
+            #Checks for uploads directory in the directory and clears it
+            if os.path.isdir(f"{filesPath}{file}"):
+                shutil.rmtree(uploadsPath)
+            else:
+                os.remove(f'{filesPath}{file}')
 
-    # #Clear Input directory
-    # if len(os.listdir(inputDirectory)) > 0:
-    #     for file in os.listdir(inputDirectory):
-    #         os.remove(f'{inputDirectory}{file}')
+    #Clear Input directory
+    if len(os.listdir(inputDirectory)) > 0:
+        for file in os.listdir(inputDirectory):
+            os.remove(f'{inputDirectory}{file}')
 
-    # #Pull necessary files from file server
-    # params = {
-    #     'target': ".java",
-    #     'isMultiple': 'true'
-    # }
-    # response = requests.get('http://localhost:5001/cds/getData', params=params)
-    # #Write the zip file
-    # open(zipPath, "wb").write(response.content)
+    #Pull necessary files from file server
+    params = {
+        'target': ".java",
+        'isMultiple': 'true'
+    }
+    response = requests.get('http://localhost:5001/cds/getData', params=params)
+    #Write the zip file
+    open(zipPath, "wb").write(response.content)
 
-    # #Extract all files from zip
-    # with zipfile.ZipFile(zipPath, 'r') as zip:
-    #     zip.extractall(filesPath)
-    # #Move files to correct directory and remove unecessary folder
-    # if os.path.isdir(uploadsPath):
-    #     for file in os.listdir(uploadsPath):
-    #         os.rename(f"{uploadsPath}{file}", f"{inputDirectory}{file}")
-    #     shutil.rmtree(uploadsPath)
+    #Extract all files from zip
+    with zipfile.ZipFile(zipPath, 'r') as zip:
+        zip.extractall(filesPath)
+    #Move files to correct directory and remove unecessary folder
+    if os.path.isdir(uploadsPath):
+        for file in os.listdir(uploadsPath):
+            os.rename(f"{uploadsPath}{file}", f"{inputDirectory}{file}")
+        shutil.rmtree(uploadsPath)
 
     
-    #     #Execute pattern matching
-    
-    os.chdir(pmDirectory)
-    output = subprocess.run('java -cp "target/dependency/*:target/my-app-1.0-SNAPSHOT.jar" com.mycompany.app.App false false null null', capture_output=True, shell=True).stdout
-    output = output.decode("utf-8")
-    
-    APs = output[-14:]
-    
-    synch_regions = output[:-14]
-    synch_regions = re.split('\d+/\d+', synch_regions)
-    
-    files = synch_regions[0]
-    files = list(filter(None, files.split("\n")))
-    for i in range(0, len(files)):
-        files[i] = files[i].strip("input/")
+        #Execute pattern matching
+        os.chdir(pmDirectory)
+        output = subprocess.run('java -cp "target/dependency/*:target/my-app-1.0-SNAPSHOT.jar" com.mycompany.app.App false false null null', capture_output=True, shell=True).stdout
+        output = output.decode("utf-8")
+        os.chdir("../../../")
 
-    synch_regions = synch_regions[1:]
-    for region in synch_regions:
-        print(region)
+        APs = list(filter(None, output[-14:].split(" ")))
+        anti_patterns = {
+            'Hot1': APs[0],
+            'Hot2': APs[1],
+            'Hot3_1': APs[2],
+            'Hot3_2': APs[3],
+            'Overly Split': APs[4],
+            'Simultaneous': APs[5],
+            'Unpredictable': APs[6],
+        }
+        
+        synch_regions = output[:-14]
+        synch_regions = re.split('\d+/\d+', synch_regions)
+        
+        files = synch_regions[0]
+        files = list(filter(None, files.split("\n")))
+        for i in range(0, len(files)):
+            files[i] = files[i].strip("input/")
+
+        synch_regions = synch_regions[1:]
+
+        apData = {
+            'files': files,
+            'synch_regions': synch_regions,
+            'anti_patterns': anti_patterns
+        }
+        with open(f"{filesPath}pattern_matcher.ap", "w") as jsonfile:
+            jsonfile.write(json.dumps(apData, indent=4, separators=(',',': ')))
+
+        r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('pattern_matcher.ap', open(f"{filesPath}pattern_matcher.ap", 'rb'))})
 
 """---- PATTERN MATCHER FUNCTIONS ------------------------------------------------------------------------------------------------------------------"""
 

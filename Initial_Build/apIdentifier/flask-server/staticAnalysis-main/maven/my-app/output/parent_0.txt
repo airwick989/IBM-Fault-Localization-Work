@@ -1,0 +1,19 @@
+looking:parent
+QueryProcessor	run
+-----------------------
+synchronized (parent) {
+    parent.completed++;
+    if (parent.completed % 4 == 0) {
+        System.out.println(parent.completed + " query batches completed");
+    }
+    parent.notify();
+}
+-----------------------
+synchronized (parent) {
+    parent.completed++;
+    if (parent.completed % 4 == 0) {
+        System.out.println(parent.completed + " query batches completed");
+    }
+    parent.notify();
+}-----------------------
+possible Hot1
