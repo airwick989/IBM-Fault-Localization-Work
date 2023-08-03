@@ -60,10 +60,10 @@ function LocalizationResults(props) {
 
     
     return ( 
-        <div className="container" style={{overflowY: 'scroll'}}>
-            <h1 class="text-5xl font-bold">{props.title}</h1>
+        <div className="container" style={{marginTop: 50, marginLeft: 20, marginRight: 20}}>
+            <h1 class="text-5xl font-bold" style={{marginBottom: 20}}>{props.title}</h1>
 
-            <div className="stats bg-primary text-primary-content" style={{margin: 50}}>
+            <div className="stats bg-primary text-primary-content">
   
                 <div className="stat">
                     <div className="stat-title">Lock Contention Type</div>

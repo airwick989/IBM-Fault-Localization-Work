@@ -47,7 +47,7 @@ function PatternMatcherUploader() {
     return (
         <form method="post" action="#" id="#" onSubmit={submitHandler} encType="multipart/form-data">
 
-            <div class="max-w-md" style={{textAlign: "center"}}>
+            <div class="max-w-md" style={{textAlign: "center", margin: 20}}>
                 <p class="py-6">After analyzing the localization results and prioritizing which source files the lock contentions exist in, 
                 please upload those source files below.</p>
                 

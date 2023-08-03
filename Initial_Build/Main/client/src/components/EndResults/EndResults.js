@@ -29,8 +29,36 @@ function EndResults() {
 
     
     return ( 
-        <div className="container" style={{overflowY: 'scroll'}}>
-            <LocalizationResults/>
+        <div className="container" style={{height: '150vh', overflowY: 'scroll'}}>
+            <LocalizationResults title="Final Results"/>
+
+            <div className="stats bg-primary text-primary-content" style={{marginBottom: 50}}>
+  
+                <div className="stat" style={{display: 'flex', flexDirection: 'column', justifyContent:'flex-start'}}>
+                    <div>
+                        <div className="stat-title">Files Analyzed by Pattern Matcher</div>
+                        <ul style={{listStyleType: 'disc'}}>
+                            {sourceFiles.map( file => <li>{file}</li> )}
+                        </ul>
+                    </div>
+                    <div style={{marginTop: 20}}>
+                        <div className="stat-title">Anti-patterns Detected</div>
+                        {Object.entries(aps).map(([key, value]) => (
+                            <div key={key}>
+                            <p><span style={{fontWeight: "bolder"}}>{key}</span>: {value}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                
+                <div className="stat">
+                    <div className="stat-title">Synchronized Regions Found</div>
+               
+                    {synchRegions.map( region => <pre>{region}<hr/></pre>)}
+                    
+                </div>
+            
+            </div>
         </div>
     );
 }
