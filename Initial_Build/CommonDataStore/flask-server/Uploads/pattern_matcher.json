@@ -1,16 +1,15 @@
 {
     "files": [
-        "Search.java"
+        "Hot_1.java"
     ],
     "synch_regions": [
-        "\nSearch.main\n0\t1\nsynchronized (this) {\n    while (completed != totalQueries) {\n        try {\n            this.wait();\n        } catch (InterruptedException e) {\n        }\n    }\n}\nmethod this.wait not found\n\n",
-        "\nparent\n0\t1\nsynchronized (parent) {\n    parent.completed++;\n    if (parent.completed % 4 == 0) {\n        System.out.println(parent.completed + \" query batches completed\");\n    }\n    parent.notify();\n}\nmethod parent.notify not found\n\nmethod System.out.println not found\n\n"
+        "\ndataBase\n0\t1\nsynchronized (dataBase) {\n    if (sleepType == 0) {\n        Thread.sleep(sleepTime);\n    } else {\n        Thread.sleep(0, sleepTime);\n    }\n    System.out.println(\"Task done from thread : \" + threadId);\n}\nmethod System.out.println not found\n\nmethod Thread.sleep not found\n\n"
     ],
     "anti_patterns": {
-        "Hot1": "2",
+        "Hot1": "1",
         "Hot2": "0",
         "Hot3_1": "0",
-        "Hot3_2": "1",
+        "Hot3_2": "0",
         "Overly Split": "0",
         "Simultaneous": "0",
         "Unpredictable": "0"
