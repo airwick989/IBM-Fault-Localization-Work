@@ -1,2 +1,2 @@
 Type 2
-Hot.retriveData(I)Ljava/lang/Object;, 
+jdk/internal/ref/PhantomCleanable.insert()V, org/dacapo/lusearch/Search.main([Ljava/lang/String;)V, org/apache/lucene/store/FSDirectory.getDirectory(Ljava/io/File;Lorg/apache/lucene/store/LockFactory;)Lorg/apache/lucene/store/FSDirectory;, jdk/internal/ref/PhantomCleanable.remove()Z, java/lang/ThreadGroup.threadTerminated(Ljava/lang/Thread;)V, java/lang/ThreadGroup.add(Ljava/lang/Thread;)V, 00036ca4_unknown_thread, 00036ca3_unknown_thread, org/dacapo/lusearch/Search$QueryProcessor.run()V, 

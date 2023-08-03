@@ -192,7 +192,10 @@ def loading():
     if success:
         return "completed"
     else:
-        return f"ERROR in {errorSource}: {data[f'from{errorSource}']}\n{errorMessage}"
+        try:
+            return f"ERROR in {errorSource}: {data[f'from{errorSource}']}\n{errorMessage}"
+        except Exception:
+            return
     
 
 
@@ -216,9 +219,48 @@ def startPatternMatcher():
         files.append(('file', open(f"{sourceFilePath}{file}", 'rb')))
 
     saveSourceFiles = requests.post('http://localhost:5001/cds/storeData', files=files)
+
+    #Middleware listener consumer
+    consumerMiddleware = Consumer({
+        'bootstrap.servers': 'localhost:9092',
+        'group.id': 'middleware-group',
+        'auto.offset.reset': 'latest'
+    })
+    consumerMiddleware.subscribe(['middlewareNotifier'])
+
     produce('coordinatorToPatternMatcher', {'fromCoordinator': 'startPatternMatcher'})
 
-    return "ok"
+    while True:
+        msg=consumerMiddleware.poll(1) #timeout
+        
+        if msg is None:
+            continue
+        if msg.error():
+            print('Error: {}'.format(msg.error()))
+            continue
+        if msg.topic() == "middlewareNotifier":
+            print("signal received")
+
+            data = loads(msg.value().decode('utf-8'))
+
+            if "fromPatternMatcher" in data:
+                print("fromPatternMatcher")
+                if data["fromPatternMatcher"] == "PatternMatcherComplete":
+                    print("PatternMatcherComplete")
+                    success = True
+                else:
+                    print("Error from Pattern Matcher")
+                    errorSource = "Pattern Matcher"
+                    errorMessage = "Internal error has occurred within the pattern matcher."
+
+            break
+    
+    consumerMiddleware.close()
+
+    if success:
+        return "completed"
+    else:
+        return f"ERROR in {errorSource}: {data[f'from{errorSource}']}\n{errorMessage}"
 
 
 

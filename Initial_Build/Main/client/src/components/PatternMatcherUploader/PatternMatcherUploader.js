@@ -28,7 +28,7 @@ function PatternMatcherUploader() {
 
         axios.post('http://localhost:5000/startPatternMatcher', data)
             .then( (e) => {
-                if(e.data === "ok"){
+                if(e.data === "completed"){
                     console.log('nice')
                     navigate("/endResults");
                 }

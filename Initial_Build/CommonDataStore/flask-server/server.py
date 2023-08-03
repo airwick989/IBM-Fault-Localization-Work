@@ -80,9 +80,14 @@ def interResults():
         results = results_file.read().strip()
         results = results.split("\n")
 
+    try:
+        methods = results[1][:-1].split(", ")
+    except Exception:
+        methods = "None"
+
     data = {
         'lctype': results[0],
-        'methods': results[1][:-1].split(", ")
+        'methods': methods
     }
 
     data = dumps(data)
