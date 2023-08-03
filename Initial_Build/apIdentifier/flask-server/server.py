@@ -123,10 +123,10 @@ def identifyAP():
             'synch_regions': synch_regions,
             'anti_patterns': anti_patterns
         }
-        with open(f"{filesPath}pattern_matcher.ap", "w") as jsonfile:
+        with open(f"{filesPath}pattern_matcher.json", "w") as jsonfile:
             jsonfile.write(json.dumps(apData, indent=4, separators=(',',': ')))
 
-        r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('pattern_matcher.ap', open(f"{filesPath}pattern_matcher.ap", 'rb'))})
+        r = requests.post('http://localhost:5001/cds/storeData', files={'file': ('pattern_matcher.json', open(f"{filesPath}pattern_matcher.json", 'rb'))})
 
         produce('patternMatcherBackToCoordinator', {'fromPatternMatcher': 'PatternMatcherComplete'})
         produce('middlewareNotifier', {'fromPatternMatcher': 'PatternMatcherComplete'})
