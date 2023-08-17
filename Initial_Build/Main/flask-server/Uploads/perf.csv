@@ -1,2 +1,6 @@
 _raw_spin_lock,ctx_sched_in,delay_mwaitx
-146,80,441
+7,0,7
+0,0,0
+12,0,0
+4,0,0
+258,166,100
