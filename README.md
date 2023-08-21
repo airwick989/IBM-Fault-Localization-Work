@@ -29,30 +29,32 @@
 - Responsible for handling middleware communication between even coordination and the system frontend.
 - Initiates some events prior to the event coordinator handling the primary bulk of the orchestration.
 - Built in Flask.
-#### Coordinator
-- Acts as primary interface for the user to the system.
-- Where the user enters the necessary inputs to the system.
-- Types of inputs accepted:
-  - '.java' file (Java program) (must be uploaded).
-  - 'jlm.csv' (jlm metrics) (optional).
-  - 'perf.csv' (perf metrics) (optional).
-  - 'test.csv' (test metrics) (optional).
-#### Common Data Store
-- Database stored locally in the system.
-- Stores files to be shared across multiple modules.
-- Stores files as binary objects to be encoded and decoded.
+#### Event Coordinator
+- Facilitates the communication middleware used throughout the system.
+- Executes functionalities of other system modules via the Topic-based Pub/Sub Broker.
+- Responsible for the orhcestration of system events throughout the end-to-end process.
+- Built in Python.
 #### Topic-based Pub/Sub Broker
+- A publish-subscribe broker used for invoking the functionalities of other system modules.
 - Used to have system exhibit an event-driven behaviour.
-- Responsible for calling on module functionality when initiated by the Coordinator.
-- Sends completion signals back to the Coordinator upon a module completing its designated functionality.
+- Responsible for calling on module functionality when initiated by the Event Coordinator.
+- Sends completion signals back to the Event Coordinator upon a module completing its designated functionality.
 - Pub/sub model is in place to ensure each module is more discrete and separated from the rest of the system as development is occurring within the functionalities of various modules at any given moment (high cohesion, low coupling).
+- Allows different system components to be able to run indpeendently while having them communicate via this middleware.
+- Based in Apache Kafka.
 #### lcClassifier
 - Lock contention classifier.
-- Uses all the performance metrics collected from the Java program and runs it against a pre-trained machine learning classifier.
+- Classifies the Java program as one of three lock contention types based on already collected runtime data.
+- Uses all the runtime performance metrics collected from the Java program and runs it against a pre-trained machine learning classifier.
 - Classification returns 1 of 3 possible lock contention types:
   - Type 0: Minimal or no lock contention exhibited.
   - Type 1: A thread(s) is holding the lock to a critical section for a prolonged time.
   - Type 2: High frequency of access requests from threads to acquire a particular lock.
+- Built in Python.
+#### Common Data Store
+- Database stored locally in the system.
+- Stores files to be shared across multiple modules.
+- Stores files as binary objects to be encoded and decoded.
 #### crLocator
 - Contented region locator.
 - Executes the Java program and simultaneously performs call stack tracing.
