@@ -51,20 +51,23 @@
   - Type 1: A thread(s) is holding the lock to a critical section for a prolonged time.
   - Type 2: High frequency of access requests from threads to acquire a particular lock.
 - Built in Python.
-#### Common Data Store
-- Database stored locally in the system.
-- Stores files to be shared across multiple modules.
-- Stores files as binary objects to be encoded and decoded.
 #### crLocator
 - Contented region locator.
-- Executes the Java program and simultaneously performs call stack tracing.
+- Leverages JLM and RTdriver to collect runtime stack traces of the Java program.
 - Produces and automatically parses a log file containing the resultant call stack traces.
-- Localize the fault by finding the method causing contention.
+- Localizes regions of high contention in the code.
+- Built in Python, Java, and Bash.
 #### apIdentifier
 - Anti-pattern identifier.
-- Detects anti-patterns (common bad practices) in the Java code which cause contention.
-- Returns recommendations to resolve the issues identified.
-- Currently a work-in-progress.
+- Performs static anlysis on select inputted Java source files.
+- Identifies predefined anti-patterns (common bad practices) in the Java code which cause contention.
+- Returns the synchronized regions found within the source code.
+- Built in Java and Python.
+#### Common Data Store
+- A file server stored locally in the system.
+- Maintains any necessary files and data used throughout the end-to-end process.
+- Provides endpoints to other system modules for data retrieval and storage.
+- Built in Flask.
 
 ## Video Demo of Tool
 https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/a953761a-6915-4221-a1ca-e4a973813dfa
