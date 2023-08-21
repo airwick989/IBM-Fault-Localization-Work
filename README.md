@@ -22,6 +22,13 @@
   - Phase 2:
     - File Upload:
       - '.java' file(s) (Java source files used for static analysis).
+- Built in ReactJS.
+#### System Backend
+- Performs all logic-based functions.
+- Handles processing input after it has passed through the system frontend.
+- Responsible for handling middleware communication between even coordination and the system frontend.
+- Initiates some events prior to the event coordinator handling the primary bulk of the orchestration.
+- Built in Flask.
 #### Coordinator
 - Acts as primary interface for the user to the system.
 - Where the user enters the necessary inputs to the system.
