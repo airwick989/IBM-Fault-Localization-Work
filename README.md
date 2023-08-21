@@ -55,7 +55,10 @@
 - Anti-pattern identifier.
 - Detects anti-patterns (common bad practices) in the Java code which cause contention.
 - Returns recommendations to resolve the issues identified.
-- Currently a work-in-progress. 
+- Currently a work-in-progress.
+
+## Video Demo of Tool
+https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/a953761a-6915-4221-a1ca-e4a973813dfa
 
 ## Coordinator Module
 ### Tools & Technologies Used
