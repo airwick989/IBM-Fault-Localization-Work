@@ -4,6 +4,24 @@
 ![Current System Architecture](./md_images/curr_sys_arch.png "Current System Architecture")
 
 ### Brief Summary of Modules and their Responsibilities
+#### System Frontend
+- Collects input from the user using forms and menus.
+- Performs preprocessing of user input and further validates it via the backend.
+- Displays results to the user in a human-readable format.
+- Inputs required:
+  - Phase 1:
+    - File Upload:
+      - '.jar' file (Java program).
+      - 'jlm.csv' (jlm metrics).
+      - 'perf.csv' (perf metrics).
+      - 'test.csv' (test metrics).
+    - Text Field Input:
+      - Java program arguments (used for the '.jar' file).
+      - Localization start time (how long the application runs before stack tracing begins).
+      - Localization run time (how long the stack tracing is performed for).
+  - Phase 2:
+    - File Upload:
+      - '.java' file(s) (Java source files used for static analysis).
 #### Coordinator
 - Acts as primary interface for the user to the system.
 - Where the user enters the necessary inputs to the system.
@@ -12,10 +30,6 @@
   - 'jlm.csv' (jlm metrics) (optional).
   - 'perf.csv' (perf metrics) (optional).
   - 'test.csv' (test metrics) (optional).
-#### Performance Benchmarking
-- Responsible for executing a performance benchmarking of the uploaded Java program.
-- Records, collects, and stores performance metrics.
-- Currently a black box in the system (area of investigation).
 #### Common Data Store
 - Database stored locally in the system.
 - Stores files to be shared across multiple modules.
