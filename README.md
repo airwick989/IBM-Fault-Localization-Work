@@ -76,8 +76,9 @@ The Dacapo lusearch benchmark was used for the above example.
 
 ## System Components in Detail
 
-### Main System Module
-It is the main component facilitating the system. It consists of the system frontend and system backend. It is separated from the other system modules, a characteristic common throughout this tool.
+### Main System Component
+It is the main component facilitating the system. It consists of the system frontend and system backend. It is separated from the other system modules, a characteristic common throughout this tool. The main system component is comprised of the following modules:
+![Main System Component](./md_images/main_sys_comp.png "Main System Component")
 #### Tools & Technologies Used
 - React (JS)
   - Currently runs on port 3000 of the localhost (http://localhost:3000)
