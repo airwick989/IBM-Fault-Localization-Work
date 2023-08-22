@@ -93,7 +93,12 @@ It is the main component facilitating the system. It consists of the system fron
 - The FileUploader component  is responsible for displaying information, receiving user input, preliminary error-checking, and notifying the user of certain events.
 - After ensuring the uploaded files meet some specified criteria, it uploads the files to the correct endpoint in coordinator's backend (http://localhost:5000/upload) using an HTTP POST method.
 - It has error messages which may be returned to the user if the backend returns some error type.
-- Once the preliminary inputs are sent to the backend for classification and localization, the [Loading.js](./Initial_Build/Main/client/src/components/Loading/Loading.js)
+- Once the preliminary inputs are saved for classification and localization, the [Loading component](./Initial_Build/Main/client/src/components/Loading/Loading.js) waits for a completion signal from an endpoint on the system backend, which is listening for a message indiciating that localization is completed. Once this is done, the Loading component redirects to the localizationResults endpoint (http://localhost:3000/localizationResults).
+- The localizationResults endpoint consists of the [LocalizationResults component](./Initial_Build/Main/client/src/components/LocalizationResults/LocalizationResults.js) and the [PatternMatcherUploader component](./Initial_Build/Main/client/src/components/PatternMatcherUploader/PatternMatcherUploader.js).
+- The LocalizationResults component displays all intermediary results of the system until localization has completed. Items such as the detected lock contention type, the complete stacktraces, and the methods/objects causing contention.
+- The PatternMatcherUploader component provides a mechanism for the user to upload the Java source files which will be examined using static analysis. This component also contains some preliminary error checking.
+- Once the Java source files are uploaded and the pattern-matching is completed, the frontend redirects to the endResults endpoint (http://localhost:3000/endResults), which consists of the aforementioned LocalizationResults component (so the results are still visible to the user) as well as the [EndResults component](./Initial_Build/Main/client/src/components/EndResults/EndResults.js).
+- The EndResults component is used for displaying the pattern-matching results. Items such as the files analyzed, the anti-patterns detected, detailed information about each anti-pattern, and the synchronized regions found in the code are returned to the user. This is essentially the last page the user is shown, beofre they may choose to return to the Home component.
 
 
 
