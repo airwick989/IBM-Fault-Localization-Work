@@ -74,6 +74,20 @@ https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/a95376
 
 The Dacapo lusearch benchmark was used for the above example.
 
+## System Components in Detail
+
+### Main System Module
+#### Tools & Technologies Used
+- React (JS)
+  - Currently runs on port 3000 of the localhost (http://localhost:3000)
+  - Acts as the frontend of the coordinator module.
+- Flask (Python)
+  - Currently runs on port 5000 of the localhost (http://localhost:5000)
+  - Is the backend of the coordinator module.
+
+
+
+
 ## Coordinator Module
 ### Tools & Technologies Used
 - React (JS)
