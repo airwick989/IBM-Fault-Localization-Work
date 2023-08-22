@@ -108,26 +108,24 @@ It is the main component facilitating the system. It consists of the system fron
 - At this stage, the loading endpoint (http://localhost:5000/loading) is utilized to display a loading screen to the user while the backend listens for a completion signal from the localization module, upon which the system frontend is redirected to the localizationResults component.
 - After the source file(s) submission is completed onthe frontend side, the startPatternMatcher endpoint (http://localhost:5000/startPatternMatcher) is utilized to push the source file(s) to the common data store and initiate the execution of the pattern-matcher module. This endpoint will busy loop until the completion signal from the pattern-matcher is acquired, after which it will redirect the system frontend to the endResults component.
 
+### Event Coordinator
+It is responsible for the orchestration of events throughout the end-to-end process. It communicates using the Kakfa broker and facilitates communication between each module through this middleware.
+#### Tools & Technologies Used
+- Python
+  - Runs on a script which is essentially listening on multiple Kafka topics.
+  - Is responsible for initiating the localizer and pattern-matcher.
+  - Is responsible for listening for completion signals from the classifier and localizer.
+#### Coordinator Details
+- The event coordinator makes communications along the following Kafka topics:
+  - classifierBackToCoordinator (consumer, listens for classifier completed signal)
+  - coordinatorToLocalizer (producer, initiates localizer)
+  - localizerBackToCoordinator (consumer, listens for localizer completed signal)
+  - coordinatorToPatternMatcher (producer, initiates pattern-matcher)
 
 
 
-## Coordinator Module
-### Tools & Technologies Used
-- React (JS)
-  - Currently runs on port 3000 of the localhost (http://localhost:3000)
-  - Acts as the frontend of the coordinator module.
-- Flask (Python)
-  - Currently runs on port 5000 of the localhost (http://localhost:5000)
-  - Is the backend of the coordinator module.
-### Backend Details
-- The endpoint http://localhost:5000/upload is responsible for handling submitted files.
-- Performs a secondary check of the files to ensure they abide by the specified criteria.
-- If all file criteria is not satisifed, a specific error message is returned back to and handled by the coordinator's frontend.
-- If all file criteria is satisfied, the files are saved in the system's local database as binary objects and overwritten if they already exist. After saving the files to the database, the coordinator backend sends a signal to the lock contention classifier module to initiate classification.
-- The coordinator backend makes communications along the following pub/sub topics (thus far):
-  - coordinatorToClassifier (producer, initiates classifier)
-  - classifierBackToCoordinator (consumer, listens for classifier completed signal on a separate thread **\[thread a\]**)
-  - coordinatorToLocalizer (producer, initiates localization on a separate thread **\[thread a\]**)
+
+
 
 ## Performance BenchMarking
 ### This portion of the system is currently a work-in-progress
