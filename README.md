@@ -71,6 +71,7 @@
 
 ## Video Demo of Tool
 https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/a953761a-6915-4221-a1ca-e4a973813dfa
+
 The Dacapo lusearch benchmark was used for the above example.
 
 ## Coordinator Module
