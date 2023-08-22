@@ -77,7 +77,7 @@ The Dacapo lusearch benchmark was used for the above example.
 ## System Components in Detail
 
 ### Main System Module
-Is the main component facilitating the system. It consists of the system frontend and system backend. It is separated from the other system modules, a characteristic common throughout this tool.
+It is the main component facilitating the system. It consists of the system frontend and system backend. It is separated from the other system modules, a characteristic common throughout this tool.
 #### Tools & Technologies Used
 - React (JS)
   - Currently runs on port 3000 of the localhost (http://localhost:3000)
