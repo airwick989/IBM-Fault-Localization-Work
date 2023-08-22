@@ -99,14 +99,14 @@ It is the main component facilitating the system. It consists of the system fron
 - The PatternMatcherUploader component provides a mechanism for the user to upload the Java source files which will be examined using static analysis. This component also contains some preliminary error checking.
 - Once the Java source files are uploaded and the pattern-matching is completed, the frontend redirects to the endResults endpoint (http://localhost:3000/endResults), which consists of the aforementioned LocalizationResults component (so the results are still visible to the user) as well as the [EndResults component](./Initial_Build/Main/client/src/components/EndResults/EndResults.js).
 - The EndResults component is used for displaying the pattern-matching results. Items such as the files analyzed, the anti-patterns detected, detailed information about each anti-pattern, and the synchronized regions found in the code are returned to the user. This is essentially the last page the user is shown, beofre they may choose to return to the Home component.
-### Backend Details
+#### Backend Details
 - Backend resides on '[serverv2.py](./Initial_Build/Main/flask-server/serverv2.py)'.
 - The upload endpoint (http://localhost:5000/upload) is responsible for handling submitted files.
 - It performs a secondary check of the files to ensure they abide by the specified criteria.
 - If all file criteria is not satisifed, a specific error message is returned back to and handled by the system's frontend.
 - If all input criteria is satisfied, the files and parameters are saved to the common data store to be used later. After saving the necessary data, the coordinator backend sends a signal to the lock contention classifier module to initiate classification.
 - At this stage, the loading endpoint (http://localhost:5000/loading) is utilized to display a loading screen to the user while the backend listens for a completion signal from the localization module, upon which the system frontend is redirected to the localizationResults component.
-- After the source file(s) submission is completed onthe frontend side, the startPatternMatcher endpoint (http://localhost:5000/startPatternMatcher) is utilized 
+- After the source file(s) submission is completed onthe frontend side, the startPatternMatcher endpoint (http://localhost:5000/startPatternMatcher) is utilized to push the source file(s) to the common data store and initiate the execution of the pattern-matcher module. This endpoint will busy loop until the completion signal from the pattern-matcher is acquired, after which it will redirect the system frontend to the endResults component.
 
 
 
