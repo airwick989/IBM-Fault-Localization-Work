@@ -86,6 +86,14 @@ It is the main component facilitating the system. It consists of the system fron
 - Flask (Python)
   - Currently runs on port 5000 of the localhost (http://localhost:5000)
   - Is the backend of the coordinator module.
+#### Frontend Details
+- Main routing and app structure exists in [App.js](./Initial_Build/Main/client/src/App.js).
+- Main landing page is in [Home.js](./Initial_Build/Main/client/src/Home.js).
+- 'Home.js' primarily utilizes and displays the [FileUploader component](./Initial_Build/Main/client/src/components/FileUploader/index.js).
+- The FileUploader component  is responsible for displaying information, receiving user input, preliminary error-checking, and notifying the user of certain events.
+- After ensuring the uploaded files meet some specified criteria, it uploads the files to the correct endpoint in coordinator's backend (http://localhost:5000/upload) using an HTTP POST method.
+- It has error messages which may be returned to the user if the backend returns some error type.
+- Once the preliminary inputs are sent to the backend for classification and localization, the [Loading.js](./Initial_Build/Main/client/src/components/Loading/Loading.js)
 
 
 
@@ -98,13 +106,6 @@ It is the main component facilitating the system. It consists of the system fron
 - Flask (Python)
   - Currently runs on port 5000 of the localhost (http://localhost:5000)
   - Is the backend of the coordinator module.
-### Frontend Details
-- Main landing page is in [Home.js](./Initial_Build/Coordinator/client/src/Home.js).
-- 'Home.js' primarily utilizes and displays the [FileUploader component](./Initial_Build/Coordinator/client/src/components/FileUploader/index.js).
-- It is responsible for displaying information, receiving user input, preliminary error-checking, and notifying the user of certain events.
-- As it currently stands, the frontend is set up such that it **requires** the 3 CSV files along with the Java program. This is because the performance benchmarking is currently an area of investigation. 
-- After ensuring the uploaded files meet some specified criteria, it uploads the files to the correct endpoint in coordinator's backend (http://localhost:5000/upload) using an HTTP POST method.
-- It has error messages which may be returned to the user if the backend returns some error type.
 ### Backend Details
 - The endpoint http://localhost:5000/upload is responsible for handling submitted files.
 - Performs a secondary check of the files to ensure they abide by the specified criteria.
