@@ -192,14 +192,40 @@ It is the middleware which collects and distributes the messages throughout the 
 		- Cluster 1 = Type 1 Contention
 		- Cluster 2 = Minimal or No Contention
 #### **NOTE:** If the CSV files contain more than one entry (such as multiple samples of runtime data), only the first row will be used to determine the lock contention type.
+- The resultant lock contention type is saved to the 'results.results' file. This is a file which will be commonly used throughout the system for each module to append their results to it. The 'results.results' file is then pushed to the common data store. 
+
+### Contented Region Localizer
+#### Tools & Technologies Used
+- Python
+  - Consists of a driver program which listens for a signal on its respective topic to execute.
+  - Utilizes multithreading to run the submitted '.jar' application alongside other tools.
+- Bash/Java
+  - 2 separate bash scripts
+  - One script runs the '.jar' file via JLM for call stack tracing.
+  - Another script runs RTdriver to collect and log the call stack traced from JLM
+#### Localizer Details
+- The localizer makes communications along the following pub/sub topics:
+  - coordinatorToLocalizer (consumer, listens for signal from system backend to initiate localization).
+  - localizerBackToCoordinator (producer, sends a localization complete signal to the event coordinator).
+- Retrieves uploaded localization parameters from the common data store and keeps them in the [Uploads directory](./Initial_Build/crLocator/flask-server/Files/Uploads).
+#### Localizer Functionality
+- Queries the necessary files (javaProgramArgs.args, localizationParams.params, results.results, and the '.jar' file) from the common data store and extracts the required parameters from the '.args' and '.params'.
+- Run the '.jar' application via JLM to collect the call stack traces using the parameters from the '.params' file.
+- The start_time parameter (first number) dictates how long the '.jar' application will run for before call stack tracing begins.
+- The recording_length paramete (second number) dictates how long the call stack tracing will run for.
+- Two distinct threads are used to run 2 separate scripts: run_jlm.sh and run_rtdriver.sh.
+- Once localization is completed and the threads are collected, the results are stored in the [stack traces log file](./Initial_Build/crLocator/flask-server/stacktraces.log-rt).
+- This log file is used to extract the methods/objects causing contention and are appended to the 'results.results' file, which is then pushed to the common data store.
+
+ 
+### Anti-pattern Identifier
+#### This portion of the system is currently a work-in-progress
 
 
 
 
 
 
-## Performance BenchMarking
-### This portion of the system is currently a work-in-progress
 
 ## Common Data Store
 ### Tools & Technologies Used
@@ -224,8 +250,3 @@ It is the middleware which collects and distributes the messages throughout the 
 - Example Database State:
 
 ![Example Database State](./md_images/sample_db.png "Example Database State")
-
-## Contented Region Locator
-### This portion of the system is currently a work-in-progress
-## Anti-pattern Identifier
-### This portion of the system is currently a work-in-progress
