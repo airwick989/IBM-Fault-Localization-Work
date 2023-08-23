@@ -191,7 +191,7 @@ It is the middleware which collects and distributes the messages throughout the 
 		- Cluster 0 = Type 2 Contention
 		- Cluster 1 = Type 1 Contention
 		- Cluster 2 = Minimal or No Contention
-- **NOTE:** If the CSV files contain more than one entry (such as multiple samples of runtime data), only the first row will be used to determine the lock contention type.
+#### **NOTE:** If the CSV files contain more than one entry (such as multiple samples of runtime data), only the first row will be used to determine the lock contention type.
 
 
 
