@@ -166,14 +166,14 @@ It is the middleware which collects and distributes the messages throughout the 
   
 ### Lock Contention Classifier
 #### Tools & Technologies Used
-- Flask (Python)
+- Python
   - Does not run on any port.
-  - Busy loops, listens for a signal to initiate.
+  - Busy loops, listens for the signal on the coordinatorToClassifier topic to initiate.
 #### Classifier Details
 - The classifier makes communications along the following pub/sub topics:
-  - coordinatorToClassifier (consumer, listens for signal from coordinator to initiate classification).
-  - classifierBackToCoordinator (producer, sends a classification complete signal back to the coordinator).
-- Retrieves uploaded metrics files from the [Uploads directory](./Initial_Build/lcClassifier/flask-server/Files/Uploads) in the lcClassifier module.
+  - coordinatorToClassifier (consumer, listens for signal from system backend to initiate classification).
+  - classifierBackToCoordinator (producer, sends a classification complete signal to the event coordinator).
+- Retrieves uploaded runtimes metrics files from the [Uploads directory](./Initial_Build/CommonDataStore/flask-server/Uploads) in the Common Data Store.
 - All pre-trained machine learning models are found in the [Models directory](./Initial_Build/lcClassifier/flask-server/Files/Models) in the lcClassifier module.
 #### Classifier Functionality
 - Queries the performance metrics files from the SQLite database and performs some cleaning and reformatting before preprocessing.
