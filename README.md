@@ -124,12 +124,12 @@ It is responsible for the orchestration of events throughout the end-to-end proc
  
 ### Topic-based Pub/Sub Broker
 It is the middleware which collects and distributes the messages throughout the publish-subscribe architecture on a topic-by-topic basis.
-### Tools & Technologies Used
+#### Tools & Technologies Used
 - Apache Kafka
   - Currently the Kafka broker is stored locally on the development machine, but the modules communicating with the broker can be set up to utilize another broker, given it has the correct topics.
   - The plan in the future is to have a cloud-based broker which hosts kafka such that it is available not only on a system's localhost.
   - Accessed by all Python-based modules using kafka-python.
-### Broker Details (Currently locally stored on a <ins>Linux</ins> machine in the development stage)
+#### Broker Details (Currently locally stored on a <ins>Linux</ins> machine in the development stage)
 - Useful Tutorials:
   - https://youtu.be/tFlYoEJsT2k
   - https://youtu.be/LjjPjT6R9Bg
@@ -163,6 +163,34 @@ It is the middleware which collects and distributes the messages throughout the 
         - coordinatorToPatternMatcher
         - patternMatcherBackToCoordinator
         - middlewareNotifier
+  
+### Lock Contention Classifier
+#### Tools & Technologies Used
+- Flask (Python)
+  - Does not run on any port.
+  - Busy loops, listens for a signal to initiate.
+#### Classifier Details
+- The classifier makes communications along the following pub/sub topics:
+  - coordinatorToClassifier (consumer, listens for signal from coordinator to initiate classification).
+  - classifierBackToCoordinator (producer, sends a classification complete signal back to the coordinator).
+- Retrieves uploaded metrics files from the [Uploads directory](./Initial_Build/lcClassifier/flask-server/Files/Uploads) in the lcClassifier module.
+- All pre-trained machine learning models are found in the [Models directory](./Initial_Build/lcClassifier/flask-server/Files/Models) in the lcClassifier module.
+#### Classifier Functionality
+- Queries the performance metrics files from the SQLite database and performs some cleaning and reformatting before preprocessing.
+- Perform preprocessing of the performance metrics (some merging and calculations on the datasets) to generate a combined data entry.
+	![Example Combined Entry](./md_images/ex_comb_entry.png)
+- Scale the values according to a pre-trained standard scaler.
+	![Example Scaled Entry](./md_images/ex_scaled_entry.png)
+- Apply principle component analysis using a pre-trained pca component to reduce the dimensionality of the data for clustering.
+
+	![Example Principle Component Values](./md_images/ex_pc_vals.png)
+- Use a pre-trained clustering algorithm to assign a cluster (lock contention class) to the principle components.
+	- Clusters produced from training data (x-axis = principle component 1, y-axis = principle component 2):
+	![Clusters produced from training data](./md_images/clusters.png)
+	- Cluster mappings:
+		- Cluster 0 = Type 2 Contention
+		- Cluster 1 = Type 1 Contention
+		- Cluster 2 = Minimal or No Contention 
 
 
 
@@ -195,70 +223,6 @@ It is the middleware which collects and distributes the messages throughout the 
 - Example Database State:
 
 ![Example Database State](./md_images/sample_db.png "Example Database State")
-
-## Topic-based Pub/Sub Broker
-### Tools & Technologies Used
-- Apache Kafka
-  - Currently the Kafka broker is stored locally on a development machine, but the modules communicating with the broker can be set up to utilize another broker, given it has the correct topics.
-  - The plan in the future is to have a cloud-based broker which hosts kafka such that it is available not only on a system's localhost.
-  - Accessed by all Python-based modules using kafka-python.
-### Broker Details (Currently locally stored on a <ins>Windows</ins> machine in the development stage)
-- Installation Guide: https://www.youtube.com/watch?v=EUzH9khPYgs&t=1s
-- Runs on port 9092 of the localhost by default (http://localhost:9092)
-- Useful Commands (Command Prompt - In the Kafka directory \[ex. C:\kafka\]):
-	- Start zookeeper server (separate terminal):
-	```
-	.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
-	```
-	- Start kafka server (separate terminal):
-	```
-	.\bin\windows\kafka-server-start.bat .\config\server.properties
-	```
-	- Create topic (separate terminal - with zookeeper and kafka servers running)
-	```
-	.\bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic [enter topic name]
-	```
-	- Use a console producer (separate terminal - with zookeeper and kafka servers running)
-	```
-	.\bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic [enter topic name]
-	```
-	- Use a console consumer (separate terminal - with zookeeper and kafka servers running)
-	```
-	.\bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic [enter topic name]
-	```
-- Topics Used (thus far):
-	- coordinatorToClassifier
-	- classifierBackToCoordinator
-	- coordinatorToLocalizer
-- <ins>Note:</ins> If the kafka server exhibits an error, clear the kafka-logs directory.
-
-## Lock Contention Classifier
-### Tools & Technologies Used
-- Flask (Python)
-  - Does not run on any port.
-  - Busy loops, listens for a signal to initiate.
-### Classifier Details
-- The classifier makes communications along the following pub/sub topics:
-  - coordinatorToClassifier (consumer, listens for signal from coordinator to initiate classification).
-  - classifierBackToCoordinator (producer, sends a classification complete signal back to the coordinator).
-- Retrieves uploaded metrics files from the [Uploads directory](./Initial_Build/lcClassifier/flask-server/Files/Uploads) in the lcClassifier module.
-- All pre-trained machine learning models are found in the [Models directory](./Initial_Build/lcClassifier/flask-server/Files/Models) in the lcClassifier module.
-### Classifier Functionality
-- Queries the performance metrics files from the SQLite database and performs some cleaning and reformatting before preprocessing.
-- Perform preprocessing of the performance metrics (some merging and calculations on the datasets) to generate a combined data entry.
-	![Example Combined Entry](./md_images/ex_comb_entry.png)
-- Scale the values according to a pre-trained standard scaler.
-	![Example Scaled Entry](./md_images/ex_scaled_entry.png)
-- Apply principle component analysis using a pre-trained pca component to reduce the dimensionality of the data for clustering.
-
-	![Example Principle Component Values](./md_images/ex_pc_vals.png)
-- Use a pre-trained clustering algorithm to assign a cluster (lock contention class) to the principle components.
-	- Clusters produced from training data (x-axis = principle component 1, y-axis = principle component 2):
-	![Clusters produced from training data](./md_images/clusters.png)
-	- Cluster mappings:
-		- Cluster 0 = Type 2 Contention
-		- Cluster 1 = Type 1 Contention
-		- Cluster 2 = Minimal or No Contention 
 
 ## Contented Region Locator
 ### This portion of the system is currently a work-in-progress
