@@ -121,6 +121,48 @@ It is responsible for the orchestration of events throughout the end-to-end proc
   - coordinatorToLocalizer (producer, initiates localizer)
   - localizerBackToCoordinator (consumer, listens for localizer completed signal)
   - coordinatorToPatternMatcher (producer, initiates pattern-matcher)
+ 
+### Topic-based Pub/Sub Broker
+It is the middleware which collects and distributes the messages throughout the publish-subscribe architecture on a topic-by-topic basis.
+### Tools & Technologies Used
+- Apache Kafka
+  - Currently the Kafka broker is stored locally on the development machine, but the modules communicating with the broker can be set up to utilize another broker, given it has the correct topics.
+  - The plan in the future is to have a cloud-based broker which hosts kafka such that it is available not only on a system's localhost.
+  - Accessed by all Python-based modules using kafka-python.
+### Broker Details (Currently locally stored on a <ins>Linux</ins> machine in the development stage)
+- Useful Tutorials:
+  - https://youtu.be/tFlYoEJsT2k
+  - https://youtu.be/LjjPjT6R9Bg
+- Runs on port 9092 of the localhost by default (http://localhost:9092)
+- Useful Commands (In the Kafka directory \[ex. /home/rtemsoft/kafka]):
+	- Start zookeeper server (separate terminal):
+	```
+	./bin/zookeeper-server-start.sh ./config/zookeeper.properties
+	```
+	- Start Kafka server (separate terminal):
+	```
+	./bin/kafka-server-start.sh ./config/server.properties
+	```
+	- Create topic (separate terminal - with zookeeper and Kafka servers running)
+	```
+	./bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic [enter topic name]
+	```
+	- Use a console producer (separate terminal - with zookeeper and Kafka servers running)
+	```
+	./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic [enter topic name]
+	```
+	- Use a console consumer (separate terminal - with zookeeper and Kafka servers running)
+	```
+	./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic [enter topic name]
+	```
+- Topics Used (thus far):
+	- coordinatorToClassifier
+	- classifierBackToCoordinator
+	- coordinatorToLocalizer
+        - localizerBackToCoordinator
+        - coordinatorToPatternMatcher
+        - patternMatcherBackToCoordinator
+        - middlewareNotifier
 
 
 
