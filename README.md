@@ -176,7 +176,7 @@ It is the middleware which collects and distributes the messages throughout the 
 - Retrieves uploaded runtimes metrics files from the [Uploads directory](./Initial_Build/CommonDataStore/flask-server/Uploads) in the Common Data Store.
 - All pre-trained machine learning models are found in the [Models directory](./Initial_Build/lcClassifier/flask-server/Files/Models) in the lcClassifier module.
 #### Classifier Functionality
-- Queries the performance metrics files from the SQLite database and performs some cleaning and reformatting before preprocessing.
+- Queries the performance metrics files (jlm.csv, perf.csv, and test.csv) from the common data store and performs some cleaning and reformatting before preprocessing.
 - Perform preprocessing of the performance metrics (some merging and calculations on the datasets) to generate a combined data entry.
 	![Example Combined Entry](./md_images/ex_comb_entry.png)
 - Scale the values according to a pre-trained standard scaler.
@@ -190,7 +190,8 @@ It is the middleware which collects and distributes the messages throughout the 
 	- Cluster mappings:
 		- Cluster 0 = Type 2 Contention
 		- Cluster 1 = Type 1 Contention
-		- Cluster 2 = Minimal or No Contention 
+		- Cluster 2 = Minimal or No Contention
+- **NOTE:** If the CSV files contain more than one entry (such as multiple samples of runtime data), only the first row will be used to determine the lock contention type.
 
 
 
