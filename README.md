@@ -216,7 +216,8 @@ It is the middleware which collects and distributes the messages throughout the 
 - Two distinct threads are used to run 2 separate scripts: run_jlm.sh and run_rtdriver.sh.
 - Once localization is completed and the threads are collected, the results are stored in the [stack traces log file](./Initial_Build/crLocator/flask-server/stacktraces.log-rt).
 - This log file is used to extract the methods/objects causing contention and are appended to the 'results.results' file, which is then pushed to the common data store.
-
+#### Sample Run (Using the Dacapo Lusearch Benchmark [with parameters -t 64 -n 100])
+https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/8f10c416-5709-4690-9080-cd4312889051
  
 ### Anti-pattern Identifier
 #### This portion of the system is currently a work-in-progress
