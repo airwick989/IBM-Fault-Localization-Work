@@ -97,6 +97,9 @@ def identifyAP():
         output = output.decode("utf-8")
         os.chdir("../../../")
 
+        print(output)
+        print("")
+
         APs = list(filter(None, output[-14:].split(" ")))
         anti_patterns = {
             'Hot1': APs[0],
