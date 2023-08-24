@@ -205,8 +205,8 @@ It is the middleware which collects and distributes the messages throughout the 
   - Another script runs RTdriver to collect and log the call stack traced from JLM
 #### Localizer Details
 - The localizer makes communications along the following pub/sub topics:
-  - coordinatorToLocalizer (consumer, listens for signal from system backend to initiate localization).
-  - localizerBackToCoordinator (producer, sends a localization complete signal to the event coordinator).
+  - coordinatorToLocalizer (consumer, listens for signal from even coordinator to initiate localization).
+  - localizerBackToCoordinator (producer, sends a localization complete signal back to the event coordinator).
 - Retrieves uploaded localization parameters from the common data store and keeps them in the [Uploads directory](./Initial_Build/crLocator/flask-server/Files/Uploads).
 #### Localizer Functionality
 - Queries the necessary files (javaProgramArgs.args, localizationParams.params, results.results, and the '.jar' file) from the common data store and extracts the required parameters from the '.args' and '.params'.
@@ -220,8 +220,21 @@ It is the middleware which collects and distributes the messages throughout the 
 https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/8f10c416-5709-4690-9080-cd4312889051
  
 ### Anti-pattern Identifier
-#### This portion of the system is currently a work-in-progress
-
+#### Tools & Technologies Used
+- Java
+  - The pattern-matcher tools which is used to perform the static anlysis on the Java source code is built in Java.
+  - Can take entire projects as input and it will automatically scan through to find and analyze the Java source files.
+- Python
+  - The driver program which is used to listen for the signal to begin pattern-matching.
+  - Executes the pattern-matcher program in a subprocess.
+### Pattern-matcher Details
+- The pattern-matcher makes communications along the following pub/sub topics:
+  - coordinatorToPatternMatcher (consumer, listens for signal from system backend to initiate pattern-matching).
+  - patternMatcherBackToCoordinator (producer, sends a pattern-matching complete signal back to the system backend).
+- Retrieves uploaded Java source files from the common data store and keeps them in the [Files directory](./Initial_Build/apIdentifier/flask-server/Files).
+- Unzips the files and stores them locally in the pattern-matcher's [Input directory](./Initial_Build/apIdentifier/flask-server/staticAnalysis-main/maven/my-app/input).
+### Pattern-matcher Functionality
+- H
 
 
 
