@@ -234,8 +234,16 @@ https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/8f10c4
 - Retrieves uploaded Java source files from the common data store and keeps them in the [Files directory](./Initial_Build/apIdentifier/flask-server/Files).
 - Unzips the files and stores them locally in the pattern-matcher's [Input directory](./Initial_Build/apIdentifier/flask-server/staticAnalysis-main/maven/my-app/input).
 ### Pattern-matcher Functionality
-- H
-
+- Queries the Java source files from the common data store and extracts them into the pattern-matcher's input directory.
+- The driver program executes the Java-based pattern-matching tool in a subprocess, which performs static analysis on the source code.
+- The pattern-matching tool outputs the following data items to the terminal:
+  - The list of files which were analyzed.
+  - The synchronized regions found in the source files.
+  - The anti-patterns which were detected in the code via static analysis.
+![Pattern-matching Tool Output](./md_images/apIdentifier_1.png "Pattern-matching Tool Output")
+- The driver program captures the output of the pattern-matching tool and parses it to extract the 3 aforementioned data items and organize them into a JSON file, which is then pushed to the common data store.
+![Parsed Output](./md_images/apIdentifier_2.png "Parsed Output")
+![JSON Output](./md_images/apIdentifier_3.png "JSON Output")
 
 
 
