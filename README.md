@@ -256,4 +256,17 @@ https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/8f10c4
 - Maintains files and data locally which are accessible using HTTP protocols.
 - Stores all files/data in the [Uploads directory](./Initial_Build/CommonDataStore/flask-server/Uploads).
 #### File Server Functionality
-- H
+- The file server contains numerous functions which are used for data storage and retrieval, exposed in the form of service endpoints:
+  - storeData endpoint (http://localhost:5001/cds/storeData)
+    - Used to store one or many files/data items in the file server.
+    - Responds to HTTP POST requests.
+    - Contains a header option called 'clear_flag', which is used to empty the common data store in the event the system is being used for another run.
+    - Stores the files to the uploads directory in the file server.
+  - getData endpoint (http://localhost:5001/cds/getData)
+    - Used to retrieve one or many files from the file server.
+    - Responds to HTTP GET requests.
+    - Contains a request argument called 'isMultiple', which is used to indicate whether the request is expecting the possibilities of multiple files being returned.
+    - If the 'isMultiple' argument is true, the requested files are first zipped before being returned.
+    - Also contains a request argument called 'target'. If the 'isMultiple' flag is true, the file server returns the files with the file extensions specified by those in the 'target' argument. If false, 'target' specifies the entire filename of the file being requested.
+  - interResults endpoint (http://localhost:5001/cds/interResults)
+    - H 
