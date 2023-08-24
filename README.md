@@ -243,6 +243,7 @@ https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/8f10c4
 ![Pattern-matching Tool Output](./md_images/apIdentifier_1.png "Pattern-matching Tool Output")
 - The driver program captures the output of the pattern-matching tool and parses it to extract the 3 aforementioned data items and organize them into a JSON file, which is then pushed to the common data store.
 ![Parsed Output](./md_images/apIdentifier_2.png "Parsed Output")
+![JSON Output](./md_images/apIdentifier_3.png "JSON Output")
 
 
 
