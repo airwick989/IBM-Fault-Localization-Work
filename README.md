@@ -240,8 +240,9 @@ https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/8f10c4
   - The list of files which were analyzed.
   - The synchronized regions found in the source files.
   - The anti-patterns which were detected in the code via static analysis.
+![Pattern-matching Tool Output](./md_images/apIdentifier_1 "Pattern-matching Tool Output")
 - The driver program captures the output of the pattern-matching tool and parses it to extract the 3 aforementioned data items and organize them into a JSON file, which is then pushed to the common data store.
-
+![Parsed Output](./md_images/apIdentifier_2 "Parsed Output")
 
 
 
