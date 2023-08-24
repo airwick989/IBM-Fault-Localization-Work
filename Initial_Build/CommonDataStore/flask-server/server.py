@@ -3,7 +3,6 @@ from flask_cors import CORS;
 from werkzeug.utils import secure_filename
 from json import dumps, loads
 from threading import Thread
-from confluent_kafka import Consumer, Producer
 import os
 import zipfile
 
@@ -13,12 +12,8 @@ app.app_context().push()
 
 uploadsDirectory = "Uploads/"
 
-"""---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
 
 
-"""---- KAFKA PRODUCER / CONSUMER ------------------------------------------------------------------------------------------------------------------"""
-
-#'http://localhost:5001/cds/storeInput'
 
 @app.route("/cds/storeData", methods=['POST'])
 def storeData():
