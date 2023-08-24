@@ -269,4 +269,7 @@ https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/8f10c4
     - If the 'isMultiple' argument is true, the requested files are first zipped before being returned.
     - Also contains a request argument called 'target'. If the 'isMultiple' flag is true, the file server returns the files with the file extensions specified by those in the 'target' argument. If false, 'target' specifies the entire filename of the file being requested.
   - interResults endpoint (http://localhost:5001/cds/interResults)
-    - H 
+    - Is used to retrieve intermediary results for the localizationResults component (http://localhost:3000/localizationResults).
+    - Responds to an HTTP GET request.
+    - Parses the 'results.results' file in order to extract the detected lock contention type, and list of contending objects/methods.
+    - These intermediary results are returned as a JSON object.
