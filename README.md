@@ -245,30 +245,15 @@ https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/8f10c4
 ![Parsed Output](./md_images/apIdentifier_2.png "Parsed Output")
 ![JSON Output](./md_images/apIdentifier_3.png "JSON Output")
 
-
-
-
-
-## Common Data Store
-### Tools & Technologies Used
-- SQLite (SQL)
-  - The [database](./Initial_Build/files.db) ('.db' file) is stored directly in the Initial_Build directory.
-  - Is stored locally in the system.
-  - Accessed by all Python-based modules using SQLAlchemy.
-### Database Model (Columns)
-- Model Structure:
-  ```
-  CREATE TABLE file (
-	filename VARCHAR(50) NOT NULL, 
-	data BLOB, 
-	PRIMARY KEY (filename)
-  )
-  ```
-- Columns:
-	- filename (VARCHAR\[50\], NOT NULL, primary key)
-  		- The name of an uploaded file is stored in this column as a string. It is the primary key.
-	- data (BLOB)
-  		- The data of an uploaded file is stored in the database as a binary object.
-- Example Database State:
-
-![Example Database State](./md_images/sample_db.png "Example Database State")
+### Common Data Store
+#### Tools & Technologies Used
+- Flask (Python)
+  - A file server which exposes endpoints for providing data storage and data retrieval functionalities.
+  - Is commnoly used by every module as the central data store throughout the end-to-end process.
+#### File Server Details
+- Does not make any communications via the pub/sub broker, is accessed directly via HTTP requests.
+- Runs on port 5001 of the localhost (http://localhost:5001).
+- Maintains files and data locally which are accessible using HTTP protocols.
+- Stores all files/data in the [Uploads directory](./Initial_Build/CommonDataStore/flask-server/Uploads).
+#### File Server Functionality
+- H
