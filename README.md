@@ -159,6 +159,7 @@ It is the middleware which collects and distributes the messages throughout the 
 	- coordinatorToClassifier
 	- classifierBackToCoordinator
 	- coordinatorToLocalizer
+        - coordinatorToLocalizer
         - localizerBackToCoordinator
         - coordinatorToPatternMatcher
         - patternMatcherBackToCoordinator
