@@ -156,14 +156,13 @@ It is the middleware which collects and distributes the messages throughout the 
 	./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic [enter topic name]
 	```
 - Topics Used (thus far):
-	- coordinatorToClassifier
-	- classifierBackToCoordinator
-	- coordinatorToLocalizer
-        - coordinatorToLocalizer
-        - localizerBackToCoordinator
-        - coordinatorToPatternMatcher
-        - patternMatcherBackToCoordinator
-        - middlewareNotifier
+  - coordinatorToClassifier
+  - classifierBackToCoordinator
+  - coordinatorToLocalizer
+  - localizerBackToCoordinator
+  - coordinatorToPatternMatcher
+  - patternMatcherBackToCoordinator
+  - middlewareNotifier
   
 ### Lock Contention Classifier
 #### Tools & Technologies Used
