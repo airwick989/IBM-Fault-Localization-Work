@@ -156,13 +156,13 @@ It is the middleware which collects and distributes the messages throughout the 
 	./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic [enter topic name]
 	```
 - Topics Used (thus far):
-	- coordinatorToClassifier
-	- classifierBackToCoordinator
-	- coordinatorToLocalizer
-        - localizerBackToCoordinator
-        - coordinatorToPatternMatcher
-        - patternMatcherBackToCoordinator
-        - middlewareNotifier
+  - coordinatorToClassifier
+  - classifierBackToCoordinator
+  - coordinatorToLocalizer
+  - localizerBackToCoordinator
+  - coordinatorToPatternMatcher
+  - patternMatcherBackToCoordinator
+  - middlewareNotifier
   
 ### Lock Contention Classifier
 #### Tools & Technologies Used
@@ -245,30 +245,31 @@ https://github.com/airwick989/IBM-Fault-Localization-Work/assets/73313597/8f10c4
 ![Parsed Output](./md_images/apIdentifier_2.png "Parsed Output")
 ![JSON Output](./md_images/apIdentifier_3.png "JSON Output")
 
-
-
-
-
-## Common Data Store
-### Tools & Technologies Used
-- SQLite (SQL)
-  - The [database](./Initial_Build/files.db) ('.db' file) is stored directly in the Initial_Build directory.
-  - Is stored locally in the system.
-  - Accessed by all Python-based modules using SQLAlchemy.
-### Database Model (Columns)
-- Model Structure:
-  ```
-  CREATE TABLE file (
-	filename VARCHAR(50) NOT NULL, 
-	data BLOB, 
-	PRIMARY KEY (filename)
-  )
-  ```
-- Columns:
-	- filename (VARCHAR\[50\], NOT NULL, primary key)
-  		- The name of an uploaded file is stored in this column as a string. It is the primary key.
-	- data (BLOB)
-  		- The data of an uploaded file is stored in the database as a binary object.
-- Example Database State:
-
-![Example Database State](./md_images/sample_db.png "Example Database State")
+### Common Data Store
+#### Tools & Technologies Used
+- Flask (Python)
+  - A file server which exposes endpoints for providing data storage and data retrieval functionalities.
+  - Is commnoly used by every module as the central data store throughout the end-to-end process.
+#### File Server Details
+- Does not make any communications via the pub/sub broker, is accessed directly via HTTP requests.
+- Runs on port 5001 of the localhost (http://localhost:5001).
+- Maintains files and data locally which are accessible using HTTP protocols.
+- Stores all files/data in the [Uploads directory](./Initial_Build/CommonDataStore/flask-server/Uploads).
+#### File Server Functionality
+- The file server contains numerous functions which are used for data storage and retrieval, exposed in the form of service endpoints:
+  - storeData endpoint (http://localhost:5001/cds/storeData)
+    - Used to store one or many files/data items in the file server.
+    - Responds to HTTP POST requests.
+    - Contains a header option called 'clear_flag', which is used to empty the common data store in the event the system is being used for another run.
+    - Stores the files to the uploads directory in the file server.
+  - getData endpoint (http://localhost:5001/cds/getData)
+    - Used to retrieve one or many files from the file server.
+    - Responds to HTTP GET requests.
+    - Contains a request argument called 'isMultiple', which is used to indicate whether the request is expecting the possibilities of multiple files being returned.
+    - If the 'isMultiple' argument is true, the requested files are first zipped before being returned.
+    - Also contains a request argument called 'target'. If the 'isMultiple' flag is true, the file server returns the files with the file extensions specified by those in the 'target' argument. If false, 'target' specifies the entire filename of the file being requested.
+  - interResults endpoint (http://localhost:5001/cds/interResults)
+    - Is used to retrieve intermediary results for the localizationResults component (http://localhost:3000/localizationResults).
+    - Responds to an HTTP GET request.
+    - Parses the 'results.results' file in order to extract the detected lock contention type, and list of contending objects/methods.
+    - These intermediary results are returned as a JSON object.
