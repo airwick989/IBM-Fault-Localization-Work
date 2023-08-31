@@ -1,0 +1,1 @@
+/usr/bin/cc  -fPIC -Wno-narrowing -Wno-write-strings  -rdynamic CMakeFiles/rtdriver.dir/rtdriver.o  -o ../Dpiperf/bin/rtdriver 

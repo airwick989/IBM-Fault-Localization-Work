@@ -1,0 +1,54 @@
+********** Linux-x86_64 A2N Version 3.1.51 **********
+********** Current directory: /home/rtemsoft/Desktop/IBM-Fault-Localization-Work/Initial_Build/Localization
+********** Process Id: 2314756 (0x235204)
+
+
+
+############################################################################
+###                       Memory and API statistics                      ###
+############################################################################
+        PidCnt = 0
+     ReusedCnt = 0
+       LastSym = 0
+     JmPoolCnt = 0
+      LdModCnt = 0
+        ModCnt = 0
+        SymCnt = 0  (Base = 0)
+        SecCnt = 0
+      SNP Elem = 100000
+
+    Pid Memory =        0 bytes
+LastSym Memory =        0 bytes
+ JmPool Memory =        0 bytes
+  LdMod Memory =        0 bytes
+    Mod Memory =        0 bytes
+    Sym Memory =        0 bytes
+    Sec Memory =        0 bytes
+   Code Memory =        0 bytes
+ String Memory =        0 bytes
+BaseSNP Memory =        0 bytes
+    SNP Memory =   800000 bytes
+                 --------
+  Total Memory =   800000 bytes
+
+                   Total       OK      Error
+                  -------    ------    ------
+      AddModule:        0         0         0
+AddJittedMethod:        0         0         0
+      AddSymbol:        0         0         0
+   CloneProcess:        0         0         0
+    ForkProcess:        0         0         0
+  CreateProcess:        0         0         0
+ SetProcessName:        0         0         0
+
+                  ******* Successful ******    ******************* Error *******************     *********** FastPath *********
+                   Total     Symbol  JitMth    NoMod   NoSyms  NoSymV  NoSymQ  NoSymF  Other     Total   FstOk   FstMod  FstMis
+                  -------    ------  ------    ------  ------  ------  ------  ------  ------    ------  ------  ------  ------
+      GetSymbol:        0         0       0         0       0       0       0       0       0         0       0       0       0
+
+
+############################################################################
+###                       Requested modules summary                      ###
+############################################################################
+syms  secs    ts     chksum  ty rqcnt  R H  name
+----- ---- -------- -------- -- ------ - -- --------------------------------------
