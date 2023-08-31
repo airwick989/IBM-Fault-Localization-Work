@@ -157,8 +157,8 @@ def classify(pca_DF_train):
     print(pca_DF_train)
     print("\n\n")
     cluster_mappings = {
-        0 : "Type 2",
-        1 : "Type 1",
+        0 : "type 2",
+        1 : "type 1",
         2 : "type 0"
     }
     print(f"Your Java program is experiencing {cluster_mappings[pca_DF_train['Cluster'].iloc[0]]} contention.")
